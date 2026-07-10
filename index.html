@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Life · 官方档案</title>
+    <style>
+        /* ========== 全局重置 ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f2f5;
+            color: #2d3748;
+            line-height: 1.7;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ========== 顶部导航 ========== */
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            padding: 0 40px;
+            height: 68px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #eaeef2;
+        }
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #c0392b;
+            letter-spacing: 1px;
+        }
+        .navbar .logo span {
+            color: #2d3748;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .nav-menu li {
+            cursor: pointer;
+            padding: 6px 0;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .nav-menu li:hover {
+            color: #c0392b;
+            border-bottom-color: #c0392b;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .login-btn {
+            background: #c0392b;
+            color: white;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-btn:hover {
+            background: #a93226;
+        }
+        .user-badge {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .user-badge .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #c0392b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .user-badge .logout-link {
+            color: #718096;
+            font-weight: 400;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .user-badge .logout-link:hover {
+            color: #c0392b;
+        }
+
+        /* ========== 主容器 ========== */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 30px 40px 60px;
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 40px;
+        }
+
+        /* ===== 左侧主内容 ===== */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* 板块卡片 */
+        .section-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #edf2f7;
+        }
+        .section-card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a202c;
+            border-left: 5px solid #c0392b;
+            padding-left: 16px;
+            margin-bottom: 22px;
+        }
+
+        /* ===== 社区讨论（论坛风格） ===== */
+        .forum-post {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 15px;
+        }
+        .forum-post:last-child {
+            border-bottom: none;
+        }
+        .forum-post .time {
+            color: #a0aec0;
+            font-size: 13px;
+            margin-right: 12px;
+        }
+        .forum-post .user {
+            font-weight: 600;
+            color: #2d3748;
+            margin-right: 8px;
+        }
+        .forum-post .msg {
+            color: #4a5568;
+        }
+        .forum-post .msg.reply {
+            padding-left: 32px;
+            color: #5a6a7a;
+        }
+        .forum-post .msg.reply2 {
+            padding-left: 56px;
+            color: #6a7a8a;
+        }
+
+        /* ===== 新闻板块 ===== */
+        .news-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-item .news-title {
+            font-weight: 600;
+            font-size: 17px;
+            color: #1a202c;
+        }
+        .news-item .news-body {
+            color: #4a5568;
+            font-size: 15px;
+            margin-top: 4px;
+            line-height: 1.8;
+        }
+
+        /* ===== 采访板块 ===== */
+        .interview {
+            background: #f7f9fc;
+            border-radius: 16px;
+            padding: 24px 28px;
+            font-size: 15px;
+            line-height: 2;
+            border-left: 4px solid #c0392b;
+        }
+        .interview .q {
+            color: #2d3748;
+            font-weight: 500;
+        }
+        .interview .a {
+            color: #4a5568;
+            padding-left: 20px;
+        }
+        .interview .a strong {
+            color: #c0392b;
+        }
+
+        /* ============================================================ */
+        /* ========== 右侧边栏（成员介绍入口） ========== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .sidebar-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #edf2f7;
+        }
+        .sidebar-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+        .sidebar-member {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sidebar-member:last-child {
+            border-bottom: none;
+        }
+        .sidebar-member:hover {
+            background: #f7f9fc;
+            margin: 0 -12px;
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .sidebar-member .avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #4a5568;
+            flex-shrink: 0;
+        }
+        .sidebar-member .info .sname {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .sidebar-member .info .sdesc {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        /* ============================================================ */
+        /* ========== 模态框（人物详情 + 评论区） ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #ffffff;
+            max-width: 780px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 28px;
+            padding: 36px 42px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
+            animation: modalPop 0.3s ease;
+            position: relative;
+        }
+        @keyframes modalPop {
+            0% {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .modal-box .close-btn {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: #f0f2f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d3748;
+            margin-top: -8px;
+            margin-right: -8px;
+        }
+        .modal-box .close-btn:hover {
+            background: #c0392b;
+            color: white;
+        }
+        .modal-box .modal-img {
+            width: 100%;
+            max-height: 360px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin: 8px 0 20px;
+            background: #e2e8f0;
+        }
+        .modal-box h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+        .modal-box .subinfo {
+            color: #718096;
+            font-size: 15px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 14px;
+        }
+        .modal-box .story-text {
+            font-size: 16px;
+            line-height: 2;
+            color: #2d3748;
+        }
+        .modal-box .story-text p {
+            margin-bottom: 14px;
+        }
+        /* 评论区 */
+        .comment-section {
+            margin-top: 28px;
+            border-top: 2px solid #edf2f7;
+            padding-top: 20px;
+        }
+        .comment-section .c-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 12px;
+        }
+        .comment-item {
+            font-size: 14px;
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0f2f5;
+        }
+        .comment-item .c-user {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .comment-item .c-time {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .comment-item .c-text {
+            color: #4a5568;
+            margin-left: 4px;
+        }
+
+        /* ============================================================ */
+        /* ========== 登录弹窗 ========== */
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-overlay.active {
+            display: flex;
+        }
+        .login-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px 44px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            animation: modalPop 0.3s ease;
+        }
+        .login-box h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+        .login-box .sub {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .login-box label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2d3748;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 18px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .login-box input:focus {
+            border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+        }
+        .login-box .login-submit {
+            width: 100%;
+            padding: 14px;
+            background: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-box .login-submit:hover {
+            background: #a93226;
+        }
+        .login-box .login-error {
+            color: #c0392b;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+        .login-box .login-close {
+            margin-top: 16px;
+            text-align: center;
+            color: #718096;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-box .login-close:hover {
+            color: #2d3748;
+        }
+
+        /* ============================================================ */
+        /* ========== 聊天联系人列表（登录后） ========== */
+        .chat-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        .chat-overlay.active {
+            display: flex;
+        }
+        .chat-box {
+            background: #ffffff;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            animation: modalPop 0.3s ease;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f7f9fc;
+        }
+        .chat-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+        .chat-header .close-chat {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #a0aec0;
+            transition: 0.2s;
+        }
+        .chat-header .close-chat:hover {
+            color: #c0392b;
+        }
+        .chat-body {
+            padding: 20px 28px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .chat-contact {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .chat-contact:hover {
+            background: #f7f9fc;
+        }
+        .chat-contact .c-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #4a5568;
+            flex-shrink: 0;
+        }
+        .chat-contact .c-name {
+            font-weight: 600;
+            font-size: 17px;
+            color: #2d3748;
+        }
+        .chat-contact .c-hint {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-left: auto;
+        }
+        /* 笔记条目特殊样式 */
+        .chat-contact.note {
+            border-bottom: 2px dashed #d4c5a0;
+        }
+        .chat-contact.note .c-avatar {
+            background: #f0e6d3;
+            color: #8a7a5a;
+        }
+
+        /* 聊天记录详情 */
+        .chat-detail {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        .chat-detail.active {
+            display: flex;
+        }
+        .chat-detail .detail-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #f7f9fc;
+        }
+        .chat-detail .detail-header .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #4a5568;
+        }
+        .chat-detail .detail-header .back-btn:hover {
+            color: #c0392b;
+        }
+        .chat-detail .detail-header .d-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .chat-detail .detail-body {
+            padding: 20px 24px;
+            flex: 1;
+            overflow-y: auto;
+            background: #fafbfc;
+        }
+        .chat-msg {
+            margin-bottom: 12px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .chat-msg .msg-time {
+            color: #a0aec0;
+            font-size: 12px;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .chat-msg .msg-user {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .chat-msg .msg-text {
+            color: #4a5568;
+        }
+        .chat-msg .msg-text.me {
+            color: #c0392b;
+        }
+
+        /* 笔记详情样式 */
+        .note-content {
+            background: #fcf8f0;
+            border-radius: 16px;
+            padding: 24px 28px;
+            border-left: 4px solid #c0392b;
+            font-size: 16px;
+            line-height: 2;
+            color: #2d3748;
+            white-space: pre-wrap;
+        }
+        .note-content .note-date {
+            color: #8a7a5a;
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #e0d6c8;
+            padding-bottom: 10px;
+        }
+        .note-content .note-text {
+            font-style: italic;
+            color: #3d3a36;
+        }
+
+        /* ========== 页脚 ========== */
+        .footer {
+            background: #1a202c;
+            color: #a0aec0;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 14px;
+            border-top: 1px solid #2d3748;
+        }
+        .footer strong {
+            color: #c0392b;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .sidebar {
+                order: -1;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+                height: auto;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+            .nav-menu {
+                gap: 14px;
+                font-size: 13px;
+                flex-wrap: wrap;
+            }
+            .section-card {
+                padding: 20px;
+            }
+            .modal-box {
+                padding: 24px 20px;
+            }
+            .login-box {
+                padding: 28px 24px;
+            }
+            .chat-box {
+                max-width: 100%;
+                border-radius: 20px;
+            }
+            .chat-body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- ===== 顶部导航 ===== -->
+    <header class="navbar">
+        <div class="logo">📁 <span>Happy</span>Life</div>
+        <ul class="nav-menu">
+            <li onclick="scrollToSection('community')">社区讨论</li>
+            <li onclick="scrollToSection('news')">新闻</li>
+            <li onclick="scrollToSection('interview')">采访</li>
+        </ul>
+        <div class="nav-right">
+            <div class="user-badge" id="userBadge">
+                <span class="avatar">林</span>
+                <span id="userNameDisplay">林凡996</span>
+                <span class="logout-link" onclick="logout()">退出</span>
+            </div>
+            <button class="login-btn" id="loginBtn" onclick="openLogin()">登录</button>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- ===== 主容器 ===== -->
+    <div class="container">
+
+        <!-- ===== 左侧主内容 ===== -->
+        <div class="main-content">
+
+            <!-- 社区讨论 -->
+            <div class="section-card" id="community">
+                <h2>💬 社区讨论</h2>
+                <div class="forum-post">
+                    <span class="time">2020.06.21 13:11</span>
+                    <span class="user">开朗怪</span>
+                    <span class="msg">有人吗？</span>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2020.07.04 16:40</span>
+                    <span class="user">小羊羔</span>
+                    <span class="msg">同问。</span>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2020.08.01 12:30</span>
+                    <span class="user">清风</span>
+                    <span class="msg">有</span>
+                    <div class="msg reply"><span class="user">小羊羔</span>：真人吗？好神奇！居然真的有人！</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：玩到这个游戏了吗？</div>
+                    <div class="msg reply"><span class="user">清风</span>：玩到了</div>
+                    <div class="msg reply"><span class="user">清风</span>：很普通的老虎机游戏啊</div>
+                    <div class="msg reply"><span class="user">清风</span>：好想接手升华一下</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：对这种类型的游戏不太感兴趣。</div>
+                    <div class="msg reply"><span class="user">清风</span>：那是没有遇到合适你的</div>
+                    <div class="msg reply"><span class="user">清风</span>：要不要来试试我改造的Happy Life？你肯定喜欢</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：真的吗？我加你联系方式吧！</div>
+                    <div class="msg reply"><span class="user">清风</span>：私</div>
+                    <div class="msg reply"><span class="user">咯叽</span>：求网址！</div>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2020.08.02 01:32</span>
+                    <span class="user">小羊羔</span>
+                    <span class="msg">有人吗？</span>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2020.08.03 17:03</span>
+                    <span class="user">小羊羔</span>
+                    <span class="msg">有人吗？</span>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2020.10.25 20:17</span>
+                    <span class="user">小羊羔</span>
+                    <span class="msg">有人吗？</span>
+                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
+                </div>
+                <div class="forum-post">
+                    <span class="time">2022.09.15 16:30</span>
+                    <span class="user">河南无言组</span>
+                    <span class="msg">我靠真有人啊</span>
+                    <div class="msg reply"><span class="user">小羊羔</span>：嗨。</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：你同学长得像张硕？把你同学介绍给我吧哈哈哈哈哈。</div>
+                    <div class="msg reply"><span class="user">河南无言组</span>：隔壁班隔壁班，话说我也有一阵子没见到他了</div>
+                    <div class="msg reply"><span class="user">小羊羔</span>：要不要来试试清风的休闲小游戏？</div>
+                    <div class="msg reply"><span class="user">河南无言组</span>：啊，好啊</div>
+                </div>
+            </div>
+
+            <!-- 新闻 -->
+            <div class="section-card" id="news">
+                <h2>📰 新闻</h2>
+                <div class="news-item">
+                    <div class="news-title">1. 科学研究新突破！</div>
+                    <div class="news-body">科学研究显示，人的身体里最多承载两个灵魂，如果两个灵魂间从未有过交集和误会，两个灵魂就会在一起完美融合，直到合为一个整体，若是两个灵魂有很严重的排斥或其中一方灵魂有很强烈的情绪，两个灵魂就会互不交融，很有可能为了同一具身体大打出手。</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">2. 新生代音乐人Rico Zayd荣获年度新人突破奖！</div>
+                    <div class="news-body">记者采访中，Rico Zayd表示这只是一个简单的开始，不久的以后将会让全世界的人知道他的音乐，对此，Rico Zayd的粉丝们也表示愿意一直陪伴他闯出一个独属于他的时代。</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">3. 网络画手Lin最新绘本预售开始！</div>
+                    <div class="news-body">网络著名画手Lin依旧以其独特的见解绘制出无数引人入胜的故事，在上一本绘本突破十万售量大关后，Lin沉寂一年投入于新的绘本创作中，大家都希望这次的销售量可以达到新巅峰。</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-title">4. 美妆新人"咯叽"带火网络用语！</div>
+                    <div class="news-body">在美妆市场高度饱和的情况下，美妆博主"咯叽"用其专业的化妆技术以及无比洗脑的网名闯出了一片新天地，现如今大家开始用"咯叽风"来形容当下最盛行的妆面！</div>
+                </div>
+            </div>
+
+            <!-- 采访 -->
+            <div class="section-card" id="interview">
+                <h2>🎤 采访</h2>
+                <div class="interview">
+                    <p><span class="q">📌 时间：2017年10月</span></p>
+                    <p><span class="q">记者：</span>《Happy Life》的大火为三位年轻人铺下了明亮的前路，今天我们有请到了创作人之一的林凡来为我们解答一些疑惑，那么请问林凡先生，是什么契机推动你想要创造一款游戏呢？</p>
+                    <p><span class="a"><strong>林凡：</strong>是夏爽。</span></p>
+                    <p><span class="q">记者：</span>哈哈哈看来林凡先生很看中这段感情呢！</p>
+                    <p><span class="a"><strong>林凡：</strong>是的，夏爽是我生命中最重要的人，大学的时候我暗恋夏爽，很幸运，我们是同一年出生，所以我把我的账户名称改成林凡996，她也不会发现我输入的是她的生日。</span></p>
+                    <p><span class="q">记者：</span>听说在咱们游戏创作初期还有一位成员是吗？</p>
+                    <p><span class="a"><strong>林凡：</strong>是的，但是后来退出了，我也不清楚他退出的理由。</span></p>
+                    <p><span class="q">记者：</span>但是他删除电子画稿的行为总归是不好的。</p>
+                    <p><span class="a"><strong>林凡：</strong>没错，还好张硕接手了这一切。</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 右侧边栏：成员介绍 ===== -->
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3>👥 成员介绍</h3>
+                <div class="sidebar-member" onclick="openMemberModal('linfan')">
+                    <div class="avatar-placeholder" style="background:#e8d5b7;">林</div>
+                    <div class="info">
+                        <div class="sname">林凡</div>
+                        <div class="sdesc">1996.4.8 · 清彩大学设计学院</div>
+                    </div>
+                </div>
+                <div class="sidebar-member" onclick="openMemberModal('xiashuang')">
+                    <div class="avatar-placeholder" style="background:#d4e0d8;">夏</div>
+                    <div class="info">
+                        <div class="sname">夏爽</div>
+                        <div class="sdesc">1996.5.14 · 清彩大学工程技术学院</div>
+                    </div>
+                </div>
+                <div class="sidebar-member" onclick="openMemberModal('zhangshuo')">
+                    <div class="avatar-placeholder" style="background:#d4d0e8;">张</div>
+                    <div class="info">
+                        <div class="sname">张硕</div>
+                        <div class="sdesc">1997.12.3 · 河南美工学院</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 页脚 ===== -->
+    <div class="footer">
+        <p>© 2026 <strong>Happy Life</strong> · 官方档案 · 仅供内部查阅</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 模态框：人物详情 ===== -->
+    <div class="modal-overlay" id="memberModal" onclick="closeModalOutside(event, 'memberModal')">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('memberModal')">✕</button>
+            <img class="modal-img" id="memberImg" src="" alt="人物照片">
+            <h2 id="memberName">名字</h2>
+            <div class="subinfo" id="memberSub">简介</div>
+            <div class="story-text" id="memberStory"></div>
+            <div class="comment-section" id="memberComments">
+                <div class="c-title">💬 评论区</div>
+                <div id="commentList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 登录弹窗（账号密码输入框已清空） ===== -->
+    <div class="login-overlay" id="loginOverlay" onclick="if(event.target===this) closeLogin()">
+        <div class="login-box">
+            <h3>🔐 登录</h3>
+            <div class="sub">请输入账号密码以访问内部聊天记录</div>
+            <label>用户</label>
+            <input type="text" id="loginUser" placeholder="请输入用户名">
+            <label>密码</label>
+            <input type="password" id="loginPass" placeholder="请输入密码">
+            <button class="login-submit" onclick="handleLogin()">登录</button>
+            <div class="login-error" id="loginError">账号或密码错误，请重试</div>
+            <div class="login-close" onclick="closeLogin()">取消</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== 聊天界面（登录后，新增笔记） ===== -->
+    <div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this) closeChat()">
+        <div class="chat-box">
+            <div class="chat-header">
+                <h3>💬 消息</h3>
+                <button class="close-chat" onclick="closeChat()">✕</button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <!-- 联系人列表 -->
+                <div id="contactList">
+                    <!-- ===== 新增：笔记选项（放在最上面） ===== -->
+                    <div class="chat-contact note" onclick="openNoteDetail()">
+                        <div class="c-avatar">📝</div>
+                        <span class="c-name">笔记</span>
+                        <span class="c-hint">2022.10.26</span>
+                    </div>
+                    <!-- 原有联系人 -->
+                    <div class="chat-contact" onclick="openChatDetail('zhangxizhi')">
+                        <div class="c-avatar">希</div>
+                        <span class="c-name">张希之</span>
+                        <span class="c-hint">3条消息</span>
+                    </div>
+                    <div class="chat-contact" onclick="openChatDetail('zhangshuo')">
+                        <div class="c-avatar">硕</div>
+                        <span class="c-name">张硕</span>
+                        <span class="c-hint">2条消息</span>
+                    </div>
+                    <div class="chat-contact" onclick="openChatDetail('xiashuang')">
+                        <div class="c-avatar">爽</div>
+                        <span class="c-name">夏爽</span>
+                        <span class="c-hint">2条消息</span>
+                    </div>
+                </div>
+                <!-- 聊天详情（复用给笔记） -->
+                <div class="chat-detail" id="chatDetail">
+                    <div class="detail-header">
+                        <button class="back-btn" onclick="backToContactList()">←</button>
+                        <span class="d-name" id="detailName">联系人</span>
+                    </div>
+                    <div class="detail-body" id="detailBody"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        // ========== 人物数据 ==========
+        const memberData = {
+            linfan: {
+                name: '林凡',
+                sub: '1996.4.8 · 清彩大学设计学院',
+                img: 'https://picsum.photos/seed/p1/800/400',
+                story: `<p>林凡，1996年4月8日出生，就读于清彩大学设计学院。在2016年"青华奖"设计大赛中荣获第三名。</p>
+                        <p>2017年八月，游戏《Happy Life》正式上线。2018年五月五日，林凡加入HT有限公司，并在三个月后宣布破产。</p>`,
+                comments: [
+                    { user: '兔崽子炖鸡蛋', time: '2019年3月22日 9:45', text: '好可惜，第一次听到就已经寄了的游戏。' }
+                ]
+            },
+            xiashuang: {
+                name: '夏爽',
+                sub: '1996.5.14 · 清彩大学工程技术学院',
+                img: 'https://picsum.photos/seed/p2/800/400',
+                story: `<p>夏爽，1996年5月14日出生，就读于清彩大学工程技术学院。在校期间经常参加舍友刘帆的采访作业，并因为采访在学校有一定的人气积累。</p>
+                        <p>夏爽曾经说过："我的梦想是创建一个独属于自己的游戏公司。"虽然多数同学对此嗤之以鼻。</p>
+                        <p>2017年八月，夏爽携手林凡等人创作出游戏《Happy Life》并大获成功，此游戏几乎成为了家喻户晓的恐怖游戏，"戒赌"主题更是让游戏升华，拯救了无数家庭。2018年五月五日，夏爽创立HT有限公司，并在三个月后宣布破产，此后杳无音信。</p>`,
+                comments: [
+                    { user: '小羔羊', time: '2020年7月4日 16:33', text: '怎么对这个游戏一点印象都没有？' },
+                    { user: '清风', time: '2020年8月1日 12:20', text: '没听说过啊，我去玩玩看' },
+                    { user: '咯叽', time: '2020年8月1日 13:10', text: '求网址' }
+                ]
+            },
+            zhangshuo: {
+                name: '张硕',
+                sub: '1997.12.3 · 河南美工学院',
+                img: 'https://picsum.photos/seed/p3/800/400',
+                story: `<p>张硕，1997年12月3日出生，就读于河南美工学院。因其外表阳光开朗，被称为"当之无愧的河南美工校草"。</p>
+                        <p>2017年四月正式加入《Happy Life》制作团队。2018年8月15日，张硕在一次校外酒局后失踪，至今下落不明。</p>`,
+                comments: [
+                    { user: '小羊羔', time: '2020年7月4日 16:36', text: '卧艹，模糊的画质，清晰的帅！' },
+                    { user: '河南无言组', time: '2022年7月4日 16:50', text: '真可惜，长得还挺像我隔壁班一个男的。' }
+                ]
+            }
+        };
+
+        // ================================================================
+        // ========== 聊天数据 ==========
+        const chatData = {
+            zhangxizhi: {
+                name: '张希之',
+                messages: [
+                    { time: '2017年3月3日', user: '张希之', text: '不要再继续做下去了，会出问题的！' },
+                    { time: '2017年3月3日', user: '我', text: '不可能在这阶段不做啊。', me: true },
+                    { time: '2017年3月3日', user: '张希之', text: '好，那你们做吧，我不奉陪了！' },
+                    { time: '2017年3月3日', user: '我', text: '好走不送。', me: true },
+                    { time: '2018年8月10日', user: '我', text: '你是不是知道一些事情？', me: true },
+                    { time: '2018年8月10日', user: '张希之', text: '怎么宣布公司破产了？' },
+                    { time: '2018年8月10日', user: '我', text: '我以为，公司破产了，夏爽就能回来了……', me: true },
+                    { time: '2018年8月10日', user: '张希之', text: '……' },
+                    { time: '2018年8月10日', user: '我', text: '所以你知道什么？可以告诉我吗？', me: true },
+                    { time: '2018年8月10日', user: '张希之', text: '我打电话跟你说。' },
+                    { time: '2022年10月26日', user: '我', text: '张希之，我们见一面吧。', me: true },
+                    { time: '2022年10月26日', user: '张希之', text: '好啊' },
+                    { time: '2022年10月26日', user: '张希之', text: '我很想和你见面' },
+                    { time: '2022年10月26日', user: '张希之', text: '约个时间吧' },
+                    { time: '2022年10月26日', user: '我', text: '现在。', me: true }
+                ]
+            },
+            zhangshuo: {
+                name: '张硕',
+                messages: [
+                    { time: '2017年4月3日', user: '我', text: '谢谢你能来接手美工项目。', me: true },
+                    { time: '2017年4月3日', user: '张硕', text: '谢什么啊哥' },
+                    { time: '2017年4月3日', user: '张硕', text: '应该我谢你们啊' },
+                    { time: '2018年8月15日', user: '我', text: '张硕！出来喝点吗？', me: true },
+                    { time: '2018年8月15日', user: '张硕', text: '啊！可以啊' },
+                    { time: '2018年8月15日', user: '张硕', text: '你们当时的庆功宴我就没去成' },
+                    { time: '2018年8月15日', user: '张硕', text: '还说有点可惜呢' },
+                    { time: '2018年8月15日', user: '我', text: '快来，地点离你们学校很近！', me: true }
+                ]
+            },
+            xiashuang: {
+                name: '夏爽',
+                messages: [
+                    { time: '2017年4月3日', user: '夏爽', text: '张硕长得挺好看啊，不愧是校草。' },
+                    { time: '2017年4月3日', user: '我', text: '别那么关注他吧！', me: true },
+                    { time: '2017年4月3日', user: '夏爽', text: '哈哈哈哈，开个玩笑嘛，你才是长到了我心上的人~' },
+                    { time: '2017年4月3日', user: '我', text: '好土啊~', me: true },
+                    { time: '2017年4月3日', user: '夏爽', text: '别逼我打你。' },
+                    { time: '2018年5月5日', user: '我', text: '你的梦想终于达成了！', me: true },
+                    { time: '2018年5月5日', user: '我', text: '要不要出来庆祝一下呀？', me: true }
+                ]
+            }
+        };
+
+        // ================================================================
+        // ========== 模态框控制 ==========
+        function openMemberModal(id) {
+            const data = memberData[id];
+            if (!data) return;
+            document.getElementById('memberImg').src = data.img;
+            document.getElementById('memberName').textContent = data.name;
+            document.getElementById('memberSub').textContent = data.sub;
+            document.getElementById('memberStory').innerHTML = data.story;
+
+            const commentList = document.getElementById('commentList');
+            commentList.innerHTML = '';
+            data.comments.forEach(c => {
+                commentList.innerHTML += `
+                    <div class="comment-item">
+                        <span class="c-user">${c.user}</span>
+                        <span class="c-time">${c.time}</span>
+                        <span class="c-text">${c.text}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('memberModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOutside(event, id) {
+            if (event.target === document.getElementById(id)) {
+                closeModal(id);
+            }
+        }
+
+        // ================================================================
+        // ========== 登录系统 ==========
+        function openLogin() {
+            document.getElementById('loginOverlay').classList.add('active');
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+        }
+
+        function closeLogin() {
+            document.getElementById('loginOverlay').classList.remove('active');
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            if (user === '林凡996' && pass === '1996514') {
+                closeLogin();
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('userBadge').style.display = 'flex';
+                document.getElementById('userNameDisplay').textContent = user;
+                openChat();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('userBadge').style.display = 'none';
+            closeChat();
+        }
+
+        // ================================================================
+        // ========== 聊天系统 ==========
+        function openChat() {
+            document.getElementById('chatOverlay').classList.add('active');
+            document.getElementById('contactList').style.display = 'block';
+            document.getElementById('chatDetail').classList.remove('active');
+        }
+
+        function closeChat() {
+            document.getElementById('chatOverlay').classList.remove('active');
+        }
+
+        function openChatDetail(id) {
+            const data = chatData[id];
+            if (!data) return;
+            document.getElementById('contactList').style.display = 'none';
+            document.getElementById('chatDetail').classList.add('active');
+            document.getElementById('detailName').textContent = data.name;
+
+            const body = document.getElementById('detailBody');
+            body.innerHTML = '';
+            data.messages.forEach(m => {
+                const cls = m.me ? 'me' : '';
+                body.innerHTML += `
+                    <div class="chat-msg">
+                        <span class="msg-time">${m.time}</span>
+                        <span class="msg-user">${m.user}：</span>
+                        <span class="msg-text ${cls}">${m.text}</span>
+                    </div>
+                `;
+            });
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // ================================================================
+        // ========== 笔记功能（新增） ==========
+        function openNoteDetail() {
+            document.getElementById('contactList').style.display = 'none';
+            document.getElementById('chatDetail').classList.add('active');
+            document.getElementById('detailName').textContent = '📝 笔记';
+
+            const body = document.getElementById('detailBody');
+            body.innerHTML = `
+                <div class="note-content">
+                    <span class="note-date">📅 2022年10月26日</span>
+                    <div class="note-text">
+                        我不知道自己还要怎么做，问题到底出在哪里？现在还剩着谁？张希之到底藏了多少秘密？不行，我要找他问清楚……<br><br>
+                        联系张希之的时候感觉他的说话方式好奇怪，发生什么了吗？
+                    </div>
+                </div>
+            `;
+        }
+
+        function backToContactList() {
+            document.getElementById('contactList').style.display = 'block';
+            document.getElementById('chatDetail').classList.remove('active');
+        }
+
+        // ================================================================
+        // ========== 导航平滑滚动 ==========
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Enter键触发登录
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) {
+                handleLogin();
+            }
+            if (e.key === 'Escape') {
+                if (document.getElementById('loginOverlay').classList.contains('active')) closeLogin();
+                if (document.getElementById('chatOverlay').classList.contains('active')) closeChat();
+                if (document.getElementById('memberModal').classList.contains('active')) closeModal('memberModal');
+            }
+        });
+
+        console.log('📁 Happy Life 官方档案已加载！');
+    </script>
+</body>
+</html>
