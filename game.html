@@ -212,7 +212,7 @@
         }
         .login-box .login-close:hover { color: #ddccff; }
 
-        /* ========== 操作面板（登录后） ========== */
+        /* ========== 操作面板 ========== */
         .operation-overlay {
             display: none;
             position: fixed;
@@ -268,7 +268,7 @@
         .op-btn.destroy { border-color: #ff6666; color: #ff8888; }
         .op-btn.exit-op { border-color: #666688; color: #9999bb; }
 
-        /* ========== 销毁确认流程覆盖层 ========== */
+        /* ========== 销毁确认流程 ========== */
         .confirm-overlay {
             display: none;
             position: fixed;
@@ -324,7 +324,7 @@
         }
         .confirm-box .btn-group .no:active { background: #2a2a3a; }
 
-        /* ========== 销毁成功终局界面 ========== */
+        /* ========== 销毁终局 ========== */
         .final-overlay {
             display: none;
             position: fixed;
@@ -372,7 +372,7 @@
         }
         .final-box .final-end.show { display: block; }
 
-        /* ========== 物品栏弹窗 ========== */
+        /* ========== 物品栏 ========== */
         .inventory-overlay {
             display: none;
             position: fixed;
@@ -435,7 +435,7 @@
         }
         .inv-close:active { background: #2a3a4a; }
 
-        /* ========== 官网页面（新版内容） ========== */
+        /* ========== 官网页面 ========== */
         #officialSite {
             display: none;
             position: fixed;
@@ -730,42 +730,153 @@
             box-shadow: 0 0px 0 #0a2a0a;
             pointer-events: none;
         }
-        .shop-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 25px;
-            width: 100%;
-        }
-        .shop-back, .shop-exit {
-            padding: 16px;
-            border-radius: 60px;
-            font-size: 22px;
-            text-align: center;
+        /* 新增：物品互动按钮（锁、唱片机、桌子） */
+        .shop-item .action-btn {
+            background: #3a4a6a;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 22px;
+            color: #ccddff;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.08s;
-            box-shadow: 0 4px 0 #0a1a0a;
+            box-shadow: 0 4px 0 #1a2a3a;
+            margin-left: auto;
+        }
+        .shop-item .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #1a2a3a;
+        }
+        .shop-item .action-btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #1a2a3a;
+            pointer-events: none;
+        }
+        .shop-item .action-btn.lock { background: #3a4a3a; border-color: #3a6a3a; color: #99dd99; }
+        .shop-item .action-btn.record { background: #4a3a4a; border-color: #6a3a6a; color: #dd99dd; }
+        .shop-item .action-btn.table { background: #4a4a3a; border-color: #6a6a3a; color: #dddd99; }
+
+        /* 新增：密码输入弹窗（商店内） */
+        .password-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+        }
+        .password-overlay.active { display: flex; }
+        .password-box {
+            background: #1a1a2a;
+            border: 3px solid #ffdd77;
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(255,220,100,0.15);
+            animation: popIn 0.3s;
+        }
+        .password-box h3 {
+            color: #ffdd77;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .password-box .sub {
+            color: #aa9966;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .password-box input {
             width: 100%;
+            padding: 14px 16px;
+            background: #0f0f1a;
+            border: 2px solid #3a3a2a;
+            border-radius: 40px;
+            color: #ffdd77;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 4px;
+            outline: none;
+            margin-bottom: 18px;
         }
-        .shop-back {
-            background: #1a2a2a;
-            border: 2px solid #3a5a3a;
-            color: #aaddaa;
+        .password-box input:focus {
+            border-color: #ffdd77;
         }
-        .shop-back:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a1a0a;
+        .password-box .pw-submit {
+            width: 100%;
+            padding: 14px;
+            background: #3a3a2a;
+            border: none;
+            border-radius: 40px;
+            color: #ffdd77;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .shop-exit {
-            background: #2a1a1a;
-            border: 2px solid #6a3a3a;
-            color: #dd9999;
-            box-shadow: 0 4px 0 #1a0a0a;
+        .password-box .pw-submit:hover { background: #4a4a3a; }
+        .password-box .pw-error {
+            color: #ff6666;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
         }
-        .shop-exit:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #1a0a0a;
+        .password-box .pw-close {
+            margin-top: 16px;
+            color: #887766;
+            cursor: pointer;
+            font-size: 14px;
         }
+        .password-box .pw-close:hover { color: #ccbbaa; }
+
+        /* ========== 随机内容展示弹窗 ========== */
+        .message-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 1600;
+            backdrop-filter: blur(4px);
+        }
+        .message-overlay.active { display: flex; }
+        .message-box {
+            background: #1a1a1a;
+            border: 2px solid #4a4a4a;
+            border-radius: 30px;
+            padding: 30px 32px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            animation: popIn 0.3s;
+            box-shadow: 0 0 60px rgba(0,0,0,0.6);
+        }
+        .message-box .msg-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .message-box .msg-text {
+            color: #d0c8c0;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .message-box .msg-close {
+            padding: 10px 32px;
+            background: #2a2a2a;
+            border: 1px solid #4a4a4a;
+            border-radius: 40px;
+            color: #b0a8a0;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .message-box .msg-close:hover { background: #3a3a3a; }
 
         /* ========== 通用弹窗动画 ========== */
         @keyframes popIn {
@@ -773,7 +884,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* ========== 奖励 & 购买反馈 ========== */
+        /* ========== Toast ========== */
         .reward-toast {
             display: none;
             position: fixed;
@@ -818,7 +929,7 @@
             text-align: center;
         }
 
-        /* ========== 系统错误弹窗 ========== */
+        /* ========== 错误弹窗 ========== */
         .error-overlay {
             display: none;
             position: fixed;
@@ -859,6 +970,43 @@
             cursor: pointer;
         }
         .error-box .close-error:active { background: #3a2a2a; }
+
+        .shop-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 25px;
+            width: 100%;
+        }
+        .shop-back, .shop-exit {
+            padding: 16px;
+            border-radius: 60px;
+            font-size: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.08s;
+            box-shadow: 0 4px 0 #0a1a0a;
+            width: 100%;
+        }
+        .shop-back {
+            background: #1a2a2a;
+            border: 2px solid #3a5a3a;
+            color: #aaddaa;
+        }
+        .shop-back:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a1a0a;
+        }
+        .shop-exit {
+            background: #2a1a1a;
+            border: 2px solid #6a3a3a;
+            color: #dd9999;
+            box-shadow: 0 4px 0 #1a0a0a;
+        }
+        .shop-exit:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #1a0a0a;
+        }
     </style>
 </head>
 <body>
@@ -898,7 +1046,7 @@
     </div>
 </div>
 
-<!-- ===== 操作面板（登录后） ===== -->
+<!-- ===== 操作面板 ===== -->
 <div class="operation-overlay" id="operationOverlay">
     <div class="operation-box">
         <h2>⚙️ 操作面板</h2>
@@ -909,7 +1057,7 @@
     </div>
 </div>
 
-<!-- ===== 销毁确认流程（多步骤） ===== -->
+<!-- ===== 销毁确认 ===== -->
 <div class="confirm-overlay" id="confirmOverlay">
     <div class="confirm-box">
         <div class="q" id="confirmQuestion">您确定吗？</div>
@@ -920,7 +1068,7 @@
     </div>
 </div>
 
-<!-- ===== 销毁终局界面 ===== -->
+<!-- ===== 销毁终局 ===== -->
 <div class="final-overlay" id="finalOverlay">
     <div class="final-box">
         <div class="big" id="finalBig">销毁成功</div>
@@ -930,7 +1078,7 @@
     </div>
 </div>
 
-<!-- ===== 物品栏弹窗 ===== -->
+<!-- ===== 物品栏 ===== -->
 <div class="inventory-overlay" id="inventoryOverlay">
     <div class="inventory-box">
         <h2>🎒 物品栏</h2>
@@ -939,15 +1087,13 @@
     </div>
 </div>
 
-<!-- ===== 官网页面（新版内容） ===== -->
+<!-- ===== 官网页面 ===== -->
 <div id="officialSite">
     <div class="site-container">
         <div class="site-header">
             <h1>🎨 Happy Life 创作团队</h1>
             <p>—— 用爱发电，用心创作 ——</p>
         </div>
-
-        <!-- 创作人员名单 -->
         <div class="site-section">
             <h2>📋 创作人员名单</h2>
             <ul>
@@ -957,39 +1103,21 @@
                 <li><strong>特别鸣谢：</strong>音乐、鼓点、节奏</li>
             </ul>
         </div>
-
-        <!-- 创作背景 -->
         <div class="site-section">
             <h2>📖 创作背景</h2>
-            <div class="quote">
-                <p><strong>林凡：</strong>大家可能想象不到，我与夏爽、张希之在大学第一学期就找到了人生目标，这一人生目标是夏爽率先提出的，他是一个聪明的女生，比我们都先参悟到一些事物的真谛，所以，Happy Life在她的规划下诞生了。</p>
-            </div>
-            <div class="quote">
-                <p><strong>夏爽：</strong>林凡是我在大学交往的男朋友，当我决定做Happy Life的时候邀请了林凡加入，他的思维能力很强，但表达能力较弱，说话有时会显得前言不搭后语。开个玩笑，一个人有优点就会有缺点，不是吗？</p>
-            </div>
-            <div class="quote">
-                <p><strong>张硕：</strong>我是在项目要结束的时候才参与进来的，当时看招聘说缺少美工设计，我就来应聘了，来了之后才知道，因为上一任美工设计张希之的离职带走了不少设计画稿，所以急需一个新的美术设计，无论我设计的如何，林凡都会聘用我。</p>
-            </div>
+            <div class="quote"><p><strong>林凡：</strong>大家可能想象不到，我与夏爽、张希之在大学第一学期就找到了人生目标，这一人生目标是夏爽率先提出的，他是一个聪明的女生，比我们都先参悟到一些事物的真谛，所以，Happy Life在她的规划下诞生了。</p></div>
+            <div class="quote"><p><strong>夏爽：</strong>林凡是我在大学交往的男朋友，当我决定做Happy Life的时候邀请了林凡加入，他的思维能力很强，但表达能力较弱，说话有时会显得前言不搭后语。开个玩笑，一个人有优点就会有缺点，不是吗？</p></div>
+            <div class="quote"><p><strong>张硕：</strong>我是在项目要结束的时候才参与进来的，当时看招聘说缺少美工设计，我就来应聘了，来了之后才知道，因为上一任美工设计张希之的离职带走了不少设计画稿，所以急需一个新的美术设计，无论我设计的如何，林凡都会聘用我。</p></div>
         </div>
-
-        <!-- 我们的忠告 -->
         <div class="site-section">
             <h2>💡 我们的忠告</h2>
             <p>无论如何，这都是个游戏，切勿沉迷，而且而且而且而且而且而且而且而且而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而</p>
             <p style="margin-top:12px; font-weight:600; color:#c0392b;">不要传播</p>
         </div>
-
-        <!-- 更多相关信息 -->
         <div class="site-section">
             <h2>🔗 更多 Happy Life 相关信息</h2>
-            <p>
-                Happy Life 官网：<br>
-                <a href="https://luhezi0703-oss.github.io/happy-life/" target="_blank" class="site-link">
-                    https://luhezi0703-oss.github.io/happy-life/
-                </a>
-            </p>
+            <p>Happy Life 官网：<br><a href="https://luhezi0703-oss.github.io/happy-life/" target="_blank" class="site-link">https://luhezi0703-oss.github.io/happy-life/</a></p>
         </div>
-
         <button class="site-close" id="siteCloseBtn">✕ 关闭官网</button>
         <div class="site-footer">© 2026 Happy Life 创作团队 · 仅供内部娱乐</div>
     </div>
@@ -1026,13 +1154,11 @@
     </div>
 </div>
 
-<!-- ===== 奖励 Toast ===== -->
+<!-- ===== Toast ===== -->
 <div class="reward-toast" id="rewardToast">🎉 奖励 +100 金币<span>已到账！</span></div>
-
-<!-- ===== 购买反馈 Toast ===== -->
 <div class="buy-toast" id="buyToast"></div>
 
-<!-- ===== 系统错误弹窗 ===== -->
+<!-- ===== 错误弹窗 ===== -->
 <div class="error-overlay" id="errorOverlay">
     <div class="error-box">
         ⚡ 系统错误，请重试
@@ -1041,17 +1167,73 @@
     </div>
 </div>
 
+<!-- ===== 密码输入弹窗（商店内） ===== -->
+<div class="password-overlay" id="passwordOverlay">
+    <div class="password-box">
+        <h3>💵 密码</h3>
+        <div class="sub">请输入密码以获取金币</div>
+        <input type="text" id="passwordInput" placeholder="输入密码">
+        <button class="pw-submit" id="passwordSubmitBtn">确认</button>
+        <div class="pw-error" id="passwordError">密码无效，请重试</div>
+        <div class="pw-close" id="passwordCloseBtn">取消</div>
+    </div>
+</div>
+
+<!-- ===== 随机内容展示弹窗 ===== -->
+<div class="message-overlay" id="messageOverlay">
+    <div class="message-box">
+        <div class="msg-icon" id="msgIcon">📜</div>
+        <div class="msg-text" id="msgText">内容加载中...</div>
+        <button class="msg-close" id="msgCloseBtn">确定</button>
+    </div>
+</div>
+
 <script>
 // ================================================================
-// ========== 商品数据 ==========
+// ========== 商品数据（价格已更新） ==========
 const shopItems = [
-    { id: 'key', icon: '🔑', name: '钥匙', price: 400, maxBuy: Infinity, desc: '在某些地方或许会有很大的作用。', limitText: '' },
+    { id: 'key', icon: '🔑', name: '钥匙', price: 1300, maxBuy: Infinity, desc: '在某些地方或许会有很大的作用。', limitText: '' },
     { id: 'cake', icon: '🍰', name: '蛋糕', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
     { id: 'lollipop', icon: '🍭', name: '棒棒糖', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
-    { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑', price: 200, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
-    { id: 'book', icon: '📖', name: 'Lin 的绘本', price: 200, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
-    { id: 'coinpack', icon: '🪙', name: '100 金币', price: 0, maxBuy: 14, desc: '乱码中间夹杂非必要不够买几个字', limitText: '可购买 14 次' }
+    { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑', price: 1000, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
+    { id: 'book', icon: '📖', name: 'Lin 的绘本', price: 1000, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
+    { id: 'coinpack', icon: '🪙', name: '100 金币', price: 0, maxBuy: 14, desc: '乱码中间夹杂非必要不够买几个字', limitText: '可购买 14 次' },
+    // 新增：密码（不占用库存，单独处理）
+    { id: 'password', icon: '💵', name: '密码', price: 0, maxBuy: Infinity, desc: '输入密码获得额外金币', limitText: '' },
+    // 新增：锁（不占用库存，单独处理）
+    { id: 'lock', icon: '🔒', name: '锁', price: 0, maxBuy: Infinity, desc: '可以用商店中的钥匙打开。', limitText: '' },
+    // 新增：唱片机
+    { id: 'recordplayer', icon: '🎵', name: '唱片机', price: 0, maxBuy: Infinity, desc: '应该能想起来什么。', limitText: '' },
+    // 新增：桌子
+    { id: 'table', icon: '🪑', name: '桌子', price: 0, maxBuy: Infinity, desc: '应该能了解到一些新的事情。', limitText: '' }
 ];
+
+// ========== 锁内容池（每条只能出现一次） ==========
+let lockContentPool = [
+    '据《Happy Life》的忠实玩家所说，自从夏爽创建HT公司后，《Happy Life》就不再对外运营了，大家都无法点进游戏。',
+    '据同校学生透露，林凡似乎并不太喜欢新员工张硕，只是表面功夫装的很好，很少有人能看出来而已。',
+    '因为夏爽工作量较大，张希之有参与到《Happy Life》的代码编写中，所以张希之对《Happy Life》的了解很深，不易忘却。',
+    '网传公司HT并不是因为破产而倒闭，而是因为夏爽的不作为。'
+];
+let lockUsedIndices = [];
+
+// ========== 唱片机内容池 ==========
+let recordContentPool = [
+    '我好像和大家都没有深仇大恨。',
+    '我好像有其他社交账号。',
+    '我好像与某人永远不能相融。',
+    '我的灵魂好像有进入过《Happy Life》。'
+];
+let recordUsedIndices = [];
+
+// ========== 桌子内容池 ==========
+let tableContentPool = [
+    '林凡和夏爽是关系密切、没有隔阂的情侣',
+    '参与代码制作的夏爽发现游戏代码中有很多无法破解的问题，并告知了林凡，但广受好评的游戏和即将达成的愿望让林凡和夏爽决定忽视隐瞒这个问题。',
+    '似乎无法查出网友"清风"的IP。',
+    '因为给了张希之较少的薪水，林凡也似乎也理解张希之的离开，所以决定在项目中保留张希之的名字，但详细介绍中就去掉他了。'
+];
+let tableUsedIndices = [];
 
 // ========== 库存 ==========
 let inventory = {
@@ -1062,10 +1244,10 @@ let inventory = {
 let coins = 200;
 let spinCount = 0;
 let isSpinning = false;
+let destroyStep = 0;
+let isLoggedIn = false;
 
-// ========== 销毁流程状态 ==========
-let destroyStep = 0; // 0=初始确认, 1=第二次确认, 2=第三次确认
-
+// ================================================================
 // ========== DOM 引用 ==========
 const coinDisplay = document.getElementById('coinDisplay');
 const spinCountDisplay = document.getElementById('spinCountDisplay');
@@ -1117,6 +1299,17 @@ const finalSub = document.getElementById('finalSub');
 const finalBtn = document.getElementById('finalBtn');
 const finalEnd = document.getElementById('finalEnd');
 
+const passwordOverlay = document.getElementById('passwordOverlay');
+const passwordInput = document.getElementById('passwordInput');
+const passwordSubmitBtn = document.getElementById('passwordSubmitBtn');
+const passwordError = document.getElementById('passwordError');
+const passwordCloseBtn = document.getElementById('passwordCloseBtn');
+
+const messageOverlay = document.getElementById('messageOverlay');
+const msgIcon = document.getElementById('msgIcon');
+const msgText = document.getElementById('msgText');
+const msgCloseBtn = document.getElementById('msgCloseBtn');
+
 const btnGameStart = document.getElementById('btnGameStart');
 const btnExitStart = document.getElementById('btnExitStart');
 const btnMenuStart = document.getElementById('btnMenuStart');
@@ -1139,25 +1332,250 @@ function updateCoins() {
     coinDisplay.textContent = coins;
 }
 
-// ========== 奖励提示 ==========
+// ========== Toast ==========
 function showReward() {
     rewardToast.style.display = 'block';
     setTimeout(() => { rewardToast.style.display = 'none'; }, 2000);
 }
 
-// ========== 购买反馈 ==========
 function showBuyToast(msg) {
     buyToast.textContent = msg;
     buyToast.style.display = 'block';
     setTimeout(() => { buyToast.style.display = 'none'; }, 1500);
 }
 
-// ========== 系统错误 ==========
+// ========== 错误弹窗 ==========
 function showError() { errorOverlay.classList.add('active'); }
 function hideError() { errorOverlay.classList.remove('active'); }
 closeErrorBtn.addEventListener('click', hideError);
 errorOverlay.addEventListener('click', function(e) {
     if (e.target === errorOverlay) hideError();
+});
+
+// ========== 随机整数 ==========
+function rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ========== 密码池匹配 ==========
+function checkPassword(input) {
+    // 去掉空格，统一格式
+    const clean = input.replace(/\s/g, '');
+    
+    // 第一组：增加100-200金币
+    const group1 = ['5497','6648','8761','3254','6678','6481','6546','2216','6646','6215','4125','6687','6331','6655','7741','2369','8688','9955','2214','6354','2158','3781','8524','7225','5316','5789','9533','1472','3905','5193','7026','4839','2701','9140','3075','5812','8297'];
+    if (group1.includes(clean)) {
+        const reward = rand(100, 200);
+        coins += reward;
+        updateCoins();
+        showBuyToast('💰 获得 ' + reward + ' 金币！');
+        return true;
+    }
+    
+    // 第二组：增加200-400金币
+    const group2 = ['1036','1159','1382','1507','1693','1825','1948','3102','3279','3461','3587','3690','3814','4017','4238','4362','4570','4793','4906','7135','7308','7469','7592','7810','8037','8156','8372','8491','9028','9264'];
+    if (group2.includes(clean)) {
+        const reward = rand(200, 400);
+        coins += reward;
+        updateCoins();
+        showBuyToast('💰 获得 ' + reward + ' 金币！');
+        return true;
+    }
+    
+    // 第三组：增加500-800金币
+    const group3 = ['0179','0253','0418','0562','0734','0891','1209','1743','2067','2419','2603','2851','3094','3715','4082','4627','5013','5290','6071','6932'];
+    if (group3.includes(clean)) {
+        const reward = rand(500, 800);
+        coins += reward;
+        updateCoins();
+        showBuyToast('💰 获得 ' + reward + ' 金币！');
+        return true;
+    }
+    
+    return false;
+}
+
+// ========== 随机抽取内容（不重复） ==========
+function getRandomContent(pool, usedIndices) {
+    if (usedIndices.length >= pool.length) {
+        return null; // 所有内容已用完
+    }
+    let available = [];
+    for (let i = 0; i < pool.length; i++) {
+        if (!usedIndices.includes(i)) {
+            available.push(i);
+        }
+    }
+    if (available.length === 0) return null;
+    const idx = available[rand(0, available.length - 1)];
+    usedIndices.push(idx);
+    return pool[idx];
+}
+
+// ========== 显示消息弹窗 ==========
+function showMessage(icon, text) {
+    msgIcon.textContent = icon;
+    msgText.textContent = text;
+    messageOverlay.classList.add('active');
+}
+
+msgCloseBtn.addEventListener('click', function() {
+    messageOverlay.classList.remove('active');
+});
+messageOverlay.addEventListener('click', function(e) {
+    if (e.target === messageOverlay) messageOverlay.classList.remove('active');
+});
+
+// ================================================================
+// ========== 商店渲染 ==========
+function renderShop() {
+    let html = '';
+    shopItems.forEach(item => {
+        const bought = inventory[item.id] || 0;
+        const isCoinPack = item.id === 'coinpack';
+        const isPassword = item.id === 'password';
+        const isLock = item.id === 'lock';
+        const isRecord = item.id === 'recordplayer';
+        const isTable = item.id === 'table';
+        const priceDisplay = (isCoinPack || isPassword || isLock || isRecord || isTable) ? '' : `${item.price} 币`;
+        const disabled = (bought >= item.maxBuy) || (isCoinPack ? false : coins < item.price);
+        
+        let descText = item.desc;
+        if (isCoinPack) descText = generateGarbledText();
+        
+        // 特殊处理锁：显示可用钥匙数量
+        let extraInfo = '';
+        if (isLock) {
+            const keyCount = inventory.key || 0;
+            extraInfo = ` (可用钥匙：${keyCount})`;
+        }
+        if (isRecord) {
+            const cdCount = inventory.cd || 0;
+            extraInfo = ` (可用专辑：${cdCount})`;
+        }
+        if (isTable) {
+            const bookCount = inventory.book || 0;
+            extraInfo = ` (可用绘本：${bookCount})`;
+        }
+        
+        html += `
+            <div class="shop-item">
+                <div class="icon">${item.icon}</div>
+                <div class="info">
+                    <div class="name">${item.name}</div>
+                    <div class="desc">${descText}${extraInfo}</div>
+                    <div class="limit">${item.limitText || ''} ${bought > 0 ? `(已购 ${bought})` : ''}</div>
+                </div>
+                <div class="price">${priceDisplay}</div>
+                ${isPassword ? `<button class="buy-btn" id="passwordOpenBtn">输入</button>` :
+                  isLock ? `<button class="action-btn lock" id="lockUseBtn" ${(inventory.key || 0) === 0 ? 'disabled' : ''}>🔑 使用钥匙</button>` :
+                  isRecord ? `<button class="action-btn record" id="recordUseBtn" ${(inventory.cd || 0) === 0 ? 'disabled' : ''}>💿 投入专辑</button>` :
+                  isTable ? `<button class="action-btn table" id="tableUseBtn" ${(inventory.book || 0) === 0 ? 'disabled' : ''}>📖 投入绘本</button>` :
+                  `<button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>购买</button>`}
+            </div>
+        `;
+    });
+    shopItemsContainer.innerHTML = html;
+    
+    // 购买事件
+    document.querySelectorAll('.shop-item .buy-btn[data-id]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            handleBuy(id);
+        });
+    });
+    
+    // 密码输入按钮
+    const pwBtn = document.getElementById('passwordOpenBtn');
+    if (pwBtn) {
+        pwBtn.addEventListener('click', function() {
+            passwordInput.value = '';
+            passwordError.style.display = 'none';
+            passwordOverlay.classList.add('active');
+            passwordInput.focus();
+        });
+    }
+    
+    // 锁使用按钮
+    const lockBtn = document.getElementById('lockUseBtn');
+    if (lockBtn) {
+        lockBtn.addEventListener('click', function() {
+            if ((inventory.key || 0) <= 0) {
+                showBuyToast('没有钥匙！');
+                return;
+            }
+            const content = getRandomContent(lockContentPool, lockUsedIndices);
+            if (content === null) {
+                showBuyToast('所有秘密已解锁！');
+                return;
+            }
+            inventory.key -= 1;
+            showMessage('🔓', content);
+            renderShop();
+        });
+    }
+    
+    // 唱片机使用按钮
+    const recordBtn = document.getElementById('recordUseBtn');
+    if (recordBtn) {
+        recordBtn.addEventListener('click', function() {
+            if ((inventory.cd || 0) <= 0) {
+                showBuyToast('没有Rico Zayd专辑！');
+                return;
+            }
+            const content = getRandomContent(recordContentPool, recordUsedIndices);
+            if (content === null) {
+                showBuyToast('所有回忆已解锁！');
+                return;
+            }
+            inventory.cd -= 1;
+            showMessage('🎵', content);
+            renderShop();
+        });
+    }
+    
+    // 桌子使用按钮
+    const tableBtn = document.getElementById('tableUseBtn');
+    if (tableBtn) {
+        tableBtn.addEventListener('click', function() {
+            if ((inventory.book || 0) <= 0) {
+                showBuyToast('没有Lin的绘本！');
+                return;
+            }
+            const content = getRandomContent(tableContentPool, tableUsedIndices);
+            if (content === null) {
+                showBuyToast('所有知识已解锁！');
+                return;
+            }
+            inventory.book -= 1;
+            showMessage('📖', content);
+            renderShop();
+        });
+    }
+}
+
+// ========== 密码提交 ==========
+passwordSubmitBtn.addEventListener('click', function() {
+    const input = passwordInput.value.trim();
+    if (checkPassword(input)) {
+        passwordOverlay.classList.remove('active');
+        renderShop();
+    } else {
+        passwordError.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+    }
+});
+passwordCloseBtn.addEventListener('click', function() {
+    passwordOverlay.classList.remove('active');
+});
+passwordOverlay.addEventListener('click', function(e) {
+    if (e.target === passwordOverlay) passwordOverlay.classList.remove('active');
+});
+passwordInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        passwordSubmitBtn.click();
+    }
 });
 
 // ========== 生成乱码 ==========
@@ -1175,39 +1593,7 @@ function generateGarbledText() {
     return result;
 }
 
-// ================================================================
-// ========== 商店 ==========
-function renderShop() {
-    let html = '';
-    shopItems.forEach(item => {
-        const bought = inventory[item.id] || 0;
-        const isCoinPack = item.id === 'coinpack';
-        const priceDisplay = isCoinPack ? '' : `${item.price} 币`;
-        const disabled = (bought >= item.maxBuy) || (isCoinPack ? false : coins < item.price);
-        let descText = item.desc;
-        if (isCoinPack) descText = generateGarbledText();
-        html += `
-            <div class="shop-item">
-                <div class="icon">${item.icon}</div>
-                <div class="info">
-                    <div class="name">${item.name}</div>
-                    <div class="desc">${descText}</div>
-                    <div class="limit">${item.limitText || ''} ${bought > 0 ? `(已购 ${bought})` : ''}</div>
-                </div>
-                <div class="price">${priceDisplay}</div>
-                <button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>购买</button>
-            </div>
-        `;
-    });
-    shopItemsContainer.innerHTML = html;
-    document.querySelectorAll('.shop-item .buy-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            handleBuy(id);
-        });
-    });
-}
-
+// ========== 购买逻辑 ==========
 function handleBuy(id) {
     const item = shopItems.find(i => i.id === id);
     if (!item) return;
@@ -1367,7 +1753,6 @@ document.addEventListener('keydown', function(e) {
 // ========== 操作面板 ==========
 function closeOperation() {
     operationOverlay.classList.remove('active');
-    // 重置销毁流程状态
     destroyStep = 0;
 }
 
@@ -1376,12 +1761,10 @@ operationOverlay.addEventListener('click', function(e) {
     if (e.target === operationOverlay) closeOperation();
 });
 
-// 修改程序
 opModifyBtn.addEventListener('click', function() {
     alert('程序已经固定并投入使用，无法修改');
 });
 
-// 销毁程序 - 多步骤确认
 opDestroyBtn.addEventListener('click', function() {
     destroyStep = 0;
     confirmQuestion.textContent = '您确定吗？';
@@ -1395,10 +1778,8 @@ confirmYes.addEventListener('click', function() {
     } else if (destroyStep === 2) {
         confirmQuestion.textContent = '销毁程序，林凡或许会永远被困在这里';
     } else if (destroyStep === 3) {
-        // 销毁成功，进入终局
         confirmOverlay.classList.remove('active');
         operationOverlay.classList.remove('active');
-        // 显示终局界面
         finalBig.textContent = '销毁成功';
         finalSub.textContent = '';
         finalEnd.classList.remove('show');
@@ -1410,7 +1791,6 @@ confirmYes.addEventListener('click', function() {
 
 confirmNo.addEventListener('click', function() {
     confirmOverlay.classList.remove('active');
-    // 回到主界面
     showPage('startPage');
     closeOperation();
 });
@@ -1424,7 +1804,7 @@ confirmOverlay.addEventListener('click', function(e) {
 });
 
 // ================================================================
-// ========== 终局界面 ==========
+// ========== 终局 ==========
 finalBtn.addEventListener('click', function() {
     finalSub.textContent = '';
     finalEnd.classList.add('show');
@@ -1433,13 +1813,11 @@ finalBtn.addEventListener('click', function() {
 
 finalOverlay.addEventListener('click', function() {
     if (finalEnd.classList.contains('show')) {
-        // 显示游戏结束
         finalBig.textContent = '游戏结束';
         finalSub.textContent = '';
         finalEnd.classList.remove('show');
         finalBtn.style.display = 'none';
     } else {
-        // 第一次点击：显示存在与消失
         finalSub.textContent = '存在与消失，已无区别';
     }
 });
@@ -1504,7 +1882,15 @@ spinBtn.addEventListener('click', spinReels);
 // ESC 键关闭各种覆盖层
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        if (finalOverlay.classList.contains('active')) return; // 终局不让ESC
+        if (finalOverlay.classList.contains('active')) return;
+        if (messageOverlay.classList.contains('active')) {
+            messageOverlay.classList.remove('active');
+            return;
+        }
+        if (passwordOverlay.classList.contains('active')) {
+            passwordOverlay.classList.remove('active');
+            return;
+        }
         if (confirmOverlay.classList.contains('active')) {
             confirmOverlay.classList.remove('active');
             showPage('startPage');
