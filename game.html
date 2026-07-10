@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Life · 四人版</title>
+    <style>
+        /* ========== 全局重置 ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body {
+            background: #0b0a0c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+        }
+        .page {
+            max-width: 460px;
+            width: 100%;
+            min-height: 700px;
+            position: relative;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .page.active { display: flex; }
+
+        /* ========== 开始界面 ========== */
+        #startPage {
+            background: radial-gradient(circle at 30% 40%, #1a0f0f, #0a0505);
+            border-radius: 50px;
+            border: 2px solid #6a1a1a;
+            padding: 50px 30px;
+            box-shadow: 0 0 60px rgba(150, 0, 0, 0.4);
+            justify-content: center;
+            gap: 40px;
+        }
+        #startPage h1 {
+            color: #cc2222;
+            font-size: 38px;
+            text-shadow: 0 0 30px #ff000088;
+            letter-spacing: 6px;
+            text-align: center;
+        }
+        .start-btn {
+            width: 100%;
+            padding: 22px;
+            font-size: 26px;
+            font-weight: bold;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(180deg, #2a1a1a, #1a0a0a);
+            color: #d4b0b0;
+            border: 2px solid #6a2a2a;
+            box-shadow: 0 6px 0 #2a0a0a;
+            cursor: pointer;
+            transition: all 0.08s;
+            letter-spacing: 4px;
+        }
+        .start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #2a0a0a;
+        }
+        .start-btn.game { background: linear-gradient(180deg, #3a1a1a, #1f0a0a); border-color: #aa3333; color: #ffbbbb; }
+        .start-btn.exit { background: linear-gradient(180deg, #1a1a2a, #0a0a1a); border-color: #444466; color: #9999bb; }
+        .start-btn.menu { background: linear-gradient(180deg, #1a2a1a, #0a1a0a); border-color: #446644; color: #99bb99; }
+
+        /* ========== Menu 弹出层 ========== */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .menu-overlay.active { display: flex; }
+        .menu-box {
+            background: #1a1a2a;
+            border: 3px solid #66aa66;
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(0,255,100,0.2);
+            animation: popIn 0.3s;
+        }
+        .menu-box h2 {
+            color: #88dd88;
+            font-size: 32px;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+        }
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 18px;
+            font-size: 24px;
+            font-weight: bold;
+            background: #0f0f1f;
+            border: 2px solid #3a5a3a;
+            border-radius: 60px;
+            color: #ccddcc;
+            cursor: pointer;
+            transition: all 0.08s;
+            box-shadow: 0 4px 0 #0a1a0a;
+        }
+        .menu-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a1a0a;
+        }
+        .menu-btn.inventory { border-color: #66aaff; color: #88ddff; }
+        .menu-btn.website { border-color: #ffaa66; color: #ffdd88; }
+        .menu-btn.login { border-color: #dd88ff; color: #ddbbff; }
+        .menu-close {
+            margin-top: 10px;
+            padding: 14px;
+            background: #2a1a1a;
+            border: 2px solid #6a3a3a;
+            border-radius: 60px;
+            color: #dd9999;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .menu-close:active { background: #3a2a2a; }
+
+        /* ========== 登录弹窗 ========== */
+        .login-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+        .login-overlay.active { display: flex; }
+        .login-box {
+            background: #1a1a2a;
+            border: 3px solid #dd88ff;
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(200,100,255,0.15);
+            animation: popIn 0.3s;
+        }
+        .login-box h2 {
+            color: #dd88ff;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .login-box .sub {
+            color: #8866aa;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .login-box label {
+            color: #ccbbdd;
+            font-size: 14px;
+            display: block;
+            text-align: left;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #3a2a4a;
+            border-radius: 30px;
+            background: #0f0f1a;
+            color: #ddccff;
+            font-size: 16px;
+            margin-bottom: 18px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .login-box input:focus {
+            border-color: #dd88ff;
+            box-shadow: 0 0 20px rgba(200,100,255,0.15);
+        }
+        .login-box .login-submit {
+            width: 100%;
+            padding: 14px;
+            background: #3a2a4a;
+            border: 2px solid #6a4a8a;
+            border-radius: 60px;
+            color: #ddccff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-box .login-submit:active { background: #4a3a5a; }
+        .login-box .login-error {
+            color: #ff6666;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
+        .login-box .login-close {
+            margin-top: 16px;
+            color: #8866aa;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-box .login-close:hover { color: #ddccff; }
+
+        /* ========== 操作面板（登录后） ========== */
+        .operation-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+        }
+        .operation-overlay.active { display: flex; }
+        .operation-box {
+            background: #1a1a2a;
+            border: 3px solid #ff88dd;
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(255,100,200,0.15);
+            animation: popIn 0.3s;
+        }
+        .operation-box h2 {
+            color: #ff88dd;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .operation-box .welcome {
+            color: #cc99bb;
+            font-size: 16px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .op-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 14px;
+            font-size: 20px;
+            font-weight: bold;
+            background: #1a0f1a;
+            border: 2px solid #4a3a4a;
+            border-radius: 60px;
+            color: #ddccdd;
+            cursor: pointer;
+            transition: 0.08s;
+            box-shadow: 0 4px 0 #0a0a0a;
+        }
+        .op-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a0a0a;
+        }
+        .op-btn.modify { border-color: #66aaff; color: #88ddff; }
+        .op-btn.destroy { border-color: #ff6666; color: #ff8888; }
+        .op-btn.exit-op { border-color: #666688; color: #9999bb; }
+
+        /* ========== 销毁确认流程覆盖层 ========== */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1300;
+        }
+        .confirm-overlay.active { display: flex; }
+        .confirm-box {
+            background: #1a0a0a;
+            border: 3px solid #ff3333;
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(255,0,0,0.2);
+            animation: popIn 0.3s;
+        }
+        .confirm-box .q {
+            color: #ff6666;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .confirm-box .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        .confirm-box .btn-group button {
+            padding: 14px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.08s;
+        }
+        .confirm-box .btn-group .yes {
+            background: #3a1a1a;
+            border: 2px solid #aa3333;
+            color: #ff8888;
+        }
+        .confirm-box .btn-group .yes:active { background: #4a2a2a; }
+        .confirm-box .btn-group .no {
+            background: #1a1a2a;
+            border: 2px solid #444466;
+            color: #9999bb;
+        }
+        .confirm-box .btn-group .no:active { background: #2a2a3a; }
+
+        /* ========== 销毁成功终局界面 ========== */
+        .final-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 1400;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .final-overlay.active { display: flex; }
+        .final-box {
+            text-align: center;
+            color: #ff4444;
+            animation: popIn 0.5s;
+        }
+        .final-box .big {
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 0 0 40px #ff000066;
+            margin-bottom: 20px;
+        }
+        .final-box .sub {
+            font-size: 22px;
+            color: #aa6666;
+            margin-bottom: 30px;
+        }
+        .final-box .final-btn {
+            padding: 16px 40px;
+            background: #2a1a1a;
+            border: 2px solid #aa3333;
+            border-radius: 60px;
+            color: #ff8888;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .final-box .final-btn:active { background: #3a2a2a; }
+        .final-box .final-end {
+            margin-top: 30px;
+            color: #664444;
+            font-size: 18px;
+            display: none;
+        }
+        .final-box .final-end.show { display: block; }
+
+        /* ========== 物品栏弹窗 ========== */
+        .inventory-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        .inventory-overlay.active { display: flex; }
+        .inventory-box {
+            background: #12121f;
+            border: 3px solid #66aaff;
+            border-radius: 40px;
+            padding: 30px 25px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 80px rgba(100,170,255,0.15);
+            animation: popIn 0.3s;
+        }
+        .inventory-box h2 {
+            color: #88ddff;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2a4a6a;
+            padding-bottom: 12px;
+        }
+        .inv-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            background: #0a0a18;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border: 1px solid #2a4a6a;
+        }
+        .inv-item .icon { font-size: 32px; width: 50px; text-align: center; }
+        .inv-item .name { color: #ddffdd; font-size: 20px; }
+        .inv-item .count { color: #88aaff; font-size: 18px; margin-left: auto; }
+        .inv-empty {
+            color: #6688aa;
+            text-align: center;
+            padding: 30px 0;
+            font-size: 20px;
+        }
+        .inv-close {
+            margin-top: 20px;
+            padding: 14px;
+            background: #1a2a3a;
+            border: 2px solid #3a5a7a;
+            border-radius: 60px;
+            color: #88bbdd;
+            font-size: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .inv-close:active { background: #2a3a4a; }
+
+        /* ========== 官网页面（新版内容） ========== */
+        #officialSite {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #f5f0eb;
+            z-index: 2000;
+            overflow-y: auto;
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            padding: 20px;
+        }
+        #officialSite.active { display: block; }
+        .site-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 40px 45px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+        .site-header {
+            text-align: center;
+            border-bottom: 3px solid #d4c5b2;
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+        .site-header h1 {
+            font-size: 44px;
+            color: #3d2b1f;
+            letter-spacing: 6px;
+            font-weight: 700;
+        }
+        .site-header p {
+            color: #8a7a6a;
+            font-size: 18px;
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
+        .site-section {
+            margin-bottom: 38px;
+            background: #faf8f5;
+            border-radius: 24px;
+            padding: 25px 30px;
+            border-left: 6px solid #b8a594;
+        }
+        .site-section h2 {
+            font-size: 28px;
+            color: #4a372a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .site-section p, .site-section li {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #3d3a36;
+        }
+        .site-section ul {
+            padding-left: 25px;
+            list-style-type: square;
+        }
+        .site-section ul li { margin-bottom: 6px; }
+        .site-section .quote {
+            font-style: italic;
+            color: #6a5a4a;
+            padding: 12px 20px;
+            background: #f0ece6;
+            border-radius: 12px;
+            margin: 8px 0;
+        }
+        .site-close {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 40px;
+            background: #3d2b1f;
+            border: none;
+            border-radius: 60px;
+            color: #f5f0eb;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .site-close:hover { background: #5a4030; }
+        .site-footer {
+            text-align: center;
+            color: #aaa69a;
+            font-size: 14px;
+            border-top: 1px solid #e0d6cc;
+            padding-top: 25px;
+            margin-top: 20px;
+        }
+        .site-link {
+            color: #c0392b;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .site-link:hover { color: #8a2a1a; }
+
+        /* ========== 老虎机界面 ========== */
+        #gamePage {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 40px;
+            padding: 25px 18px 35px;
+            border: 3px solid #ff0066;
+            box-shadow: 0 0 50px rgba(255, 0, 100, 0.3);
+            position: relative;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #ffaa44;
+            font-size: 18px;
+            background: #00000055;
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid #ffaa0066;
+        }
+        .top-bar .coins { font-weight: bold; color: #ffdd77; text-shadow: 0 0 15px #ffaa00aa; }
+        .top-bar .spin-count { color: #88aaff; }
+
+        .screen {
+            background: #0f0e17;
+            border-radius: 30px;
+            padding: 25px 10px;
+            border: 3px solid #ff0066;
+            margin: 10px 0 20px;
+            box-shadow: inset 0 0 40px #00000088;
+        }
+        .reels {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 8px;
+        }
+        .reel {
+            font-size: 72px;
+            background: #1a1926;
+            padding: 18px 0;
+            width: 30%;
+            text-align: center;
+            border-radius: 25px;
+            border: 2px solid #555;
+            color: #fff;
+            text-shadow: 0 0 30px #ff006644;
+            transition: all 0.1s;
+            min-height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .spin-btn {
+            width: 100%;
+            padding: 22px;
+            font-size: 30px;
+            font-weight: bold;
+            background: linear-gradient(180deg, #ff1a4a, #b30033);
+            border: none;
+            border-radius: 60px;
+            color: white;
+            letter-spacing: 6px;
+            box-shadow: 0 8px 0 #66001a;
+            cursor: pointer;
+            transition: all 0.08s ease;
+            margin-top: 6px;
+            text-shadow: 0 2px 4px #00000088;
+        }
+        .spin-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #66001a;
+        }
+        .spin-btn:disabled {
+            opacity: 0.5;
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #66001a;
+        }
+        .hint {
+            color: #8888aa;
+            text-align: center;
+            margin: 12px 0 20px;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .bottom-btn {
+            flex: 1;
+            padding: 16px 0;
+            font-size: 22px;
+            font-weight: bold;
+            border: 2px solid #555;
+            border-radius: 50px;
+            background: #1a1a2a;
+            color: #ccccdd;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.08s;
+            box-shadow: 0 4px 0 #0a0a12;
+        }
+        .bottom-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0a0a12;
+        }
+        .bottom-btn.shop { background: #1a2a1a; border-color: #3a6a3a; color: #99dd99; }
+        .bottom-btn.exit-btn { background: #2a1a1a; border-color: #6a3a3a; color: #dd9999; }
+
+        /* ========== 商店界面 ========== */
+        #shopPage {
+            background: linear-gradient(145deg, #1a1a2a, #0f0f1a);
+            border-radius: 40px;
+            padding: 25px 18px 35px;
+            border: 3px solid #66aa66;
+            box-shadow: 0 0 50px rgba(0, 255, 100, 0.15);
+            min-height: 700px;
+            position: relative;
+        }
+        #shopPage h2 {
+            color: #88dd88;
+            text-align: center;
+            font-size: 32px;
+            letter-spacing: 4px;
+            border-bottom: 2px solid #2a4a2a;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .shop-item {
+            background: #12121f;
+            border: 1px solid #2a4a2a;
+            border-radius: 20px;
+            padding: 15px 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .shop-item .icon { font-size: 36px; width: 50px; text-align: center; }
+        .shop-item .info {
+            flex: 1;
+            min-width: 140px;
+        }
+        .shop-item .info .name {
+            color: #ddffdd;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .shop-item .info .desc {
+            color: #99aa99;
+            font-size: 14px;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .shop-item .info .limit {
+            color: #cc8844;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+        .shop-item .price {
+            color: #ffdd77;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        .shop-item .buy-btn {
+            background: #2a4a2a;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 22px;
+            color: #ddffdd;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.08s;
+            box-shadow: 0 4px 0 #0a2a0a;
+            margin-left: auto;
+        }
+        .shop-item .buy-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a2a0a;
+        }
+        .shop-item .buy-btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a2a0a;
+            pointer-events: none;
+        }
+        .shop-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 25px;
+            width: 100%;
+        }
+        .shop-back, .shop-exit {
+            padding: 16px;
+            border-radius: 60px;
+            font-size: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.08s;
+            box-shadow: 0 4px 0 #0a1a0a;
+            width: 100%;
+        }
+        .shop-back {
+            background: #1a2a2a;
+            border: 2px solid #3a5a3a;
+            color: #aaddaa;
+        }
+        .shop-back:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #0a1a0a;
+        }
+        .shop-exit {
+            background: #2a1a1a;
+            border: 2px solid #6a3a3a;
+            color: #dd9999;
+            box-shadow: 0 4px 0 #1a0a0a;
+        }
+        .shop-exit:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #1a0a0a;
+        }
+
+        /* ========== 通用弹窗动画 ========== */
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ========== 奖励 & 购买反馈 ========== */
+        .reward-toast {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a3a1a;
+            border: 3px solid #66dd66;
+            border-radius: 30px;
+            padding: 20px 40px;
+            color: #bbffbb;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 0 60px #66dd6688;
+            z-index: 1000;
+            text-align: center;
+            animation: popIn 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .reward-toast span {
+            font-size: 20px;
+            display: block;
+            color: #aaddaa;
+            margin-top: 5px;
+        }
+        .buy-toast {
+            display: none;
+            position: fixed;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a2a1a;
+            border: 2px solid #88dd88;
+            border-radius: 20px;
+            padding: 16px 30px;
+            color: #ddffdd;
+            font-size: 22px;
+            box-shadow: 0 0 40px #88dd8844;
+            z-index: 1001;
+            animation: popIn 0.3s;
+            text-align: center;
+        }
+
+        /* ========== 系统错误弹窗 ========== */
+        .error-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .error-overlay.active { display: flex; }
+        .error-box {
+            background: #1a0a0a;
+            border: 3px solid #ff3333;
+            border-radius: 30px;
+            padding: 40px 30px;
+            max-width: 320px;
+            text-align: center;
+            color: #ff6666;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 0 80px #ff000066;
+            animation: popIn 0.3s;
+        }
+        .error-box small {
+            display: block;
+            font-size: 16px;
+            color: #aa5555;
+            margin-top: 10px;
+        }
+        .error-box .close-error {
+            margin-top: 25px;
+            padding: 12px 40px;
+            background: #2a1a1a;
+            border: 2px solid #6a2a2a;
+            border-radius: 40px;
+            color: #ffaaaa;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .error-box .close-error:active { background: #3a2a2a; }
+    </style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- ===== 开始界面 ===== -->
+<div id="startPage" class="page active">
+    <h1>🎰 Happy Life</h1>
+    <button class="start-btn game" id="btnGameStart">▶ Game Start</button>
+    <button class="start-btn exit" id="btnExitStart">✖ Exit</button>
+    <button class="start-btn menu" id="btnMenuStart">☰ Menu</button>
+</div>
+
+<!-- ===== Menu 弹出层 ===== -->
+<div class="menu-overlay" id="menuOverlay">
+    <div class="menu-box">
+        <h2>☰ Menu</h2>
+        <button class="menu-btn inventory" id="menuInventoryBtn">🎒 物品栏</button>
+        <button class="menu-btn website" id="menuWebsiteBtn">🌐 官网网址</button>
+        <button class="menu-btn login" id="menuLoginBtn">🔐 登录</button>
+        <div class="menu-close" id="menuCloseBtn">关闭</div>
+    </div>
+</div>
+
+<!-- ===== 登录弹窗 ===== -->
+<div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+        <h2>🔐 登录</h2>
+        <div class="sub">请输入账号密码</div>
+        <label>账户</label>
+        <input type="text" id="loginUser" placeholder="请输入账户">
+        <label>密码</label>
+        <input type="password" id="loginPass" placeholder="请输入密码">
+        <button class="login-submit" id="loginSubmitBtn">登录</button>
+        <div class="login-error" id="loginError">账户或密码错误，请重试</div>
+        <div class="login-close" id="loginCloseBtn">取消</div>
+    </div>
+</div>
+
+<!-- ===== 操作面板（登录后） ===== -->
+<div class="operation-overlay" id="operationOverlay">
+    <div class="operation-box">
+        <h2>⚙️ 操作面板</h2>
+        <div class="welcome">欢迎你！总程序员张希之！<br>您想要进行什么操作？</div>
+        <button class="op-btn modify" id="opModifyBtn">📝 修改程序</button>
+        <button class="op-btn destroy" id="opDestroyBtn">💀 销毁程序</button>
+        <button class="op-btn exit-op" id="opExitBtn">Exit</button>
+    </div>
+</div>
+
+<!-- ===== 销毁确认流程（多步骤） ===== -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <div class="q" id="confirmQuestion">您确定吗？</div>
+        <div class="btn-group" id="confirmBtnGroup">
+            <button class="yes" id="confirmYes">确定</button>
+            <button class="no" id="confirmNo">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 销毁终局界面 ===== -->
+<div class="final-overlay" id="finalOverlay">
+    <div class="final-box">
+        <div class="big" id="finalBig">销毁成功</div>
+        <div class="sub" id="finalSub"></div>
+        <button class="final-btn" id="finalBtn">林凡呢？</button>
+        <div class="final-end" id="finalEnd">存在与消失，已无区别</div>
+    </div>
+</div>
+
+<!-- ===== 物品栏弹窗 ===== -->
+<div class="inventory-overlay" id="inventoryOverlay">
+    <div class="inventory-box">
+        <h2>🎒 物品栏</h2>
+        <div id="inventoryList"></div>
+        <div class="inv-close" id="invCloseBtn">关闭</div>
+    </div>
+</div>
+
+<!-- ===== 官网页面（新版内容） ===== -->
+<div id="officialSite">
+    <div class="site-container">
+        <div class="site-header">
+            <h1>🎨 Happy Life 创作团队</h1>
+            <p>—— 用爱发电，用心创作 ——</p>
+        </div>
+
+        <!-- 创作人员名单 -->
+        <div class="site-section">
+            <h2>📋 创作人员名单</h2>
+            <ul>
+                <li><strong>发起人：</strong>林凡 夏爽</li>
+                <li><strong>代码 / 设计：</strong>夏爽 张希之</li>
+                <li><strong>美工：</strong>张希之 张硕</li>
+                <li><strong>特别鸣谢：</strong>音乐、鼓点、节奏</li>
+            </ul>
+        </div>
+
+        <!-- 创作背景 -->
+        <div class="site-section">
+            <h2>📖 创作背景</h2>
+            <div class="quote">
+                <p><strong>林凡：</strong>大家可能想象不到，我与夏爽、张希之在大学第一学期就找到了人生目标，这一人生目标是夏爽率先提出的，他是一个聪明的女生，比我们都先参悟到一些事物的真谛，所以，Happy Life在她的规划下诞生了。</p>
+            </div>
+            <div class="quote">
+                <p><strong>夏爽：</strong>林凡是我在大学交往的男朋友，当我决定做Happy Life的时候邀请了林凡加入，他的思维能力很强，但表达能力较弱，说话有时会显得前言不搭后语。开个玩笑，一个人有优点就会有缺点，不是吗？</p>
+            </div>
+            <div class="quote">
+                <p><strong>张硕：</strong>我是在项目要结束的时候才参与进来的，当时看招聘说缺少美工设计，我就来应聘了，来了之后才知道，因为上一任美工设计张希之的离职带走了不少设计画稿，所以急需一个新的美术设计，无论我设计的如何，林凡都会聘用我。</p>
+            </div>
+        </div>
+
+        <!-- 我们的忠告 -->
+        <div class="site-section">
+            <h2>💡 我们的忠告</h2>
+            <p>无论如何，这都是个游戏，切勿沉迷，而且而且而且而且而且而且而且而且而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而</p>
+            <p style="margin-top:12px; font-weight:600; color:#c0392b;">不要传播</p>
+        </div>
+
+        <!-- 更多相关信息 -->
+        <div class="site-section">
+            <h2>🔗 更多 Happy Life 相关信息</h2>
+            <p>
+                Happy Life 官网：<br>
+                <a href="https://luhezi0703-oss.github.io/happy-life/" target="_blank" class="site-link">
+                    https://luhezi0703-oss.github.io/happy-life/
+                </a>
+            </p>
+        </div>
+
+        <button class="site-close" id="siteCloseBtn">✕ 关闭官网</button>
+        <div class="site-footer">© 2026 Happy Life 创作团队 · 仅供内部娱乐</div>
+    </div>
+</div>
+
+<!-- ===== 老虎机界面 ===== -->
+<div id="gamePage" class="page">
+    <div class="top-bar">
+        <span class="coins">💰 <span id="coinDisplay">200</span></span>
+        <span class="spin-count">🎲 <span id="spinCountDisplay">0</span> 次</span>
+    </div>
+    <div class="screen">
+        <div class="reels">
+            <div class="reel" id="reel1">💀</div>
+            <div class="reel" id="reel2">👻</div>
+            <div class="reel" id="reel3">🕷️</div>
+        </div>
+    </div>
+    <button class="spin-btn" id="spinBtn">▶ 转动</button>
+    <div class="hint">💀 20币 / 次  💀 三同奖励100币</div>
+    <div class="bottom-bar">
+        <div class="bottom-btn shop" id="shopBtn">🛒 Shop</div>
+        <div class="bottom-btn exit-btn" id="exitToMenuBtn">Exit</div>
+    </div>
+</div>
+
+<!-- ===== 商店界面 ===== -->
+<div id="shopPage" class="page">
+    <h2>🛒 神秘商店</h2>
+    <div id="shopItemsContainer"></div>
+    <div class="shop-bottom">
+        <div class="shop-back" id="shopBackBtn">← 返回老虎机</div>
+        <div class="shop-exit" id="shopExitBtn">🚪 退出到主界面</div>
+    </div>
+</div>
+
+<!-- ===== 奖励 Toast ===== -->
+<div class="reward-toast" id="rewardToast">🎉 奖励 +100 金币<span>已到账！</span></div>
+
+<!-- ===== 购买反馈 Toast ===== -->
+<div class="buy-toast" id="buyToast"></div>
+
+<!-- ===== 系统错误弹窗 ===== -->
+<div class="error-overlay" id="errorOverlay">
+    <div class="error-box">
+        ⚡ 系统错误，请重试
+        <small>错误代码：0x7F</small>
+        <div class="close-error" id="closeErrorBtn">确定</div>
+    </div>
+</div>
+
+<script>
+// ================================================================
+// ========== 商品数据 ==========
+const shopItems = [
+    { id: 'key', icon: '🔑', name: '钥匙', price: 400, maxBuy: Infinity, desc: '在某些地方或许会有很大的作用。', limitText: '' },
+    { id: 'cake', icon: '🍰', name: '蛋糕', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
+    { id: 'lollipop', icon: '🍭', name: '棒棒糖', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
+    { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑', price: 200, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
+    { id: 'book', icon: '📖', name: 'Lin 的绘本', price: 200, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
+    { id: 'coinpack', icon: '🪙', name: '100 金币', price: 0, maxBuy: 14, desc: '乱码中间夹杂非必要不够买几个字', limitText: '可购买 14 次' }
+];
+
+// ========== 库存 ==========
+let inventory = {
+    key: 0, cake: 0, lollipop: 0, cd: 0, book: 0, coinpack: 0
+};
+
+// ========== 游戏状态 ==========
+let coins = 200;
+let spinCount = 0;
+let isSpinning = false;
+
+// ========== 销毁流程状态 ==========
+let destroyStep = 0; // 0=初始确认, 1=第二次确认, 2=第三次确认
+
+// ========== DOM 引用 ==========
+const coinDisplay = document.getElementById('coinDisplay');
+const spinCountDisplay = document.getElementById('spinCountDisplay');
+const spinBtn = document.getElementById('spinBtn');
+const reel1 = document.getElementById('reel1');
+const reel2 = document.getElementById('reel2');
+const reel3 = document.getElementById('reel3');
+const errorOverlay = document.getElementById('errorOverlay');
+const closeErrorBtn = document.getElementById('closeErrorBtn');
+const rewardToast = document.getElementById('rewardToast');
+const buyToast = document.getElementById('buyToast');
+
+const startPage = document.getElementById('startPage');
+const gamePage = document.getElementById('gamePage');
+const shopPage = document.getElementById('shopPage');
+const shopItemsContainer = document.getElementById('shopItemsContainer');
+const officialSite = document.getElementById('officialSite');
+
+const menuOverlay = document.getElementById('menuOverlay');
+const menuInventoryBtn = document.getElementById('menuInventoryBtn');
+const menuWebsiteBtn = document.getElementById('menuWebsiteBtn');
+const menuLoginBtn = document.getElementById('menuLoginBtn');
+const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+const inventoryOverlay = document.getElementById('inventoryOverlay');
+const inventoryList = document.getElementById('inventoryList');
+const invCloseBtn = document.getElementById('invCloseBtn');
+
+const loginOverlay = document.getElementById('loginOverlay');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+const loginError = document.getElementById('loginError');
+const loginCloseBtn = document.getElementById('loginCloseBtn');
+
+const operationOverlay = document.getElementById('operationOverlay');
+const opModifyBtn = document.getElementById('opModifyBtn');
+const opDestroyBtn = document.getElementById('opDestroyBtn');
+const opExitBtn = document.getElementById('opExitBtn');
+
+const confirmOverlay = document.getElementById('confirmOverlay');
+const confirmQuestion = document.getElementById('confirmQuestion');
+const confirmYes = document.getElementById('confirmYes');
+const confirmNo = document.getElementById('confirmNo');
+
+const finalOverlay = document.getElementById('finalOverlay');
+const finalBig = document.getElementById('finalBig');
+const finalSub = document.getElementById('finalSub');
+const finalBtn = document.getElementById('finalBtn');
+const finalEnd = document.getElementById('finalEnd');
+
+const btnGameStart = document.getElementById('btnGameStart');
+const btnExitStart = document.getElementById('btnExitStart');
+const btnMenuStart = document.getElementById('btnMenuStart');
+const exitToMenuBtn = document.getElementById('exitToMenuBtn');
+const shopBtn = document.getElementById('shopBtn');
+const shopBackBtn = document.getElementById('shopBackBtn');
+const shopExitBtn = document.getElementById('shopExitBtn');
+const siteCloseBtn = document.getElementById('siteCloseBtn');
+
+// ================================================================
+// ========== 页面切换 ==========
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    if (pageId === 'shopPage') renderShop();
+}
+
+// ========== 金币更新 ==========
+function updateCoins() {
+    coinDisplay.textContent = coins;
+}
+
+// ========== 奖励提示 ==========
+function showReward() {
+    rewardToast.style.display = 'block';
+    setTimeout(() => { rewardToast.style.display = 'none'; }, 2000);
+}
+
+// ========== 购买反馈 ==========
+function showBuyToast(msg) {
+    buyToast.textContent = msg;
+    buyToast.style.display = 'block';
+    setTimeout(() => { buyToast.style.display = 'none'; }, 1500);
+}
+
+// ========== 系统错误 ==========
+function showError() { errorOverlay.classList.add('active'); }
+function hideError() { errorOverlay.classList.remove('active'); }
+closeErrorBtn.addEventListener('click', hideError);
+errorOverlay.addEventListener('click', function(e) {
+    if (e.target === errorOverlay) hideError();
+});
+
+// ========== 生成乱码 ==========
+function generateGarbledText() {
+    const chars = '!@#$%^&*()_+{}|:<>?~`-=[]\\;\',./';
+    const words = ['非', '必', '要', '不', '够', '买', '几', '个'];
+    let result = '';
+    for (let i = 0; i < 50; i++) {
+        if (i % 7 === 0 && words.length > 0) {
+            result += words.shift();
+        } else {
+            result += chars[Math.floor(Math.random() * chars.length)];
+        }
+    }
+    return result;
+}
+
+// ================================================================
+// ========== 商店 ==========
+function renderShop() {
+    let html = '';
+    shopItems.forEach(item => {
+        const bought = inventory[item.id] || 0;
+        const isCoinPack = item.id === 'coinpack';
+        const priceDisplay = isCoinPack ? '' : `${item.price} 币`;
+        const disabled = (bought >= item.maxBuy) || (isCoinPack ? false : coins < item.price);
+        let descText = item.desc;
+        if (isCoinPack) descText = generateGarbledText();
+        html += `
+            <div class="shop-item">
+                <div class="icon">${item.icon}</div>
+                <div class="info">
+                    <div class="name">${item.name}</div>
+                    <div class="desc">${descText}</div>
+                    <div class="limit">${item.limitText || ''} ${bought > 0 ? `(已购 ${bought})` : ''}</div>
+                </div>
+                <div class="price">${priceDisplay}</div>
+                <button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>购买</button>
+            </div>
+        `;
+    });
+    shopItemsContainer.innerHTML = html;
+    document.querySelectorAll('.shop-item .buy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            handleBuy(id);
+        });
+    });
+}
+
+function handleBuy(id) {
+    const item = shopItems.find(i => i.id === id);
+    if (!item) return;
+    const bought = inventory[id] || 0;
+    const isCoinPack = id === 'coinpack';
+    if (bought >= item.maxBuy) {
+        showBuyToast('已达到购买上限');
+        return;
+    }
+    if (!isCoinPack && coins < item.price) {
+        showBuyToast('金币不足，请购买100金币');
+        renderShop();
+        const coinBtn = document.querySelector('.shop-item button[data-id="coinpack"]');
+        if (coinBtn) {
+            coinBtn.style.border = '3px solid #ffdd77';
+            setTimeout(() => { coinBtn.style.border = ''; }, 2000);
+        }
+        return;
+    }
+    if (!isCoinPack) {
+        coins -= item.price;
+        inventory[id] = bought + 1;
+        showBuyToast(`✅ 购买了 ${item.name}`);
+    } else {
+        if (bought < item.maxBuy) {
+            coins += 100;
+            inventory[id] = bought + 1;
+            showBuyToast('感谢您的付出。');
+        } else {
+            showBuyToast('已达到购买上限');
+            return;
+        }
+    }
+    updateCoins();
+    renderShop();
+}
+
+// ================================================================
+// ========== 物品栏 ==========
+function renderInventory() {
+    const items = [
+        { id: 'key', icon: '🔑', name: '钥匙' },
+        { id: 'cake', icon: '🍰', name: '蛋糕' },
+        { id: 'lollipop', icon: '🍭', name: '棒棒糖' },
+        { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑' },
+        { id: 'book', icon: '📖', name: 'Lin 的绘本' }
+    ];
+    let html = '';
+    let hasItem = false;
+    items.forEach(item => {
+        const count = inventory[item.id] || 0;
+        if (count > 0) {
+            hasItem = true;
+            html += `
+                <div class="inv-item">
+                    <span class="icon">${item.icon}</span>
+                    <span class="name">${item.name}</span>
+                    <span class="count">× ${count}</span>
+                </div>
+            `;
+        }
+    });
+    if (!hasItem) {
+        html = `<div class="inv-empty">🛒 还没有任何物品<br><span style="font-size:14px;color:#445566;">去商店逛逛吧</span></div>`;
+    }
+    inventoryList.innerHTML = html;
+}
+
+// ================================================================
+// ========== 老虎机 ==========
+const symbols = ['💀', '👻', '🕷️', '🦇', '☠️', '👹', '👺', '👿', '💀', '👻'];
+
+function spinReels() {
+    if (isSpinning) return;
+    if (coins < 20) {
+        alert('金币不足！请去商店购买金币。');
+        return;
+    }
+    coins -= 20;
+    updateCoins();
+    isSpinning = true;
+    spinBtn.disabled = true;
+    spinCount++;
+    spinCountDisplay.textContent = spinCount;
+
+    const isTriple = (Math.random() < 0.1);
+    let result1, result2, result3;
+    if (isTriple) {
+        const idx = Math.floor(Math.random() * symbols.length);
+        const symbol = symbols[idx];
+        result1 = result2 = result3 = symbol;
+    } else {
+        result1 = symbols[Math.floor(Math.random() * symbols.length)];
+        result2 = symbols[Math.floor(Math.random() * symbols.length)];
+        result3 = symbols[Math.floor(Math.random() * symbols.length)];
+    }
+
+    let rollCount = 0;
+    const rollInterval = setInterval(() => {
+        reel1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        reel2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        reel3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        rollCount++;
+        if (rollCount >= 8) {
+            clearInterval(rollInterval);
+            reel1.textContent = result1;
+            reel2.textContent = result2;
+            reel3.textContent = result3;
+            if (isTriple) {
+                coins += 100;
+                updateCoins();
+                showReward();
+            }
+            isSpinning = false;
+            spinBtn.disabled = false;
+        }
+    }, 100);
+}
+
+// ================================================================
+// ========== 登录系统 ==========
+function openLogin() {
+    loginOverlay.classList.add('active');
+    loginError.style.display = 'none';
+    loginUser.value = '';
+    loginPass.value = '';
+}
+
+function closeLogin() {
+    loginOverlay.classList.remove('active');
+}
+
+function handleLogin() {
+    const user = loginUser.value.trim();
+    const pass = loginPass.value.trim();
+    if (user === '2020621' && pass === '1311') {
+        closeLogin();
+        closeMenu();
+        operationOverlay.classList.add('active');
+    } else {
+        loginError.style.display = 'block';
+    }
+}
+
+loginSubmitBtn.addEventListener('click', handleLogin);
+loginCloseBtn.addEventListener('click', closeLogin);
+loginOverlay.addEventListener('click', function(e) {
+    if (e.target === loginOverlay) closeLogin();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && loginOverlay.classList.contains('active')) {
+        handleLogin();
+    }
+});
+
+// ================================================================
+// ========== 操作面板 ==========
+function closeOperation() {
+    operationOverlay.classList.remove('active');
+    // 重置销毁流程状态
+    destroyStep = 0;
+}
+
+opExitBtn.addEventListener('click', closeOperation);
+operationOverlay.addEventListener('click', function(e) {
+    if (e.target === operationOverlay) closeOperation();
+});
+
+// 修改程序
+opModifyBtn.addEventListener('click', function() {
+    alert('程序已经固定并投入使用，无法修改');
+});
+
+// 销毁程序 - 多步骤确认
+opDestroyBtn.addEventListener('click', function() {
+    destroyStep = 0;
+    confirmQuestion.textContent = '您确定吗？';
+    confirmOverlay.classList.add('active');
+});
+
+confirmYes.addEventListener('click', function() {
+    destroyStep++;
+    if (destroyStep === 1) {
+        confirmQuestion.textContent = '是否已经决定？';
+    } else if (destroyStep === 2) {
+        confirmQuestion.textContent = '销毁程序，林凡或许会永远被困在这里';
+    } else if (destroyStep === 3) {
+        // 销毁成功，进入终局
+        confirmOverlay.classList.remove('active');
+        operationOverlay.classList.remove('active');
+        // 显示终局界面
+        finalBig.textContent = '销毁成功';
+        finalSub.textContent = '';
+        finalEnd.classList.remove('show');
+        finalBtn.textContent = '林凡呢？';
+        finalBtn.style.display = 'inline-block';
+        finalOverlay.classList.add('active');
+    }
+});
+
+confirmNo.addEventListener('click', function() {
+    confirmOverlay.classList.remove('active');
+    // 回到主界面
+    showPage('startPage');
+    closeOperation();
+});
+
+confirmOverlay.addEventListener('click', function(e) {
+    if (e.target === confirmOverlay) {
+        confirmOverlay.classList.remove('active');
+        showPage('startPage');
+        closeOperation();
+    }
+});
+
+// ================================================================
+// ========== 终局界面 ==========
+finalBtn.addEventListener('click', function() {
+    finalSub.textContent = '';
+    finalEnd.classList.add('show');
+    finalBtn.style.display = 'none';
+});
+
+finalOverlay.addEventListener('click', function() {
+    if (finalEnd.classList.contains('show')) {
+        // 显示游戏结束
+        finalBig.textContent = '游戏结束';
+        finalSub.textContent = '';
+        finalEnd.classList.remove('show');
+        finalBtn.style.display = 'none';
+    } else {
+        // 第一次点击：显示存在与消失
+        finalSub.textContent = '存在与消失，已无区别';
+    }
+});
+
+// ================================================================
+// ========== Menu ==========
+function openMenu() {
+    menuOverlay.classList.add('active');
+}
+function closeMenu() {
+    menuOverlay.classList.remove('active');
+}
+
+btnMenuStart.addEventListener('click', openMenu);
+menuCloseBtn.addEventListener('click', closeMenu);
+menuOverlay.addEventListener('click', function(e) {
+    if (e.target === menuOverlay) closeMenu();
+});
+
+menuInventoryBtn.addEventListener('click', function() {
+    closeMenu();
+    renderInventory();
+    inventoryOverlay.classList.add('active');
+});
+invCloseBtn.addEventListener('click', function() {
+    inventoryOverlay.classList.remove('active');
+});
+inventoryOverlay.addEventListener('click', function(e) {
+    if (e.target === inventoryOverlay) inventoryOverlay.classList.remove('active');
+});
+
+menuWebsiteBtn.addEventListener('click', function() {
+    closeMenu();
+    officialSite.classList.add('active');
+    document.body.style.overflow = 'hidden';
+});
+siteCloseBtn.addEventListener('click', function() {
+    officialSite.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+menuLoginBtn.addEventListener('click', function() {
+    closeMenu();
+    openLogin();
+});
+
+// ================================================================
+// ========== 其他事件绑定 ==========
+btnGameStart.addEventListener('click', () => showPage('gamePage'));
+btnExitStart.addEventListener('click', () => alert('确定退出吗？\n（开始界面）'));
+
+exitToMenuBtn.addEventListener('click', showError);
+shopBtn.addEventListener('click', () => {
+    showPage('shopPage');
+    renderShop();
+});
+shopBackBtn.addEventListener('click', () => showPage('gamePage'));
+shopExitBtn.addEventListener('click', () => showPage('startPage'));
+
+spinBtn.addEventListener('click', spinReels);
+
+// ESC 键关闭各种覆盖层
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        if (finalOverlay.classList.contains('active')) return; // 终局不让ESC
+        if (confirmOverlay.classList.contains('active')) {
+            confirmOverlay.classList.remove('active');
+            showPage('startPage');
+            closeOperation();
+            return;
+        }
+        if (operationOverlay.classList.contains('active')) {
+            closeOperation();
+            return;
+        }
+        if (loginOverlay.classList.contains('active')) {
+            closeLogin();
+            return;
+        }
+        if (inventoryOverlay.classList.contains('active')) {
+            inventoryOverlay.classList.remove('active');
+            return;
+        }
+        if (officialSite.classList.contains('active')) {
+            officialSite.classList.remove('active');
+            document.body.style.overflow = '';
+            return;
+        }
+        if (menuOverlay.classList.contains('active')) {
+            closeMenu();
+            return;
+        }
+    }
+});
+
+// ================================================================
+// ========== 初始化 ==========
+showPage('startPage');
+updateCoins();
+spinCountDisplay.textContent = '0';
+console.log('🎰 Happy Life 已启动！');
+</script>
+</body>
+</html>
