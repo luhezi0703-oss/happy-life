@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
 
-        /* ========== 通用 ========== */
         .page {
             display: none;
             padding: 16px;
@@ -134,7 +133,7 @@
             box-shadow: 0 4px 20px rgba(155, 89, 182, 0.3);
         }
 
-        /* ========== 游戏界面（左上角状态栏） ========== */
+        /* ========== 游戏界面 ========== */
         #gamePage .status-bar {
             display: flex;
             justify-content: space-between;
@@ -142,21 +141,23 @@
             background: rgba(255,255,255,0.08);
             padding: 12px 18px;
             border-radius: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
         .status-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 18px;
+            gap: 4px;
+            font-size: 15px;
             font-weight: 700;
         }
 
         .status-item .icon {
-            font-size: 22px;
+            font-size: 18px;
         }
 
         .status-item .value {
@@ -167,19 +168,18 @@
             color: #ff6b6b;
         }
 
-        /* ========== 游戏菜单（四个图标按钮） ========== */
         .game-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 12px;
             margin-top: 10px;
         }
 
         .game-grid-btn {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 24px 10px;
+            border-radius: 16px;
+            padding: 18px 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -191,21 +191,26 @@
             background: rgba(255,255,255,0.12);
         }
 
+        .game-grid-btn.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
         .game-grid-btn .icon {
-            font-size: 52px;
+            font-size: 36px;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .game-grid-btn .label {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .game-grid-btn .sub {
-            font-size: 12px;
+            font-size: 10px;
             color: #aaa;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         /* ========== 老虎机 ========== */
@@ -228,27 +233,17 @@
         }
 
         .slot-reel {
-            width: 70px;
-            height: 80px;
+            width: 65px;
+            height: 75px;
             background: #1a1a2e;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 42px;
             border: 2px solid rgba(255,255,255,0.1);
             transition: 0.1s;
             font-weight: 400;
-        }
-
-        .slot-reel.spinning {
-            animation: slotSpin 0.1s steps(1) infinite;
-        }
-
-        @keyframes slotSpin {
-            0% { transform: translateY(-10px); opacity: 0.5; }
-            50% { transform: translateY(10px); opacity: 1; }
-            100% { transform: translateY(-10px); opacity: 0.5; }
         }
 
         .slot-btn {
@@ -292,12 +287,23 @@
 
         .casino-ticket {
             text-align: center;
-            font-size: 16px;
+            font-size: 15px;
             color: #ff6b6b;
             background: rgba(255,0,0,0.1);
             padding: 10px;
             border-radius: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .casino-remaining {
+            text-align: center;
+            font-size: 15px;
+            color: #ffd700;
+            background: rgba(255,215,0,0.1);
+            padding: 8px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
@@ -305,18 +311,18 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            padding: 20px 0;
+            padding: 16px 0;
         }
 
         .casino-card {
-            width: 70px;
-            height: 100px;
+            width: 65px;
+            height: 92px;
             background: #0a0a1a;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 900;
             border: 2px solid rgba(255,255,255,0.15);
             position: relative;
@@ -324,8 +330,8 @@
 
         .casino-card .label {
             position: absolute;
-            bottom: -28px;
-            font-size: 12px;
+            bottom: -24px;
+            font-size: 11px;
             color: #888;
             font-weight: 400;
         }
@@ -337,15 +343,15 @@
 
         .casino-card.hidden::after {
             content: '?';
-            font-size: 36px;
+            font-size: 32px;
             color: #9b59b6;
         }
 
         .casino-bet-area {
-            margin-top: 16px;
+            margin-top: 12px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .casino-bet-area input {
@@ -365,10 +371,10 @@
         }
 
         .casino-btn {
-            padding: 14px;
+            padding: 12px;
             border: none;
             border-radius: 12px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
@@ -383,10 +389,6 @@
             background: linear-gradient(135deg, #e74c3c, #c0392b);
         }
 
-        .casino-btn.draw {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-        }
-
         .casino-btn.bet-confirm {
             background: linear-gradient(135deg, #2ecc71, #27ae60);
         }
@@ -397,8 +399,8 @@
             top: 16px;
             right: 16px;
             z-index: 100;
-            padding: 10px 20px;
-            font-size: 14px;
+            padding: 8px 16px;
+            font-size: 13px;
             border-radius: 30px;
             display: none;
         }
@@ -414,9 +416,9 @@
 
         .casino-result {
             text-align: center;
-            font-size: 18px;
-            margin-top: 12px;
-            min-height: 30px;
+            font-size: 17px;
+            margin-top: 10px;
+            min-height: 28px;
             font-weight: 600;
             padding: 10px;
             border-radius: 12px;
@@ -427,14 +429,14 @@
         .shop-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .shop-item {
             background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 14px 10px;
+            border-radius: 14px;
+            padding: 12px 8px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.08);
             transition: 0.2s;
@@ -445,36 +447,36 @@
         }
 
         .shop-item .icon {
-            font-size: 32px;
+            font-size: 28px;
             display: block;
         }
 
         .shop-item .name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin: 4px 0;
+            margin: 3px 0;
         }
 
         .shop-item .price {
-            font-size: 13px;
+            font-size: 12px;
             color: #ffd700;
         }
 
         .shop-item .qty {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
-            margin: 4px 0;
+            margin: 3px 0;
         }
 
         .shop-item .buy-btn {
-            margin-top: 6px;
-            padding: 6px 16px;
+            margin-top: 4px;
+            padding: 5px 14px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             background: #2ecc71;
             color: #fff;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -489,18 +491,18 @@
         }
 
         .shop-bottom {
-            margin-top: 20px;
+            margin-top: 16px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .shop-bottom .black-market-btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 16px;
-            font-size: 18px;
+            border-radius: 14px;
+            font-size: 17px;
             font-weight: 700;
             background: linear-gradient(135deg, #1a1a2e, #2d1b3d);
             color: #9b59b6;
@@ -516,16 +518,16 @@
 
         .shop-inventory-link {
             text-align: right;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .shop-inventory-link button {
             background: rgba(255,255,255,0.1);
             border: none;
             color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 13px;
             cursor: pointer;
         }
 
@@ -533,14 +535,14 @@
         .black-market-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .bm-item {
             background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -548,23 +550,23 @@
         }
 
         .bm-item .info .name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .bm-item .info .price {
-            font-size: 13px;
+            font-size: 12px;
             color: #aaa;
         }
 
         .bm-item .buy-btn {
-            padding: 8px 20px;
+            padding: 6px 16px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             background: #9b59b6;
             color: #fff;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -577,14 +579,14 @@
         .morning-market-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .mm-item {
             background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 14px 16px;
+            border-radius: 14px;
+            padding: 12px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -592,23 +594,23 @@
         }
 
         .mm-item .info .name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .mm-item .info .detail {
-            font-size: 13px;
+            font-size: 12px;
             color: #aaa;
         }
 
         .mm-item .sell-btn {
-            padding: 6px 16px;
+            padding: 5px 14px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             background: #e67e22;
             color: #fff;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -623,22 +625,22 @@
         }
 
         .mm-controls {
-            margin: 16px 0;
+            margin: 12px 0;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .mm-controls input {
             flex: 1;
-            min-width: 80px;
-            padding: 10px;
-            border-radius: 12px;
+            min-width: 70px;
+            padding: 8px;
+            border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.15);
             background: rgba(255,255,255,0.05);
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
         }
 
@@ -648,13 +650,13 @@
         }
 
         .mm-controls .action-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: #2ecc71;
             color: #fff;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -672,43 +674,43 @@
         .inventory-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .inv-item {
             background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 14px 10px;
+            border-radius: 14px;
+            padding: 12px 8px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.08);
         }
 
         .inv-item .icon {
-            font-size: 32px;
+            font-size: 28px;
             display: block;
         }
 
         .inv-item .name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin: 4px 0;
+            margin: 3px 0;
         }
 
         .inv-item .qty {
-            font-size: 13px;
+            font-size: 12px;
             color: #ffd700;
         }
 
         .inv-item .use-btn {
-            margin-top: 6px;
-            padding: 6px 16px;
+            margin-top: 4px;
+            padding: 5px 14px;
             border: none;
-            border-radius: 20px;
+            border-radius: 18px;
             background: #e74c3c;
             color: #fff;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -726,14 +728,14 @@
         .achievement-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
         .ach-item {
             background: rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 14px;
             border: 1px solid rgba(255,255,255,0.08);
             transition: 0.2s;
         }
@@ -744,26 +746,241 @@
         }
 
         .ach-item .name {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             color: #ffd700;
         }
 
         .ach-item .desc {
-            font-size: 14px;
+            font-size: 13px;
             color: #ccc;
-            margin: 4px 0;
+            margin: 3px 0;
         }
 
         .ach-item .reward {
-            font-size: 13px;
+            font-size: 12px;
             color: #2ecc71;
         }
 
         .ach-item .status {
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        /* ========== 偷窃 ========== */
+        .theft-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .theft-item {
+            background: rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+
+        .theft-item .desc {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .theft-item .risk {
+            font-size: 12px;
+            color: #ff6b6b;
+        }
+
+        .theft-item .reward-info {
+            font-size: 12px;
+            color: #ffd700;
+        }
+
+        .theft-item .theft-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            background: #e74c3c;
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+
+        .theft-item .theft-btn:active {
+            transform: scale(0.94);
+        }
+
+        .theft-item .theft-btn:disabled {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+
+        /* ========== 股票 ========== */
+        .stock-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stock-item {
+            background: rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .stock-item .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stock-item .name {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .stock-item .price-info {
+            font-size: 14px;
+            color: #ffd700;
+        }
+
+        .stock-item .change {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .stock-item .change.up { color: #2ecc71; }
+        .stock-item .change.down { color: #e74c3c; }
+
+        .stock-item .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stock-item .actions input {
+            width: 70px;
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .stock-item .actions input:focus {
+            outline: none;
+            border-color: #f7971e;
+        }
+
+        .stock-item .actions .stock-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
             font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+        }
+
+        .stock-item .actions .stock-btn:active {
+            transform: scale(0.92);
+        }
+
+        .stock-item .actions .stock-btn.buy { background: #2ecc71; }
+        .stock-item .actions .stock-btn.sell { background: #e67e22; }
+
+        .stock-item .actions .stock-btn:disabled {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+
+        .stock-item .holdings {
+            font-size: 12px;
             color: #888;
             margin-top: 4px;
+        }
+
+        /* ========== 公司（偶像管理） ========== */
+        .idol-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .idol-item {
+            background: rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .idol-item .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .idol-item .name {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .idol-item .status {
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .idol-item .status.hired { background: #2ecc71; color: #fff; }
+        .idol-item .status.not-hired { background: #555; color: #aaa; }
+
+        .idol-item .info {
+            font-size: 13px;
+            color: #ccc;
+            margin: 6px 0;
+        }
+
+        .idol-item .daily-stats {
+            font-size: 12px;
+            color: #ffd700;
+            margin: 4px 0;
+        }
+
+        .idol-item .idol-btn {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+        }
+
+        .idol-item .idol-btn:active {
+            transform: scale(0.92);
+        }
+
+        .idol-item .idol-btn.hire { background: #2ecc71; }
+        .idol-item .idol-btn.fire { background: #e74c3c; }
+
+        .idol-item .idol-btn:disabled {
+            opacity: 0.3;
+            transform: scale(1);
         }
 
         /* ========== 弹窗 ========== */
@@ -773,7 +990,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.92);
-            padding: 30px 40px;
+            padding: 28px 32px;
             border-radius: 20px;
             border: 2px solid rgba(255,215,0,0.3);
             z-index: 999;
@@ -794,25 +1011,31 @@
         }
 
         .toast .msg {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             line-height: 1.4;
         }
 
         .toast .toast-btn {
-            padding: 10px 30px;
+            padding: 8px 24px;
             border: none;
             border-radius: 12px;
             background: #f7971e;
             color: #1a1a2e;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
+            margin: 0 4px;
         }
 
         .toast .toast-btn:active {
             transform: scale(0.94);
+        }
+
+        .toast .toast-btn.cancel {
+            background: #555;
+            color: #fff;
         }
 
         .overlay {
@@ -838,13 +1061,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: #1a1a2e;
-            padding: 30px 24px;
+            padding: 24px 20px;
             border-radius: 20px;
             border: 2px solid #9b59b6;
             z-index: 1000;
             text-align: center;
             max-width: 90%;
-            width: 360px;
+            width: 340px;
             display: none;
             animation: popIn 0.3s ease;
         }
@@ -854,23 +1077,23 @@
         }
 
         .pwd-popup .title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #9b59b6;
         }
 
         .pwd-popup input {
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.15);
             background: rgba(255,255,255,0.05);
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             text-align: center;
-            letter-spacing: 8px;
-            margin-bottom: 12px;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
         }
 
         .pwd-popup input:focus {
@@ -879,13 +1102,13 @@
         }
 
         .pwd-popup .pwd-btn {
-            padding: 10px 30px;
+            padding: 8px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: #9b59b6;
             color: #fff;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             margin: 0 4px;
         }
@@ -905,7 +1128,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: #1a1a2e;
-            padding: 30px 24px;
+            padding: 24px 20px;
             border-radius: 20px;
             border: 2px solid #e67e22;
             z-index: 1000;
@@ -921,22 +1144,22 @@
         }
 
         .qty-popup .title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #e67e22;
         }
 
         .qty-popup input {
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.15);
             background: rgba(255,255,255,0.05);
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .qty-popup input:focus {
@@ -945,13 +1168,13 @@
         }
 
         .qty-popup .qty-btn {
-            padding: 10px 24px;
+            padding: 8px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: #e67e22;
             color: #fff;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             margin: 0 4px;
         }
@@ -964,19 +1187,9 @@
             background: #555;
         }
 
-        /* ========== 通用工具 ========== */
         .text-center { text-align: center; }
-        .mt-10 { margin-top: 10px; }
-        .mt-20 { margin-top: 20px; }
-        .mb-10 { margin-bottom: 10px; }
-        .gap-10 { gap: 10px; }
-        .flex { display: flex; }
-        .flex-wrap { flex-wrap: wrap; }
-        .flex-center { align-items: center; justify-content: center; }
-
         .hidden { display: none !important; }
 
-        /* ========== 滚动条美化 ========== */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -999,14 +1212,17 @@
 <!-- 通用弹窗 -->
 <div class="toast" id="toast">
     <div class="msg" id="toastMsg">消息</div>
-    <button class="toast-btn" onclick="closeToast()">确定</button>
+    <div>
+        <button class="toast-btn" id="toastBtn1" onclick="closeToast()">确定</button>
+        <button class="toast-btn cancel" id="toastBtn2" style="display:none;" onclick="closeToast()">取消</button>
+    </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- 密码输入弹窗（黑市用） -->
+<!-- 密码输入弹窗 -->
 <div class="pwd-popup" id="pwdPopup">
-    <div class="title" id="pwdTitle">请输入四位密码</div>
-    <input type="text" id="pwdInput" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="____">
+    <div class="title" id="pwdTitle">请输入密码</div>
+    <input type="text" id="pwdInput" maxlength="5" inputmode="numeric" pattern="[0-9]*" placeholder="____">
     <div>
         <button class="pwd-btn" onclick="confirmPwd()">确认</button>
         <button class="pwd-btn cancel" onclick="closePwdPopup()">取消</button>
@@ -1014,7 +1230,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- 上货数量弹窗 -->
+<!-- 上货弹窗 -->
 <div class="qty-popup" id="qtyPopup">
     <div class="title" id="qtyTitle">上货数量</div>
     <input type="number" id="qtyInput" min="1" value="1">
@@ -1034,46 +1250,39 @@
         <button class="main-btn inventory" onclick="openInventory()">🎒 背包</button>
         <button class="main-btn achievement" onclick="openAchievement()">🏆 成就</button>
     </div>
-    <p style="text-align:center;color:#555;font-size:12px;margin-top:30px;">v1.0 · 三人好友版</p>
+    <p style="text-align:center;color:#555;font-size:11px;margin-top:30px;">v2.0 · 三人好友版</p>
 </div>
 
 <!-- ===================== 游戏界面 ============================== -->
 <div class="page" id="gamePage">
     <button class="back-btn" onclick="backToMain()">← 返回主菜单</button>
 
-    <!-- 状态栏 -->
     <div class="status-bar">
-        <div class="status-item">
-            <span class="icon">🪙</span>
-            <span class="value" id="goldDisplay">200</span>
-        </div>
-        <div class="status-item">
-            <span class="icon">❤️</span>
-            <span class="value life" id="lifeDisplay">100</span>
-        </div>
+        <div class="status-item"><span class="icon">🪙</span><span class="value" id="goldDisplay">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life" id="lifeDisplay">100</span></div>
     </div>
 
-    <!-- 四个功能按钮 -->
     <div class="game-grid">
-        <div class="game-grid-btn" onclick="openSlot()">
-            <span class="icon">🎰</span>
-            <span class="label">老虎机</span>
-            <span class="sub">试试手气</span>
+        <div class="game-grid-btn" id="slotBtn" onclick="openSlot()">
+            <span class="icon">🎰</span><span class="label">老虎机</span><span class="sub">试试手气</span>
         </div>
-        <div class="game-grid-btn" onclick="openCasino()">
-            <span class="icon">♠️</span>
-            <span class="label">赌场</span>
-            <span class="sub">门票 500💰</span>
+        <div class="game-grid-btn" id="casinoBtn" onclick="openCasino()">
+            <span class="icon">♠️</span><span class="label">赌场</span><span class="sub">门票 400💰/5局</span>
         </div>
-        <div class="game-grid-btn" onclick="openShop()">
-            <span class="icon">🏪</span>
-            <span class="label">商店</span>
-            <span class="sub">购物天堂</span>
+        <div class="game-grid-btn" id="shopBtn" onclick="openShop()">
+            <span class="icon">🏪</span><span class="label">商店</span><span class="sub">购物天堂</span>
         </div>
-        <div class="game-grid-btn" onclick="openMorningMarket()">
-            <span class="icon">🌅</span>
-            <span class="label">早市</span>
-            <span class="sub">摆摊赚钱</span>
+        <div class="game-grid-btn" id="marketBtn" onclick="openMorningMarket()">
+            <span class="icon">🌅</span><span class="label">早市</span><span class="sub">摆摊赚钱</span>
+        </div>
+        <div class="game-grid-btn" id="theftBtn" onclick="openTheft()">
+            <span class="icon">🥷</span><span class="label">偷窃</span><span class="sub">高风险高回报</span>
+        </div>
+        <div class="game-grid-btn" id="stockBtn" onclick="openStock()">
+            <span class="icon">📈</span><span class="label">股票</span><span class="sub">投资理财</span>
+        </div>
+        <div class="game-grid-btn" id="companyBtn" onclick="openCompany()" style="display:none;">
+            <span class="icon">🏢</span><span class="label">公司</span><span class="sub">偶像管理</span>
         </div>
     </div>
 </div>
@@ -1082,7 +1291,6 @@
 <div class="page" id="slotPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
     <div class="page-title">🎰 老虎机</div>
-
     <div class="slot-machine">
         <div class="slot-reels">
             <div class="slot-reel" id="reel1">🐟</div>
@@ -1098,40 +1306,33 @@
 <div class="page" id="casinoPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
     <div class="page-title">♠️ 赌场</div>
-
     <div class="casino-area">
-        <div class="casino-ticket">🎫 入场门票：500 金币</div>
-
+        <div class="casino-ticket">🎫 入场门票：400 金币（可玩5局）</div>
+        <div class="casino-remaining" id="casinoRemaining">剩余局数：0</div>
         <div class="casino-cards">
-            <div class="casino-card hidden" id="playerCard">
-                <span class="label">你的牌</span>
-            </div>
-            <div class="casino-card hidden" id="dealerCard">
-                <span class="label">机器牌</span>
-            </div>
+            <div class="casino-card hidden" id="playerCard"><span class="label">你的牌</span></div>
+            <div class="casino-card hidden" id="dealerCard"><span class="label">机器牌</span></div>
         </div>
-
         <div class="casino-bet-area" id="casinoBetArea">
             <div id="casinoPhase1">
-                <button class="casino-btn enter" onclick="enterCasino()">🎫 进入赌场（-500💰）</button>
-                <p style="color:#888;font-size:13px;margin-top:8px;">进入后随机抽牌，然后下注</p>
+                <button class="casino-btn enter" onclick="enterCasino()">🎫 进入赌场（-400💰）</button>
+                <p style="color:#888;font-size:12px;margin-top:6px;">进入后随机抽牌，然后下注</p>
             </div>
             <div id="casinoPhase2" style="display:none;">
-                <p style="color:#ffd700;">你抽到了：<span id="playerNumDisplay" style="font-size:28px;font-weight:900;">?</span></p>
-                <input type="number" id="betAmount" placeholder="下注金额 (100-2000)" min="100" max="2000">
+                <p style="color:#ffd700;">你抽到了：<span id="playerNumDisplay" style="font-size:26px;font-weight:900;">?</span></p>
+                <input type="number" id="betAmount" placeholder="下注金额 (最少100)" min="100">
                 <button class="casino-btn bet-confirm" onclick="confirmBet()">✅ 确认下注</button>
-                <button class="casino-btn" style="background:#555;margin-top:4px;" onclick="leaveCasino()">🚪 离开赌场（不退还门票）</button>
+                <button class="casino-btn" style="background:#555;margin-top:4px;" onclick="leaveCasino()">🚪 离开赌场</button>
             </div>
             <div id="casinoPhase3" style="display:none;">
-                <p style="color:#ffd700;">你的牌：<span id="finalPlayerNum" style="font-size:28px;font-weight:900;">?</span></p>
-                <p style="color:#ffd700;">机器牌：<span id="finalDealerNum" style="font-size:28px;font-weight:900;">?</span></p>
+                <p style="color:#ffd700;">你的牌：<span id="finalPlayerNum" style="font-size:26px;font-weight:900;">?</span></p>
+                <p style="color:#ffd700;">机器牌：<span id="finalDealerNum" style="font-size:26px;font-weight:900;">?</span></p>
                 <div class="casino-result" id="casinoResult">结果</div>
-                <button class="casino-btn" style="background:#3498db;margin-top:8px;" onclick="resetCasino()">🔄 再来一局</button>
+                <button class="casino-btn" style="background:#3498db;margin-top:6px;" onclick="nextCasinoRound()">🔄 下一局</button>
+                <button class="casino-btn" style="background:#555;margin-top:4px;" onclick="leaveCasino()">🚪 离开赌场</button>
             </div>
         </div>
     </div>
-
-    <!-- 逃跑按钮（固定右上角） -->
     <button class="casino-btn escape" id="escapeBtn" onclick="escapeCasino()">🏃 逃跑 (25%)</button>
 </div>
 
@@ -1139,13 +1340,10 @@
 <div class="page" id="shopPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
     <div class="page-title">🏪 商店</div>
-
     <div class="shop-inventory-link">
         <button onclick="openInventoryFromShop()">🎒 查看背包</button>
     </div>
-
     <div class="shop-grid" id="shopGrid"></div>
-
     <div class="shop-bottom">
         <button class="black-market-btn" onclick="openBlackMarket()">🖤 黑市</button>
     </div>
@@ -1155,8 +1353,7 @@
 <div class="page" id="blackMarketPage">
     <button class="back-btn" onclick="backToShop()">← 返回商店</button>
     <div class="page-title">🖤 黑市</div>
-    <p style="color:#888;font-size:14px;text-align:center;margin-bottom:12px;">输入正确密码获得金币</p>
-
+    <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">输入正确密码获得金币</p>
     <div class="black-market-grid" id="blackMarketGrid"></div>
 </div>
 
@@ -1178,13 +1375,35 @@
 <div class="page" id="morningMarketPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
     <div class="page-title">🌅 早市</div>
-
     <div class="mm-controls">
         <span style="color:#888;">摊位费 30💰</span>
         <button class="action-btn" id="startSellBtn" onclick="startSelling()">🛒 开始贩卖</button>
     </div>
-
     <div class="morning-market-grid" id="morningMarketGrid"></div>
+</div>
+
+<!-- ===================== 偷窃界面 ============================== -->
+<div class="page" id="theftPage">
+    <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="page-title">🥷 偷窃</div>
+    <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">高风险高回报，谨慎选择！</p>
+    <div class="theft-grid" id="theftGrid"></div>
+</div>
+
+<!-- ===================== 股票界面 ============================== -->
+<div class="page" id="stockPage">
+    <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="page-title">📈 股票</div>
+    <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">最低买入 150💰，每次进入走势不同</p>
+    <div class="stock-grid" id="stockGrid"></div>
+</div>
+
+<!-- ===================== 公司界面 ============================== -->
+<div class="page" id="companyPage">
+    <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="page-title">🏢 公司</div>
+    <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">招聘偶像，每日为你赚钱！</p>
+    <div class="idol-grid" id="idolGrid"></div>
 </div>
 
 
@@ -1195,10 +1414,10 @@
 // 数据管理
 // ================================================================
 
-const STORAGE_KEY = 'heavy_promotion_data';
+const STORAGE_KEY = 'heavy_promotion_v2';
 
-// 图标映射
 const SLOT_ICONS = ['🐰', '🕷️', '🐟', '🐭', '💎', '💀', '🍇', '🐙'];
+
 const SHOP_ITEMS = [
     { id: 'bread', name: '面包', icon: '🍞', price: 30, max: 20 },
     { id: 'cookie', name: '饼干', icon: '🍪', price: 20, max: 20 },
@@ -1207,21 +1426,56 @@ const SHOP_ITEMS = [
     { id: 'shoes', name: '鞋子', icon: '👟', price: 45, max: 20 },
     { id: 'necklace', name: '项链', icon: '📿', price: 160, max: 15 },
     { id: 'ring', name: '戒指', icon: '💍', price: 230, max: 10 },
-    { id: 'medicine', name: '药', icon: '💊', price: 50, max: 10 }
+    { id: 'medicine', name: '药', icon: '💊', price: 50, max: 10 },
+    { id: 'diamond', name: '钻石', icon: '💎', price: 4000, max: 20 },
+    { id: 'car', name: '普通轿车', icon: '🚗', price: 23000, max: 5 },
+    { id: 'perfume', name: '艾玛丝香水', icon: '🧴', price: 8000, max: 10 },
+    { id: 'sports_car', name: '跑车', icon: '🏎️', price: 60000, max: 3 },
+    { id: 'suburb_villa', name: '郊区别墅', icon: '🏡', price: 320000, max: 1 },
+    { id: 'city_villa', name: '市区别墅', icon: '🏰', price: 8000000, max: 1 },
+    { id: 'y_entertainment', name: 'Y派娱乐公司', icon: '🎬', price: 60000000, max: 1 }
 ];
+
+const SELL_CONFIG = {
+    'bread': { price: 50, rate: 0.8 },
+    'cookie': { price: 40, rate: 0.8 },
+    'clothes': { price: 120, rate: 0.8 },
+    'drink': { price: 40, rate: 0.8 },
+    'shoes': { price: 100, rate: 0.8 },
+    'necklace': { price: 300, rate: 0.5 },
+    'ring': { price: 400, rate: 0.5 },
+    'diamond': { price: 6000, rate: 0.6 },
+    'car': { price: 30000, rate: 0.5 },
+    'perfume': { price: 9500, rate: 0.7 },
+    'sports_car': { price: 68000, rate: 0.65 },
+    'suburb_villa': { price: 150000, rate: 1.0 },
+    'city_villa': { price: 4000000, rate: 1.0 }
+};
 
 const BLACK_MARKET_ITEMS = [
-    { id: 'bm_200', name: '200 金币', price: '0.2 coin', codes: ['4029','1753','8012','3695','2741','9058','1367','5204','7183','6902','2517','8430','1962','5738','4109','7625','3081','9476','1520','6843','5917','2308','8651','4792','1035','7269','3514','9807','6128','2954'], reward: 200 },
-    { id: 'bm_500', name: '500 金币', price: '0.35 coin', codes: ['1247','3068','5129','7401','2635','8194','9306','1482','3750','5816','7043','2159','6380','4912','1705','3298','5461','8723','9150','2074','4619','6832','1507','3941','5286','7610','2395','8047','9521','1863','3402','5718','7936','2580','4173','6291','1054','3627','5089','7312'], reward: 500 },
-    { id: 'bm_1000', name: '一包金币 (~1000)', price: '0.69 coin', codes: ['0215','0639','0974','1108','1390','1642','1871','2036','2405','2681','3149','3307','3852','4061','4315','4590','4826','5031','5472','5609','6134','6470','6728','7019','7356','7582','7803','8145','8360','8712','9048','9273','9610','0357','0524','0813','1469','2253','3418','4275'], reward: 1000 },
-    { id: 'bm_3000', name: '一箱金币 (~3000)', price: '0.99 coin', codes: ['0126','0184','0319','0427','0518','0729','0841','1027','1093','1205','1358','1406','1639','1724','1903','2107','2164','2319','2471','2710','2846','3015','3172','3490','3508','3716','3925','4137','4208','4513','4672','4801','5130','5247','5391','5614','5802','6019','6235','6371','6518','6804','7126','7290','7413','7608','7915','8062','8217','8409'], reward: 3000 }
+    { id: 'bm_200', name: '200 金币', price: '0.1 coin', codes: ['4029','1753','8012','3695','2741','9058','1367','5204','7183','6902','2517','8430','1962','5738','4109','7625','3081','9476','1520','6843','5917','2308','8651','4792','1035','7269','3514','9807','6128','2954'], reward: 200, len: 4 },
+    { id: 'bm_500', name: '500 金币', price: '0.2 coin', codes: ['1247','3068','5129','7401','2635','8194','9306','1482','3750','5816','7043','2159','6380','4912','1705','3298','5461','8723','9150','2074','4619','6832','1507','3941','5286','7610','2395','8047','9521','1863','3402','5718','7936','2580','4173','6291','1054','3627','5089','7312'], reward: 500, len: 4 },
+    { id: 'bm_1000', name: '1000 金币', price: '0.39 coin', codes: ['0215','0639','0974','1108','1390','1642','1871','2036','2405','2681','3149','3307','3852','4061','4315','4590','4826','5031','5472','5609','6134','6470','6728','7019','7356','7582','7803','8145','8360','8712','9048','9273','9610','0357','0524','0813','1469','2253','3418','4275'], reward: 1000, len: 4 },
+    { id: 'bm_3000', name: '3000 金币', price: '0.99 coin', codes: ['0126','0184','0319','0427','0518','0729','0841','1027','1093','1205','1358','1406','1639','1724','1903','2107','2164','2319','2471','2710','2846','3015','3172','3490','3508','3716','3925','4137','4208','4513','4672','4801','5130','5247','5391','5614','5802','6019','6235','6371','6518','6804','7126','7290','7413','7608','7915','8062','8217','8409'], reward: 3000, len: 4 },
+    { id: 'bm_5000', name: '5000 金币', price: '1.49 coin', codes: ['15927','30418','62905','41720','80361','27495','51083','93612','74025','18539','46092','71358','29401','53176','87024','35910','61427','90253','17648','52801','39075','76132','24890','65317','81940','10736','43259','78601','25047','69183','31570','58294','94716','12038','47562','83109','20645','54971','70328','96814','13752','40196','67280','85413','21907','36841','50729','79165','14208','63597'], reward: 5000, len: 5 },
+    { id: 'bm_10000', name: '10000 金币', price: '2.49 coin', codes: ['26019','57341','81207','19463','35702','60814','92537','41085','73629','10548','39271','64105','87523','20694','51837','74910','16325','48079','62153','90481','28716','53092','86417','13950','40268','71593','98304','24671','59138','82740','17052','43986','68219','95703','31425','56870','89142','12569','47031','78625'], reward: 10000, len: 5 },
+    { id: 'bm_90000000', name: '90000000（自留款）', price: '自留款', codes: ['860712'], reward: 90000000, len: 6 }
 ];
-
 const ACHIEVEMENTS = [
     { id: 'ach_bread', name: '面包坊', desc: '你在面包领域发展很好！', reward: 500, rewardType: 'gold', check: () => getTotalSold('bread') >= 60 },
     { id: 'ach_jewelry', name: '首饰专家', desc: '许多人把你称为首饰供货商。', reward: 700, rewardType: 'gold', check: () => getTotalSold('necklace') + getTotalSold('ring') >= 60 },
     { id: 'ach_clothing', name: '服装店老板', desc: '时尚，从这里开始！', reward: 500, rewardType: 'gold', check: () => getTotalSold('shoes') + getTotalSold('clothes') >= 60 },
     { id: 'ach_life', name: '要鼠了', desc: '在鼠掉边缘反复横跳。', reward: 5, rewardType: 'medicine', check: () => getLifeBelow50Count() >= 3 }
+];
+
+const STOCK_COMPANIES = [
+    '乐活公司', 'Ysk', '泰捷台球', '傲凌服饰', '开源电器', '金火文具', '快乐影音音响', '升万国际'
+];
+
+const IDOLS = [
+    { id: 'rick', name: '瑞克', cost: 9000, baseIncome: 600, spendMin: 200, spendMax: 1200, earnMin: 200, earnMax: 1200 },
+    { id: 'hefang', name: '何方', cost: 6000, baseIncome: 400, spendMin: 100, spendMax: 900, earnMin: 100, earnMax: 900 },
+    { id: 'zhangdeshuang', name: '张德双', cost: 3000, baseIncome: 200, spendMin: 100, spendMax: 600, earnMin: 100, earnMax: 600 }
 ];
 
 // ================================================================
@@ -1233,17 +1487,20 @@ function getDefaultData() {
         gold: 200,
         life: 100,
         maxLife: 150,
-        inventory: {}, // { itemId: count }
-        totalSold: {}, // { itemId: count }
+        inventory: {},
+        totalSold: {},
         lifeBelow50Count: 0,
         unlockedAchievements: [],
-        slotHistory: [],
-        casinoState: 'idle', // idle | drew | bet | result
+        casinoRemainingRounds: 0,
+        casinoHasEntered: false,
         casinoPlayerNum: 0,
         casinoDealerNum: 0,
         casinoBetAmount: 0,
         casinoEscaped: false,
-        hasEnteredCasino: false,
+        casinoInRound: false,
+        stocks: {},
+        idols: {},
+        hasYEntertainment: false,
     };
 }
 
@@ -1252,11 +1509,12 @@ function getData() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return getDefaultData();
         const data = JSON.parse(raw);
-        // 补齐可能缺失的字段
         const def = getDefaultData();
         for (let key in def) {
             if (!(key in data)) data[key] = def[key];
         }
+        if (!data.stocks) data.stocks = {};
+        if (!data.idols) data.idols = {};
         return data;
     } catch {
         return getDefaultData();
@@ -1264,15 +1522,36 @@ function getData() {
 }
 
 function saveData(data) {
+    data.gold = Math.round(data.gold);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     updateUI();
 }
 
-// 更新UI状态
 function updateUI() {
     const data = getData();
-    document.getElementById('goldDisplay').textContent = data.gold;
+    document.getElementById('goldDisplay').textContent = Math.round(data.gold);
     document.getElementById('lifeDisplay').textContent = data.life;
+    updateGameGrid();
+    if (data.inventory['y_entertainment'] > 0) {
+        document.getElementById('companyBtn').style.display = 'block';
+        data.hasYEntertainment = true;
+    } else {
+        document.getElementById('companyBtn').style.display = 'none';
+        data.hasYEntertainment = false;
+    }
+}
+
+function updateGameGrid() {
+    const data = getData();
+    const goldOk = data.gold > 0;
+    const lifeOk = data.life > 0;
+
+    document.getElementById('slotBtn').classList.toggle('disabled', !goldOk || !lifeOk);
+    document.getElementById('casinoBtn').classList.toggle('disabled', data.gold < 400 || !lifeOk);
+    document.getElementById('marketBtn').classList.toggle('disabled', !goldOk || !lifeOk);
+    document.getElementById('shopBtn').classList.toggle('disabled', !lifeOk);
+    document.getElementById('theftBtn').classList.toggle('disabled', !lifeOk || data.gold < 10);
+    document.getElementById('stockBtn').classList.toggle('disabled', !lifeOk);
 }
 
 // ================================================================
@@ -1282,7 +1561,6 @@ function updateUI() {
 function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    // 关闭所有弹窗
     closeToast();
     closePwdPopup();
     closeQtyPopup();
@@ -1304,7 +1582,6 @@ function backToShop() {
 }
 
 function backFromInventory() {
-    // 判断从哪来的
     const from = sessionStorage.getItem('inventory_from') || 'game';
     if (from === 'shop') {
         showPage('shopPage');
@@ -1324,13 +1601,8 @@ function backFromInventory() {
 
 function enterGame() {
     const data = getData();
-    // 检查是否满足进入条件
     if (data.life <= 0) {
         showToast('💀 生命值不足，请前往商店购买药品。');
-        return;
-    }
-    if (data.gold <= 0) {
-        showToast('💰 金币不足，请到黑市购买。');
         return;
     }
     showPage('gamePage');
@@ -1339,7 +1611,6 @@ function enterGame() {
 
 function exitGame() {
     if (confirm('确定要退出游戏吗？')) {
-        // 回到主界面，数据保留
         showPage('mainPage');
     }
 }
@@ -1373,16 +1644,9 @@ function openInventoryFromMorning() {
 
 function openSlot() {
     const data = getData();
-    if (data.life <= 0) {
-        showToast('💀 生命值不足，无法进入老虎机。');
-        return;
-    }
-    if (data.gold <= 0) {
-        showToast('💰 金币不足，请到黑市购买。');
-        return;
-    }
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    if (data.gold <= 0) { showToast('💰 金币不足'); return; }
     showPage('slotPage');
-    // 随机初始显示
     document.getElementById('reel1').textContent = SLOT_ICONS[Math.floor(Math.random() * SLOT_ICONS.length)];
     document.getElementById('reel2').textContent = SLOT_ICONS[Math.floor(Math.random() * SLOT_ICONS.length)];
     document.getElementById('reel3').textContent = SLOT_ICONS[Math.floor(Math.random() * SLOT_ICONS.length)];
@@ -1395,21 +1659,16 @@ let isSpinning = false;
 function spinSlot() {
     if (isSpinning) return;
     const data = getData();
-    if (data.gold < 10) {
-        showToast('💰 金币不足10，无法拉霸！');
-        return;
-    }
+    if (data.gold < 10) { showToast('💰 金币不足10'); return; }
 
     isSpinning = true;
     const btn = document.getElementById('slotSpinBtn');
     btn.disabled = true;
     document.getElementById('slotResult').textContent = '🎰 旋转中...';
 
-    // 扣10金币
     data.gold -= 10;
     saveData(data);
 
-    // 模拟旋转动画
     let count = 0;
     const maxCount = 15;
     const interval = setInterval(() => {
@@ -1419,7 +1678,6 @@ function spinSlot() {
         count++;
         if (count >= maxCount) {
             clearInterval(interval);
-            // 最终结果
             const result = getSlotResult();
             document.getElementById('reel1').textContent = result[0];
             document.getElementById('reel2').textContent = result[1];
@@ -1432,11 +1690,9 @@ function spinSlot() {
 }
 
 function getSlotResult() {
-    // 三同概率 1/8
     const isTriple = Math.random() < 0.125;
     if (isTriple) {
-        // 随机选一个图标，兔子概率低，钻石更低
-        const weights = [10, 20, 20, 20, 5, 20, 20, 20]; // 兔子权重10，钻石权重5
+        const weights = [10, 20, 20, 20, 5, 20, 20, 20];
         const total = weights.reduce((a,b) => a+b, 0);
         let r = Math.random() * total;
         let idx = 0;
@@ -1447,7 +1703,6 @@ function getSlotResult() {
         const icon = SLOT_ICONS[idx];
         return [icon, icon, icon];
     } else {
-        // 完全不同
         let a, b, c;
         do {
             a = SLOT_ICONS[Math.floor(Math.random() * SLOT_ICONS.length)];
@@ -1462,23 +1717,15 @@ function processSlotResult(result) {
     const data = getData();
     let reward = 0;
     let msg = '';
-
     const [a, b, c] = result;
     if (a === b && b === c) {
-        // 三同
         reward = 100;
         msg = '🎉 三同！+100金币';
-        if (a === '🐰') {
-            reward += 50;
-            msg = '🐰 兔子三同！+150金币';
-        } else if (a === '💎') {
-            reward += 200;
-            msg = '💎 钻石三同！+300金币';
-        }
+        if (a === '🐰') { reward += 50; msg = '🐰 兔子三同！+150金币'; }
+        else if (a === '💎') { reward += 200; msg = '💎 钻石三同！+300金币'; }
     } else {
         msg = '😅 没中奖，下次好运！';
     }
-
     data.gold += reward;
     saveData(data);
     document.getElementById('slotResult').textContent = msg + ` (${reward > 0 ? '+' : ''}${reward}💰)`;
@@ -1488,23 +1735,11 @@ function processSlotResult(result) {
 // 赌场
 // ================================================================
 
-let casinoData = {};
-
 function openCasino() {
     const data = getData();
-    if (data.life <= 0) {
-        showToast('💀 生命值不足，无法进入赌场。');
-        return;
-    }
-    if (data.gold <= 0) {
-        showToast('💰 金币不足，请到黑市购买。');
-        return;
-    }
-    if (data.gold < 500) {
-        showToast('💰 金币不足500，无法购买门票。');
-        return;
-    }
-
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    if (data.gold < 400) { showToast('💰 金币不足400'); return; }
+    if (data.gold <= 0) { showToast('💰 金币不足'); return; }
     showPage('casinoPage');
     resetCasinoUI();
     updateUI();
@@ -1521,45 +1756,55 @@ function resetCasinoUI() {
     document.getElementById('dealerCard').textContent = '';
     document.getElementById('casinoResult').textContent = '';
     document.getElementById('betAmount').value = '';
-    casinoData = {};
+    document.getElementById('casinoRemaining').textContent = '剩余局数：0';
 }
 
 function enterCasino() {
     const data = getData();
-    if (data.gold < 500) {
-        showToast('💰 金币不足500，无法购买门票。');
+    if (data.gold < 400) { showToast('💰 金币不足400'); return; }
+    data.gold -= 400;
+    data.casinoRemainingRounds = 5;
+    data.casinoHasEntered = true;
+    data.casinoEscaped = false;
+    data.casinoInRound = false;
+    saveData(data);
+    document.getElementById('casinoPhase1').style.display = 'none';
+    document.getElementById('casinoRemaining').textContent = `剩余局数：${data.casinoRemainingRounds}`;
+    showToast('🎫 已进入赌场！剩余5局');
+    startCasinoRound();
+}
+
+function startCasinoRound() {
+    const data = getData();
+    if (data.casinoRemainingRounds <= 0) {
+        showToast('⛔ 已无剩余局数，请离开赌场。');
         return;
     }
-
-    data.gold -= 500;
-    saveData(data);
-
-    // 抽牌
+    data.casinoInRound = true;
     const playerNum = Math.floor(Math.random() * 10) + 1;
     const dealerNum = Math.floor(Math.random() * 10) + 1;
-
-    casinoData.playerNum = playerNum;
-    casinoData.dealerNum = dealerNum;
-    casinoData.hasEntered = true;
-    casinoData.escaped = false;
-
-    document.getElementById('casinoPhase1').style.display = 'none';
+    data.casinoPlayerNum = playerNum;
+    data.casinoDealerNum = dealerNum;
+    data.casinoEscaped = false;
+    saveData(data);
     document.getElementById('casinoPhase2').style.display = 'block';
+    document.getElementById('casinoPhase3').style.display = 'none';
+    document.getElementById('escapeBtn').classList.add('show');
     document.getElementById('playerNumDisplay').textContent = playerNum;
     document.getElementById('playerCard').classList.remove('hidden');
     document.getElementById('playerCard').textContent = playerNum;
-    document.getElementById('playerCard').style.fontSize = '38px';
-
-    document.getElementById('escapeBtn').classList.add('show');
-    document.getElementById('casinoResult').textContent = '你抽到了 ' + playerNum + '，请下注！';
+    document.getElementById('playerCard').style.fontSize = '34px';
+    document.getElementById('casinoResult').textContent = `你抽到了 ${playerNum}，请下注！`;
+    document.getElementById('casinoRemaining').textContent = `剩余局数：${data.casinoRemainingRounds}`;
+    document.getElementById('betAmount').value = '';
     updateUI();
 }
 
 function confirmBet() {
     const input = document.getElementById('betAmount');
     const bet = parseInt(input.value);
-    if (isNaN(bet) || bet < 100 || bet > 2000) {
-        showToast('请下注 100-2000 金币');
+    if (isNaN(bet) || bet < 100) {
+        showToast('请下注至少 100 金币');
         return;
     }
     const data = getData();
@@ -1567,56 +1812,63 @@ function confirmBet() {
         showToast('💰 金币不足！');
         return;
     }
-
-    // 扣除下注金（暂扣，结果出来后多退少补）
     data.gold -= bet;
-    casinoData.betAmount = bet;
+    data.casinoBetAmount = bet;
+    data.casinoInRound = false;
     saveData(data);
-
-    // 显示结果
-    const pNum = casinoData.playerNum;
-    const dNum = casinoData.dealerNum;
-
+    const pNum = data.casinoPlayerNum;
+    const dNum = data.casinoDealerNum;
     document.getElementById('casinoPhase2').style.display = 'none';
     document.getElementById('casinoPhase3').style.display = 'block';
     document.getElementById('escapeBtn').classList.remove('show');
-
     document.getElementById('finalPlayerNum').textContent = pNum;
     document.getElementById('finalDealerNum').textContent = dNum;
-
     document.getElementById('dealerCard').classList.remove('hidden');
     document.getElementById('dealerCard').textContent = dNum;
-    document.getElementById('dealerCard').style.fontSize = '38px';
-
+    document.getElementById('dealerCard').style.fontSize = '34px';
     let resultMsg = '';
     let finalGold = 0;
-
     if (pNum > dNum) {
-        // 玩家赢
-        const win = bet * 2;
-        finalGold = win;
-        resultMsg = `🎉 你赢了！+${win} 金币！ (${pNum} > ${dNum})`;
+        finalGold = bet * 2;
+        resultMsg = `🎉 你赢了！+${finalGold} 金币！ (${pNum} > ${dNum})`;
     } else if (pNum < dNum) {
-        // 玩家输
         finalGold = 0;
         resultMsg = `😢 你输了！-${bet} 金币 (${pNum} < ${dNum})`;
     } else {
-        // 平局
         finalGold = bet;
-        resultMsg = `🤝 平局！退还 ${bet} 金币 (${pNum} = ${dNum})`;
+        resultMsg = `🤝 平局！退还 ${finalGold} 金币 (${pNum} = ${dNum})`;
     }
-
-    // 实际修改金币（之前已扣，现在加回结果）
-    const data2 = getData();
-    data2.gold += finalGold;
-    saveData(data2);
-
-    document.getElementById('casinoResult').textContent = resultMsg;
+    data.casinoRemainingRounds -= 1;
+    data.gold += finalGold;
+    saveData(data);
+    document.getElementById('casinoResult').textContent = resultMsg + ` (剩余${data.casinoRemainingRounds}局)`;
+    document.getElementById('casinoRemaining').textContent = `剩余局数：${data.casinoRemainingRounds}`;
+    if (data.casinoRemainingRounds <= 0) {
+        document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').textContent = '🚪 已无局数，离开赌场';
+        document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').onclick = leaveCasino;
+    } else {
+        document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').textContent = '🔄 下一局';
+        document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').onclick = nextCasinoRound;
+    }
     updateUI();
 }
 
+function nextCasinoRound() {
+    const data = getData();
+    if (data.casinoRemainingRounds <= 0) {
+        showToast('⛔ 已无剩余局数，请离开赌场。');
+        return;
+    }
+    startCasinoRound();
+}
+
 function leaveCasino() {
-    if (confirm('确定离开赌场吗？门票不退还。')) {
+    if (confirm('确定离开赌场吗？剩余局数和门票不退还。')) {
+        const data = getData();
+        data.casinoRemainingRounds = 0;
+        data.casinoHasEntered = false;
+        data.casinoInRound = false;
+        saveData(data);
         resetCasinoUI();
         updateUI();
         showToast('🚪 已离开赌场');
@@ -1624,43 +1876,53 @@ function leaveCasino() {
 }
 
 function escapeCasino() {
-    if (casinoData.escaped) return;
+    const data = getData();
+    if (data.casinoEscaped) return;
+    if (data.casinoRemainingRounds <= 0) {
+        showToast('⛔ 已无剩余局数');
+        return;
+    }
     if (Math.random() < 0.25) {
-        // 逃跑成功
-        casinoData.escaped = true;
+        data.casinoEscaped = true;
         document.getElementById('escapeBtn').classList.remove('show');
         showToast('🏃 逃跑成功！但门票不退还。');
         document.getElementById('casinoPhase2').style.display = 'none';
         document.getElementById('casinoPhase3').style.display = 'block';
-        document.getElementById('finalPlayerNum').textContent = casinoData.playerNum;
+        document.getElementById('finalPlayerNum').textContent = data.casinoPlayerNum;
         document.getElementById('finalDealerNum').textContent = '?';
         document.getElementById('casinoResult').textContent = '🏃 你逃跑了！';
         document.getElementById('dealerCard').classList.remove('hidden');
         document.getElementById('dealerCard').textContent = '?';
-        document.getElementById('dealerCard').style.fontSize = '38px';
+        document.getElementById('dealerCard').style.fontSize = '34px';
+        data.casinoRemainingRounds -= 1;
+        saveData(data);
+        document.getElementById('casinoRemaining').textContent = `剩余局数：${data.casinoRemainingRounds}`;
+        if (data.casinoRemainingRounds <= 0) {
+            document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').textContent = '🚪 已无局数，离开赌场';
+            document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').onclick = leaveCasino;
+        }
     } else {
-        // 逃跑失败
-        casinoData.escaped = true;
+        data.casinoEscaped = true;
         document.getElementById('escapeBtn').classList.remove('show');
-        const data = getData();
         data.life = Math.max(0, data.life - 20);
+        data.casinoRemainingRounds -= 1;
         saveData(data);
         showToast('💀 逃跑失败！-20 生命值');
         document.getElementById('casinoPhase2').style.display = 'none';
         document.getElementById('casinoPhase3').style.display = 'block';
-        document.getElementById('finalPlayerNum').textContent = casinoData.playerNum;
+        document.getElementById('finalPlayerNum').textContent = data.casinoPlayerNum;
         document.getElementById('finalDealerNum').textContent = '?';
         document.getElementById('casinoResult').textContent = '💀 逃跑失败！-20 生命值';
         document.getElementById('dealerCard').classList.remove('hidden');
         document.getElementById('dealerCard').textContent = '?';
-        document.getElementById('dealerCard').style.fontSize = '38px';
+        document.getElementById('dealerCard').style.fontSize = '34px';
+        document.getElementById('casinoRemaining').textContent = `剩余局数：${data.casinoRemainingRounds}`;
+        if (data.casinoRemainingRounds <= 0) {
+            document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').textContent = '🚪 已无局数，离开赌场';
+            document.querySelector('#casinoPhase3 .casino-btn[style*="background:#3498db"]').onclick = leaveCasino;
+        }
         updateUI();
     }
-}
-
-function resetCasino() {
-    resetCasinoUI();
-    updateUI();
 }
 
 // ================================================================
@@ -1669,14 +1931,7 @@ function resetCasino() {
 
 function openShop() {
     const data = getData();
-    if (data.life <= 0) {
-        showToast('💀 生命值不足，无法进入商店。');
-        return;
-    }
-    if (data.gold <= 0) {
-        showToast('💰 金币不足，请到黑市购买。');
-        return;
-    }
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
     showPage('shopPage');
     renderShop();
 }
@@ -1685,11 +1940,9 @@ function renderShop() {
     const grid = document.getElementById('shopGrid');
     grid.innerHTML = '';
     const data = getData();
-
     SHOP_ITEMS.forEach(item => {
         const invCount = data.inventory[item.id] || 0;
         const canBuy = data.gold >= item.price && invCount < item.max;
-
         const div = document.createElement('div');
         div.className = 'shop-item';
         div.innerHTML = `
@@ -1707,18 +1960,9 @@ function buyItem(itemId) {
     const data = getData();
     const item = SHOP_ITEMS.find(i => i.id === itemId);
     if (!item) return;
-
-    if (data.gold < item.price) {
-        showToast('💰 金币不足！');
-        return;
-    }
-
+    if (data.gold < item.price) { showToast('💰 金币不足！'); return; }
     const invCount = data.inventory[item.id] || 0;
-    if (invCount >= item.max) {
-        showToast('📦 已达到最大购买数量！');
-        return;
-    }
-
+    if (invCount >= item.max) { showToast('📦 已达到最大购买数量！'); return; }
     data.gold -= item.price;
     data.inventory[item.id] = (data.inventory[item.id] || 0) + 1;
     saveData(data);
@@ -1739,7 +1983,6 @@ function openBlackMarket() {
 function renderBlackMarket() {
     const grid = document.getElementById('blackMarketGrid');
     grid.innerHTML = '';
-
     BLACK_MARKET_ITEMS.forEach(item => {
         const div = document.createElement('div');
         div.className = 'bm-item';
@@ -1757,8 +2000,10 @@ function renderBlackMarket() {
 let pendingBMItem = null;
 
 function openPwdPopup(itemId) {
+    const item = BLACK_MARKET_ITEMS.find(i => i.id === itemId);
     pendingBMItem = itemId;
-    document.getElementById('pwdTitle').textContent = '请输入四位密码';
+    document.getElementById('pwdTitle').textContent = `请输入${item.len}位密码`;
+    document.getElementById('pwdInput').maxLength = item.len;
     document.getElementById('pwdInput').value = '';
     document.getElementById('pwdPopup').classList.add('show');
     document.getElementById('overlay').classList.add('show');
@@ -1773,16 +2018,12 @@ function closePwdPopup() {
 
 function confirmPwd() {
     const pwd = document.getElementById('pwdInput').value.trim();
-    if (pwd.length !== 4 || !/^\d{4}$/.test(pwd)) {
-        showToast('请输入4位数字密码');
-        return;
-    }
-
-    if (!pendingBMItem) return;
-
     const item = BLACK_MARKET_ITEMS.find(i => i.id === pendingBMItem);
     if (!item) return;
-
+    if (pwd.length !== item.len || !/^\d+$/.test(pwd)) {
+        showToast(`请输入${item.len}位数字密码`);
+        return;
+    }
     if (item.codes.includes(pwd)) {
         const data = getData();
         data.gold += item.reward;
@@ -1804,8 +2045,6 @@ function renderInventory() {
     const grid = document.getElementById('inventoryGrid');
     grid.innerHTML = '';
     const data = getData();
-
-    // 只显示商店物品（黑市不显示）
     let hasItems = false;
     SHOP_ITEMS.forEach(item => {
         const count = data.inventory[item.id] || 0;
@@ -1823,7 +2062,6 @@ function renderInventory() {
             grid.appendChild(div);
         }
     });
-
     if (!hasItems) {
         grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#888;padding:30px;">背包空空如也 🎒</p>';
     }
@@ -1832,15 +2070,8 @@ function renderInventory() {
 function useMedicine() {
     const data = getData();
     const count = data.inventory['medicine'] || 0;
-    if (count <= 0) {
-        showToast('没有药品了！');
-        return;
-    }
-    if (data.life >= data.maxLife) {
-        showToast('❤️ 生命值已满！');
-        return;
-    }
-
+    if (count <= 0) { showToast('没有药品了！'); return; }
+    if (data.life >= data.maxLife) { showToast('❤️ 生命值已满！'); return; }
     data.inventory['medicine'] = count - 1;
     data.life = Math.min(data.maxLife, data.life + 10);
     saveData(data);
@@ -1853,19 +2084,10 @@ function useMedicine() {
 // 早市
 // ================================================================
 
-let morningSellTarget = null;
-let morningSellQty = 0;
-
 function openMorningMarket() {
     const data = getData();
-    if (data.life <= 0) {
-        showToast('💀 生命值不足，无法进入早市。');
-        return;
-    }
-    if (data.gold <= 0) {
-        showToast('💰 金币不足，请到黑市购买。');
-        return;
-    }
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    if (data.gold <= 0) { showToast('💰 金币不足'); return; }
     showPage('morningMarketPage');
     renderMorningMarket();
     document.getElementById('startSellBtn').disabled = false;
@@ -1875,57 +2097,40 @@ function renderMorningMarket() {
     const grid = document.getElementById('morningMarketGrid');
     grid.innerHTML = '';
     const data = getData();
-
-    // 只显示商店物品（黑市不显示）
     let hasItems = false;
     SHOP_ITEMS.forEach(item => {
-        // 药品不得售出
         if (item.id === 'medicine') return;
         const count = data.inventory[item.id] || 0;
         if (count > 0) {
             hasItems = true;
-            const sellPrice = getSellPrice(item.id);
+            const sellConfig = SELL_CONFIG[item.id];
+            if (!sellConfig) return;
             const div = document.createElement('div');
             div.className = 'mm-item';
             div.innerHTML = `
                 <div class="info">
                     <div class="name">${item.icon} ${item.name}</div>
-                    <div class="detail">库存: ${count} | 售价: ${sellPrice}💰</div>
+                    <div class="detail">库存: ${count} | 售价: ${sellConfig.price}💰 | 成功率: ${Math.round(sellConfig.rate * 100)}%</div>
                 </div>
                 <button class="sell-btn" onclick="prepareSell('${item.id}')">📤 上货</button>
             `;
             grid.appendChild(div);
         }
     });
-
     if (!hasItems) {
         grid.innerHTML = '<p style="text-align:center;color:#888;padding:30px;">没有可出售的物品 🛒</p>';
     }
 }
 
-function getSellPrice(itemId) {
-    const prices = {
-        'bread': 50,
-        'cookie': 40,
-        'clothes': 120,
-        'drink': 40,
-        'shoes': 100,
-        'necklace': 300,
-        'ring': 400
-    };
-    return prices[itemId] || 0;
-}
+let morningSellTarget = null;
 
 function prepareSell(itemId) {
     const data = getData();
     const count = data.inventory[itemId] || 0;
-    if (count <= 0) {
-        showToast('没有该物品了！');
-        return;
-    }
-
+    if (count <= 0) { showToast('没有该物品了！'); return; }
     morningSellTarget = itemId;
-    document.getElementById('qtyTitle').textContent = `上货 ${SHOP_ITEMS.find(i=>i.id===itemId)?.name || ''} (最多 ${count})`;
+    const item = SHOP_ITEMS.find(i => i.id === itemId);
+    document.getElementById('qtyTitle').textContent = `上货 ${item?.name || ''} (最多 ${count})`;
     document.getElementById('qtyInput').value = 1;
     document.getElementById('qtyInput').max = count;
     document.getElementById('qtyPopup').classList.add('show');
@@ -1944,17 +2149,12 @@ function confirmQty() {
     const data = getData();
     const itemId = morningSellTarget;
     if (!itemId) return;
-
     const maxQty = data.inventory[itemId] || 0;
     if (isNaN(qty) || qty <= 0 || qty > maxQty) {
         showToast(`请输入 1-${maxQty} 之间的数量`);
         return;
     }
-
-    morningSellQty = qty;
     closeQtyPopup();
-
-    // 开始贩卖（等待点击"开始贩卖"按钮）
     document.getElementById('startSellBtn').dataset.itemId = itemId;
     document.getElementById('startSellBtn').dataset.qty = qty;
     showToast(`✅ 已准备上货 ${qty} 个，点击"开始贩卖"`);
@@ -1964,69 +2164,277 @@ function startSelling() {
     const btn = document.getElementById('startSellBtn');
     const itemId = btn.dataset.itemId;
     const qty = parseInt(btn.dataset.qty);
-
-    if (!itemId || !qty) {
-        showToast('请先选择要上货的物品！');
-        return;
-    }
-
+    if (!itemId || !qty) { showToast('请先选择要上货的物品！'); return; }
     const data = getData();
-    if (data.gold < 30) {
-        showToast('💰 金币不足30，无法支付摊位费！');
-        return;
-    }
-
-    // 扣除摊位费
+    if (data.gold < 30) { showToast('💰 金币不足30，无法支付摊位费！'); return; }
     data.gold -= 30;
-
-    // 检查库存
     const invCount = data.inventory[itemId] || 0;
-    if (invCount < qty) {
-        showToast('库存不足！');
-        return;
-    }
-
-    // 扣除物品
+    if (invCount < qty) { showToast('库存不足！'); return; }
     data.inventory[itemId] = invCount - qty;
-
-    // 计算成功卖出数量
-    const isJewelry = itemId === 'necklace' || itemId === 'ring';
-    const successRate = isJewelry ? 0.5 : 0.8;
+    const sellConfig = SELL_CONFIG[itemId];
+    if (!sellConfig) { showToast('该物品不可出售'); return; }
     let soldCount = 0;
     let totalEarn = 0;
-    const sellPrice = getSellPrice(itemId);
-
     for (let i = 0; i < qty; i++) {
-        if (Math.random() < successRate) {
+        if (Math.random() < sellConfig.rate) {
             soldCount++;
-            totalEarn += sellPrice;
+            totalEarn += sellConfig.price;
         }
     }
-
-    // 记录卖出数量（用于成就）
     data.totalSold[itemId] = (data.totalSold[itemId] || 0) + soldCount;
-
-    // 增加金币
     data.gold += totalEarn;
-
-    // 检查生命值低于50的次数（成就用）
     if (data.life < 50) {
         data.lifeBelow50Count = (data.lifeBelow50Count || 0) + 1;
     }
-
     saveData(data);
-
-    const rate = successRate * 100;
-    showToast(`📊 卖出 ${soldCount}/${qty} 个，赚取 ${totalEarn}💰 (成功率 ${rate}%)`);
-
-    // 重置按钮状态
+    showToast(`📊 卖出 ${soldCount}/${qty} 个，赚取 ${totalEarn}💰 (成功率 ${Math.round(sellConfig.rate * 100)}%)`);
     btn.dataset.itemId = '';
     btn.dataset.qty = '';
     renderMorningMarket();
     updateUI();
-
-    // 检查成就
     checkAchievements();
+}
+
+// ================================================================
+// 偷窃
+// ================================================================
+
+function openTheft() {
+    const data = getData();
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    if (data.gold < 10) { showToast('💰 金币不足10，无法偷窃'); return; }
+    showPage('theftPage');
+    renderTheft();
+}
+
+function renderTheft() {
+    const grid = document.getElementById('theftGrid');
+    grid.innerHTML = '';
+    const data = getData();
+    const thefts = [
+        { id: 't1', label: '偷取 1000-2000 金币', min: 1000, max: 2000, rate: 0.5, failPenalty: 0.5, minGold: 10 },
+        { id: 't2', label: '偷取 5000-8000 金币', min: 5000, max: 8000, rate: 0.3, failPenalty: 0.7, minGold: 2000 },
+        { id: 't3', label: '偷取 15000-30000 金币', min: 15000, max: 30000, rate: 0.15, failPenalty: 0.85, minGold: 5000 }
+    ];
+    thefts.forEach(t => {
+        const canDo = data.gold >= t.minGold;
+        const div = document.createElement('div');
+        div.className = 'theft-item';
+        div.innerHTML = `
+            <div class="desc">${t.label}</div>
+            <div class="reward-info">💰 成功：${t.min}-${t.max} 金币</div>
+            <div class="risk">🎯 成功率：${Math.round(t.rate * 100)}% | 失败扣除 ${Math.round(t.failPenalty * 100)}% 金币</div>
+            <div style="font-size:11px;color:#888;">需要金币 ≥ ${t.minGold}</div>
+            <button class="theft-btn" ${!canDo ? 'disabled' : ''} onclick="doTheft('${t.id}')">🥷 偷窃</button>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function doTheft(theftId) {
+    const data = getData();
+    const thefts = {
+        't1': { min: 1000, max: 2000, rate: 0.5, failPenalty: 0.5, minGold: 10 },
+        't2': { min: 5000, max: 8000, rate: 0.3, failPenalty: 0.7, minGold: 2000 },
+        't3': { min: 15000, max: 30000, rate: 0.15, failPenalty: 0.85, minGold: 5000 }
+    };
+    const t = thefts[theftId];
+    if (!t) return;
+    if (data.gold < t.minGold) { showToast('💰 金币不足！'); return; }
+    if (Math.random() < t.rate) {
+        const reward = Math.round(Math.random() * (t.max - t.min) + t.min);
+        data.gold += reward;
+        saveData(data);
+        showToast(`🎉 偷窃成功！获得 ${reward} 金币！`);
+    } else {
+        const penalty = Math.round(data.gold * t.failPenalty);
+        data.gold -= penalty;
+        saveData(data);
+        showToast(`💀 偷窃失败！失去 ${penalty} 金币！`);
+    }
+    renderTheft();
+    updateUI();
+}
+
+// ================================================================
+// 股票（每次进入随机生成走势）
+// ================================================================
+
+function openStock() {
+    const data = getData();
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    showPage('stockPage');
+    // 每次进入生成新的随机价格
+    generateStockPrices();
+    renderStocks();
+}
+
+function generateStockPrices() {
+    const data = getData();
+    STOCK_COMPANIES.forEach(name => {
+        data.stockPrices[name] = Math.round((Math.random() * 80 + 20) * 10) / 10;
+    });
+    saveData(data);
+}
+
+function renderStocks() {
+    const grid = document.getElementById('stockGrid');
+    grid.innerHTML = '';
+    const data = getData();
+    STOCK_COMPANIES.forEach(name => {
+        const price = data.stockPrices[name] || Math.round((Math.random() * 80 + 20) * 10) / 10;
+        const holdings = data.stocks[name] || { shares: 0, avgPrice: 0 };
+        const div = document.createElement('div');
+        div.className = 'stock-item';
+        // 随机涨跌（-10% ~ +15%）
+        const change = Math.round((Math.random() * 0.25 - 0.10) * 1000) / 10;
+        const changeClass = change >= 0 ? 'up' : 'down';
+        const changeSign = change >= 0 ? '+' : '';
+        div.innerHTML = `
+            <div class="header">
+                <span class="name">${name}</span>
+                <span class="price-info">💰 ${price.toFixed(1)}</span>
+                <span class="change ${changeClass}">${changeSign}${change}%</span>
+            </div>
+            <div class="holdings">持有: ${holdings.shares} 股 | 均价: ${holdings.avgPrice.toFixed(1)}</div>
+            <div class="actions">
+                <input type="number" id="stock_qty_${name}" placeholder="股数" min="1" value="1">
+                <button class="stock-btn buy" onclick="stockBuy('${name}')">买入</button>
+                <button class="stock-btn sell" onclick="stockSell('${name}')" ${holdings.shares <= 0 ? 'disabled' : ''}>卖出</button>
+            </div>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function stockBuy(name) {
+    const data = getData();
+    const price = data.stockPrices[name];
+    const qtyInput = document.getElementById(`stock_qty_${name}`);
+    const qty = parseInt(qtyInput.value);
+    if (isNaN(qty) || qty <= 0) { showToast('请输入有效股数'); return; }
+    const cost = Math.round(price * qty * 10) / 10;
+    if (data.gold < cost) { showToast(`💰 金币不足！需要 ${Math.round(cost)} 金币`); return; }
+    if (!data.stocks[name]) data.stocks[name] = { shares: 0, avgPrice: 0 };
+    const totalCost = data.stocks[name].shares * data.stocks[name].avgPrice + cost;
+    data.stocks[name].shares += qty;
+    data.stocks[name].avgPrice = Math.round((totalCost / data.stocks[name].shares) * 10) / 10;
+    data.gold -= cost;
+    saveData(data);
+    showToast(`✅ 买入 ${qty} 股 ${name}，花费 ${Math.round(cost)} 金币`);
+    renderStocks();
+    updateUI();
+}
+
+function stockSell(name) {
+    const data = getData();
+    const holdings = data.stocks[name];
+    if (!holdings || holdings.shares <= 0) { showToast('没有持有该股票'); return; }
+    const qtyInput = document.getElementById(`stock_qty_${name}`);
+    const qty = parseInt(qtyInput.value);
+    if (isNaN(qty) || qty <= 0) { showToast('请输入有效股数'); return; }
+    if (qty > holdings.shares) { showToast('股数不足'); return; }
+    const price = data.stockPrices[name];
+    const revenue = Math.round(price * qty * 10) / 10;
+    holdings.shares -= qty;
+    if (holdings.shares === 0) holdings.avgPrice = 0;
+    data.gold += revenue;
+    saveData(data);
+    showToast(`✅ 卖出 ${qty} 股 ${name}，获得 ${Math.round(revenue)} 金币`);
+    renderStocks();
+    updateUI();
+}
+
+// ================================================================
+// 公司（偶像管理）
+// ================================================================
+
+function openCompany() {
+    const data = getData();
+    if (!data.hasYEntertainment && data.inventory['y_entertainment'] <= 0) {
+        showToast('🏢 需要购买 Y派娱乐公司 才能解锁此功能！');
+        return;
+    }
+    if (data.life <= 0) { showToast('💀 生命值不足'); return; }
+    showPage('companyPage');
+    renderIdols();
+    // 处理偶像每日收益（每次进入公司时触发）
+    processIdols(data);
+}
+
+function renderIdols() {
+    const grid = document.getElementById('idolGrid');
+    grid.innerHTML = '';
+    const data = getData();
+    IDOLS.forEach(idol => {
+        const hired = data.idols[idol.id] && data.idols[idol.id].hired;
+        const div = document.createElement('div');
+        div.className = 'idol-item';
+        div.innerHTML = `
+            <div class="header">
+                <span class="name">${idol.name}</span>
+                <span class="status ${hired ? 'hired' : 'not-hired'}">${hired ? '✅ 已招聘' : '❌ 未招聘'}</span>
+            </div>
+            <div class="info">💰 招聘费用: ${idol.cost} 金币 | 每日基础收入: ${idol.baseIncome} 金币</div>
+            <div class="info" style="font-size:12px;color:#888;">
+                20%概率额外事件: 花费 ${idol.spendMin}-${idol.spendMax} 或 挣得 ${idol.earnMin}-${idol.earnMax}
+            </div>
+            ${hired ? 
+                `<button class="idol-btn fire" onclick="fireIdol('${idol.id}')">🔥 解雇</button>` :
+                `<button class="idol-btn hire" onclick="hireIdol('${idol.id}')">📋 招聘</button>`
+            }
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function hireIdol(idolId) {
+    const data = getData();
+    const idol = IDOLS.find(i => i.id === idolId);
+    if (!idol) return;
+    if (data.gold < idol.cost) { showToast(`💰 金币不足 ${idol.cost}，无法招聘`); return; }
+    data.gold -= idol.cost;
+    if (!data.idols[idolId]) data.idols[idolId] = {};
+    data.idols[idolId].hired = true;
+    saveData(data);
+    showToast(`✅ 成功招聘 ${idol.name}！`);
+    renderIdols();
+    updateUI();
+}
+
+function fireIdol(idolId) {
+    const data = getData();
+    if (data.idols[idolId]) data.idols[idolId].hired = false;
+    saveData(data);
+    showToast(`🔥 已解雇 ${IDOLS.find(i => i.id === idolId)?.name}`);
+    renderIdols();
+    updateUI();
+}
+
+function processIdols(data) {
+    let log = '';
+    IDOLS.forEach(idol => {
+        if (data.idols[idol.id] && data.idols[idol.id].hired) {
+            let dailyIncome = idol.baseIncome;
+            if (Math.random() < 0.2) {
+                if (Math.random() < 0.5) {
+                    const extra = Math.round(Math.random() * (idol.earnMax - idol.earnMin) + idol.earnMin);
+                    dailyIncome += extra;
+                    log += `✨ ${idol.name} 因活动成功/代言/专辑大卖，额外挣得 ${extra}💰！\n`;
+                } else {
+                    const extra = Math.round(Math.random() * (idol.spendMax - idol.spendMin) + idol.spendMin);
+                    dailyIncome -= extra;
+                    log += `💸 ${idol.name} 因出去玩/宣传/练习室，额外花费 ${extra}💰！\n`;
+                }
+            }
+            data.gold += dailyIncome;
+            log += `💰 ${idol.name} 今日带来 ${dailyIncome} 金币\n`;
+        }
+    });
+    if (log) {
+        saveData(data);
+        showToast('📊 偶像日报\n' + log);
+    }
 }
 
 // ================================================================
@@ -2038,7 +2446,6 @@ function renderAchievements() {
     list.innerHTML = '';
     const data = getData();
     const unlocked = data.unlockedAchievements || [];
-
     ACHIEVEMENTS.forEach(ach => {
         const isUnlocked = unlocked.includes(ach.id);
         const div = document.createElement('div');
@@ -2057,21 +2464,17 @@ function checkAchievements() {
     const data = getData();
     const unlocked = data.unlockedAchievements || [];
     let changed = false;
-
     ACHIEVEMENTS.forEach(ach => {
         if (!unlocked.includes(ach.id) && ach.check()) {
             unlocked.push(ach.id);
-            // 发放奖励
-            if (ach.rewardType === 'gold') {
-                data.gold += ach.reward;
-            } else if (ach.rewardType === 'medicine') {
+            if (ach.rewardType === 'gold') data.gold += ach.reward;
+            else if (ach.rewardType === 'medicine') {
                 data.inventory['medicine'] = (data.inventory['medicine'] || 0) + ach.reward;
             }
             changed = true;
             showToast(`🏆 解锁成就: ${ach.name}！获得奖励！`);
         }
     });
-
     if (changed) {
         data.unlockedAchievements = unlocked;
         saveData(data);
@@ -2090,11 +2493,13 @@ function getLifeBelow50Count() {
 }
 
 // ================================================================
-// Toast 弹窗
+// 弹窗系统
 // ================================================================
 
 function showToast(msg) {
     document.getElementById('toastMsg').textContent = msg;
+    document.getElementById('toastBtn1').style.display = 'inline-block';
+    document.getElementById('toastBtn2').style.display = 'none';
     document.getElementById('toast').classList.add('show');
     document.getElementById('overlay').classList.add('show');
 }
@@ -2105,30 +2510,31 @@ function closeToast() {
 }
 
 // ================================================================
-// 初始化
+// 键盘事件
 // ================================================================
 
-// 初始化数据
-let initData = getData();
-saveData(initData);
-updateUI();
-
-// 键盘回车触发确认
 document.getElementById('pwdInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') confirmPwd();
 });
-document.getElementById('qtyInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') confirmQty();
-});
 
-// 点击遮罩关闭弹窗
 document.getElementById('overlay').addEventListener('click', function() {
     closeToast();
     closePwdPopup();
     closeQtyPopup();
 });
 
-console.log('🎮 Heavy Promotion 已加载！');
+// ================================================================
+// 初始化
+// ================================================================
+
+let initData = getData();
+saveData(initData);
+updateUI();
+checkAchievements();
+
+console.log('🎮 Heavy Promotion v2.0 已加载！');
+console.log('📝 已移除活动点和天数系统');
+console.log('📝 股票每次进入随机生成走势');
 </script>
 </body>
 </html>
