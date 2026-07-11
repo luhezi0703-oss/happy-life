@@ -47,7 +47,7 @@
             border-radius: 20px;
             font-size: 14px;
             cursor: pointer;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             backdrop-filter: blur(4px);
             transition: 0.2s;
         }
@@ -64,9 +64,32 @@
             background: linear-gradient(135deg, #f7971e, #ffd200);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             letter-spacing: 2px;
         }
+
+        /* ===== 状态栏（所有页面通用） ===== */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.08);
+            padding: 10px 16px;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .status-item .icon { font-size: 20px; }
+        .status-item .value { color: #ffd700; }
+        .status-item .value.life { color: #ff6b6b; }
 
         /* ========== 主界面 ========== */
         #mainPage .game-title {
@@ -133,41 +156,7 @@
             box-shadow: 0 4px 20px rgba(155, 89, 182, 0.3);
         }
 
-        /* ========== 游戏界面 ========== */
-        #gamePage .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.08);
-            padding: 12px 18px;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.06);
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .status-item .icon {
-            font-size: 18px;
-        }
-
-        .status-item .value {
-            color: #ffd700;
-        }
-
-        .status-item .value.life {
-            color: #ff6b6b;
-        }
-
+        /* ========== 游戏主界面按钮网格 ========== */
         .game-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1187,6 +1176,7 @@
             background: #555;
         }
 
+        /* ========== 通用工具 ========== */
         .text-center { text-align: center; }
         .hidden { display: none !important; }
 
@@ -1222,7 +1212,7 @@
 <!-- 密码输入弹窗 -->
 <div class="pwd-popup" id="pwdPopup">
     <div class="title" id="pwdTitle">请输入密码</div>
-    <input type="text" id="pwdInput" maxlength="5" inputmode="numeric" pattern="[0-9]*" placeholder="____">
+    <input type="text" id="pwdInput" maxlength="6" inputmode="numeric" pattern="[0-9]*" placeholder="____">
     <div>
         <button class="pwd-btn" onclick="confirmPwd()">确认</button>
         <button class="pwd-btn cancel" onclick="closePwdPopup()">取消</button>
@@ -1241,7 +1231,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- ===================== 主界面 ================================ -->
+<!-- ===================== 主界面（无状态栏） ==================== -->
 <div class="page active" id="mainPage">
     <div class="game-title">Heavy Promotion</div>
     <div class="main-menu">
@@ -1253,43 +1243,31 @@
     <p style="text-align:center;color:#555;font-size:11px;margin-top:30px;">v2.0 · 三人好友版</p>
 </div>
 
-<!-- ===================== 游戏界面 ============================== -->
+<!-- ===================== 游戏主界面（已有状态栏） ================= -->
 <div class="page" id="gamePage">
     <button class="back-btn" onclick="backToMain()">← 返回主菜单</button>
-
     <div class="status-bar">
-        <div class="status-item"><span class="icon">🪙</span><span class="value" id="goldDisplay">200</span></div>
-        <div class="status-item"><span class="icon">❤️</span><span class="value life" id="lifeDisplay">100</span></div>
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value" id="goldDisplay">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value" id="lifeDisplay">100</span></div>
     </div>
-
     <div class="game-grid">
-        <div class="game-grid-btn" id="slotBtn" onclick="openSlot()">
-            <span class="icon">🎰</span><span class="label">老虎机</span><span class="sub">试试手气</span>
-        </div>
-        <div class="game-grid-btn" id="casinoBtn" onclick="openCasino()">
-            <span class="icon">♠️</span><span class="label">赌场</span><span class="sub">门票 400💰/5局</span>
-        </div>
-        <div class="game-grid-btn" id="shopBtn" onclick="openShop()">
-            <span class="icon">🏪</span><span class="label">商店</span><span class="sub">购物天堂</span>
-        </div>
-        <div class="game-grid-btn" id="marketBtn" onclick="openMorningMarket()">
-            <span class="icon">🌅</span><span class="label">早市</span><span class="sub">摆摊赚钱</span>
-        </div>
-        <div class="game-grid-btn" id="theftBtn" onclick="openTheft()">
-            <span class="icon">🥷</span><span class="label">偷窃</span><span class="sub">高风险高回报</span>
-        </div>
-        <div class="game-grid-btn" id="stockBtn" onclick="openStock()">
-            <span class="icon">📈</span><span class="label">股票</span><span class="sub">投资理财</span>
-        </div>
-        <div class="game-grid-btn" id="companyBtn" onclick="openCompany()" style="display:none;">
-            <span class="icon">🏢</span><span class="label">公司</span><span class="sub">偶像管理</span>
-        </div>
+        <div class="game-grid-btn" id="slotBtn" onclick="openSlot()"><span class="icon">🎰</span><span class="label">老虎机</span><span class="sub">试试手气</span></div>
+        <div class="game-grid-btn" id="casinoBtn" onclick="openCasino()"><span class="icon">♠️</span><span class="label">赌场</span><span class="sub">门票 400💰/5局</span></div>
+        <div class="game-grid-btn" id="shopBtn" onclick="openShop()"><span class="icon">🏪</span><span class="label">商店</span><span class="sub">购物天堂</span></div>
+        <div class="game-grid-btn" id="marketBtn" onclick="openMorningMarket()"><span class="icon">🌅</span><span class="label">早市</span><span class="sub">摆摊赚钱</span></div>
+        <div class="game-grid-btn" id="theftBtn" onclick="openTheft()"><span class="icon">🥷</span><span class="label">偷窃</span><span class="sub">高风险高回报</span></div>
+        <div class="game-grid-btn" id="stockBtn" onclick="openStock()"><span class="icon">📈</span><span class="label">股票</span><span class="sub">投资理财</span></div>
+        <div class="game-grid-btn" id="companyBtn" onclick="openCompany()" style="display:none;"><span class="icon">🏢</span><span class="label">公司</span><span class="sub">偶像管理</span></div>
     </div>
 </div>
 
-<!-- ===================== 老虎机界面 ============================ -->
+<!-- ===================== 老虎机（新增状态栏） ================= -->
 <div class="page" id="slotPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🎰 老虎机</div>
     <div class="slot-machine">
         <div class="slot-reels">
@@ -1302,9 +1280,13 @@
     </div>
 </div>
 
-<!-- ===================== 赌场界面 ============================== -->
+<!-- ===================== 赌场（新增状态栏） ================= -->
 <div class="page" id="casinoPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">♠️ 赌场</div>
     <div class="casino-area">
         <div class="casino-ticket">🎫 入场门票：400 金币（可玩5局）</div>
@@ -1336,9 +1318,13 @@
     <button class="casino-btn escape" id="escapeBtn" onclick="escapeCasino()">🏃 逃跑 (25%)</button>
 </div>
 
-<!-- ===================== 商店界面 ============================== -->
+<!-- ===================== 商店（新增状态栏） ================= -->
 <div class="page" id="shopPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🏪 商店</div>
     <div class="shop-inventory-link">
         <button onclick="openInventoryFromShop()">🎒 查看背包</button>
@@ -1349,31 +1335,47 @@
     </div>
 </div>
 
-<!-- ===================== 黑市界面 ============================== -->
+<!-- ===================== 黑市（新增状态栏） ================= -->
 <div class="page" id="blackMarketPage">
     <button class="back-btn" onclick="backToShop()">← 返回商店</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🖤 黑市</div>
     <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">输入正确密码获得金币</p>
     <div class="black-market-grid" id="blackMarketGrid"></div>
 </div>
 
-<!-- ===================== 背包界面 ============================== -->
+<!-- ===================== 背包（新增状态栏） ================= -->
 <div class="page" id="inventoryPage">
     <button class="back-btn" onclick="backFromInventory()">← 返回</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🎒 背包</div>
     <div class="inventory-grid" id="inventoryGrid"></div>
 </div>
 
-<!-- ===================== 成就界面 ============================== -->
+<!-- ===================== 成就（新增状态栏） ================= -->
 <div class="page" id="achievementPage">
     <button class="back-btn" onclick="backToMain()">← 返回主菜单</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🏆 成就</div>
     <div class="achievement-list" id="achievementList"></div>
 </div>
 
-<!-- ===================== 早市界面 ============================== -->
+<!-- ===================== 早市（新增状态栏） ================= -->
 <div class="page" id="morningMarketPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🌅 早市</div>
     <div class="mm-controls">
         <span style="color:#888;">摊位费 30💰</span>
@@ -1382,25 +1384,37 @@
     <div class="morning-market-grid" id="morningMarketGrid"></div>
 </div>
 
-<!-- ===================== 偷窃界面 ============================== -->
+<!-- ===================== 偷窃（新增状态栏） ================= -->
 <div class="page" id="theftPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🥷 偷窃</div>
     <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">高风险高回报，谨慎选择！</p>
     <div class="theft-grid" id="theftGrid"></div>
 </div>
 
-<!-- ===================== 股票界面 ============================== -->
+<!-- ===================== 股票（新增状态栏） ================= -->
 <div class="page" id="stockPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">📈 股票</div>
     <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">最低买入 150💰，每次进入走势不同</p>
     <div class="stock-grid" id="stockGrid"></div>
 </div>
 
-<!-- ===================== 公司界面 ============================== -->
+<!-- ===================== 公司（新增状态栏） ================= -->
 <div class="page" id="companyPage">
     <button class="back-btn" onclick="backToGame()">← 返回游戏</button>
+    <div class="status-bar">
+        <div class="status-item"><span class="icon">🪙</span><span class="value gold-value">200</span></div>
+        <div class="status-item"><span class="icon">❤️</span><span class="value life life-value">100</span></div>
+    </div>
     <div class="page-title">🏢 公司</div>
     <p style="color:#888;font-size:13px;text-align:center;margin-bottom:10px;">招聘偶像，每日为你赚钱！</p>
     <div class="idol-grid" id="idolGrid"></div>
@@ -1461,6 +1475,7 @@ const BLACK_MARKET_ITEMS = [
     { id: 'bm_10000', name: '10000 金币', price: '2.49 coin', codes: ['26019','57341','81207','19463','35702','60814','92537','41085','73629','10548','39271','64105','87523','20694','51837','74910','16325','48079','62153','90481','28716','53092','86417','13950','40268','71593','98304','24671','59138','82740','17052','43986','68219','95703','31425','56870','89142','12569','47031','78625'], reward: 10000, len: 5 },
     { id: 'bm_90000000', name: '90000000（自留款）', price: '自留款', codes: ['860712'], reward: 90000000, len: 6 }
 ];
+
 const ACHIEVEMENTS = [
     { id: 'ach_bread', name: '面包坊', desc: '你在面包领域发展很好！', reward: 500, rewardType: 'gold', check: () => getTotalSold('bread') >= 60 },
     { id: 'ach_jewelry', name: '首饰专家', desc: '许多人把你称为首饰供货商。', reward: 700, rewardType: 'gold', check: () => getTotalSold('necklace') + getTotalSold('ring') >= 60 },
@@ -1527,11 +1542,20 @@ function saveData(data) {
     updateUI();
 }
 
+// ===== 更新所有状态栏 =====
 function updateUI() {
     const data = getData();
-    document.getElementById('goldDisplay').textContent = Math.round(data.gold);
-    document.getElementById('lifeDisplay').textContent = data.life;
+    const gold = Math.round(data.gold);
+    const life = data.life;
+
+    // 更新所有 .gold-value 和 .life-value 元素
+    document.querySelectorAll('.gold-value').forEach(el => el.textContent = gold);
+    document.querySelectorAll('.life-value').forEach(el => el.textContent = life);
+
+    // 更新游戏网格按钮状态
     updateGameGrid();
+
+    // 显示/隐藏公司按钮
     if (data.inventory['y_entertainment'] > 0) {
         document.getElementById('companyBtn').style.display = 'block';
         data.hasYEntertainment = true;
@@ -1565,33 +1589,17 @@ function showPage(id) {
     closePwdPopup();
     closeQtyPopup();
     document.getElementById('overlay').classList.remove('show');
+    updateUI(); // 切换后刷新状态栏
 }
 
-function backToMain() {
-    showPage('mainPage');
-}
-
-function backToGame() {
-    showPage('gamePage');
-    updateUI();
-}
-
-function backToShop() {
-    showPage('shopPage');
-    renderShop();
-}
-
+function backToMain() { showPage('mainPage'); }
+function backToGame() { showPage('gamePage'); updateUI(); }
+function backToShop() { showPage('shopPage'); renderShop(); }
 function backFromInventory() {
     const from = sessionStorage.getItem('inventory_from') || 'game';
-    if (from === 'shop') {
-        showPage('shopPage');
-        renderShop();
-    } else if (from === 'morning') {
-        showPage('morningMarketPage');
-        renderMorningMarket();
-    } else {
-        showPage('gamePage');
-    }
+    if (from === 'shop') { showPage('shopPage'); renderShop(); }
+    else if (from === 'morning') { showPage('morningMarketPage'); renderMorningMarket(); }
+    else { showPage('gamePage'); }
     sessionStorage.removeItem('inventory_from');
 }
 
@@ -2257,14 +2265,13 @@ function doTheft(theftId) {
 }
 
 // ================================================================
-// 股票（每次进入随机生成走势）
+// 股票
 // ================================================================
 
 function openStock() {
     const data = getData();
     if (data.life <= 0) { showToast('💀 生命值不足'); return; }
     showPage('stockPage');
-    // 每次进入生成新的随机价格
     generateStockPrices();
     renderStocks();
 }
@@ -2286,7 +2293,6 @@ function renderStocks() {
         const holdings = data.stocks[name] || { shares: 0, avgPrice: 0 };
         const div = document.createElement('div');
         div.className = 'stock-item';
-        // 随机涨跌（-10% ~ +15%）
         const change = Math.round((Math.random() * 0.25 - 0.10) * 1000) / 10;
         const changeClass = change >= 0 ? 'up' : 'down';
         const changeSign = change >= 0 ? '+' : '';
@@ -2358,7 +2364,6 @@ function openCompany() {
     if (data.life <= 0) { showToast('💀 生命值不足'); return; }
     showPage('companyPage');
     renderIdols();
-    // 处理偶像每日收益（每次进入公司时触发）
     processIdols(data);
 }
 
@@ -2510,7 +2515,7 @@ function closeToast() {
 }
 
 // ================================================================
-// 键盘事件
+// 键盘与遮罩事件
 // ================================================================
 
 document.getElementById('pwdInput').addEventListener('keydown', function(e) {
@@ -2533,8 +2538,7 @@ updateUI();
 checkAchievements();
 
 console.log('🎮 Heavy Promotion v2.0 已加载！');
-console.log('📝 已移除活动点和天数系统');
-console.log('📝 股票每次进入随机生成走势');
+console.log('📝 所有界面均已显示金币和生命值状态栏');
 </script>
 </body>
 </html>
