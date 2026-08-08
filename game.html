@@ -1,1932 +1,2538 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Life · 四人版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光线科研部 · 时空叙事</title>
     <style>
-        /* ========== 全局重置 ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        /* ============================================================
+           全局重置 – 简洁信息型风格
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0b0a0c;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+            background: #f4f7fc;
+            color: #1e2a3a;
+            min-height: 100vh;
+            padding: 30px 24px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Courier New', monospace;
-            padding: 15px;
+            align-items: flex-start;
         }
-        .page {
-            max-width: 460px;
-            width: 100%;
-            min-height: 700px;
-            position: relative;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        .page.active { display: flex; }
 
-        /* ========== 开始界面 ========== */
-        #startPage {
-            background: radial-gradient(circle at 30% 40%, #1a0f0f, #0a0505);
-            border-radius: 50px;
-            border: 2px solid #6a1a1a;
-            padding: 50px 30px;
-            box-shadow: 0 0 60px rgba(150, 0, 0, 0.4);
-            justify-content: center;
-            gap: 40px;
-        }
-        #startPage h1 {
-            color: #cc2222;
-            font-size: 38px;
-            text-shadow: 0 0 30px #ff000088;
-            letter-spacing: 6px;
-            text-align: center;
-        }
-        .start-btn {
+        .app {
+            max-width: 1100px;
             width: 100%;
-            padding: 22px;
-            font-size: 26px;
-            font-weight: bold;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+            padding: 28px 32px 40px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        /* ===== 页面切换 ===== */
+        .page {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eef2f6;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 22px 8px 18px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover {
+            background: #e2e8ed;
+            transform: translateX(-3px);
+        }
+        .back-btn .arrow {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .home-card {
+            background: #f8faff;
+            border-radius: 32px;
+            padding: 44px 36px 36px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            margin-top: 10px;
+        }
+        .home-card .avatar-big {
+            font-size: 80px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .home-card .name-tag {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1e2a3a;
+        }
+        .home-card .msg-preview {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 24px;
+            margin: 20px 0 24px;
+            border-left: 5px solid #3b82f6;
+            text-align: left;
+            font-size: 16px;
+            color: #2c3e50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .home-card .msg-preview .from {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .primary-btn {
+            display: inline-block;
+            padding: 14px 48px;
+            background: #3b82f6;
             border: none;
             border-radius: 60px;
-            background: linear-gradient(180deg, #2a1a1a, #1a0a0a);
-            color: #d4b0b0;
-            border: 2px solid #6a2a2a;
-            box-shadow: 0 6px 0 #2a0a0a;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
             cursor: pointer;
-            transition: all 0.08s;
-            letter-spacing: 4px;
+            transition: 0.2s;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.20);
+            letter-spacing: 0.5px;
         }
-        .start-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #2a0a0a;
+        .primary-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
         }
-        .start-btn.game { background: linear-gradient(180deg, #3a1a1a, #1f0a0a); border-color: #aa3333; color: #ffbbbb; }
-        .start-btn.exit { background: linear-gradient(180deg, #1a1a2a, #0a0a1a); border-color: #444466; color: #9999bb; }
-        .start-btn.menu { background: linear-gradient(180deg, #1a2a1a, #0a1a0a); border-color: #446644; color: #99bb99; }
+        .primary-btn:active {
+            transform: scale(0.96);
+        }
 
-        /* ========== Menu 弹出层 ========== */
-        .menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 8px 0 16px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
-        .menu-overlay.active { display: flex; }
-        .menu-box {
-            background: #1a1a2a;
-            border: 3px solid #66aa66;
-            border-radius: 40px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 80px rgba(0,255,100,0.2);
-            animation: popIn 0.3s;
+        .chat-container::-webkit-scrollbar {
+            width: 5px;
         }
-        .menu-box h2 {
-            color: #88dd88;
-            font-size: 32px;
-            margin-bottom: 30px;
-            letter-spacing: 4px;
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #d0d7e0;
+            border-radius: 10px;
         }
-        .menu-btn {
-            display: block;
-            width: 100%;
-            padding: 20px;
-            margin-bottom: 18px;
-            font-size: 24px;
-            font-weight: bold;
-            background: #0f0f1f;
-            border: 2px solid #3a5a3a;
-            border-radius: 60px;
-            color: #ccddcc;
-            cursor: pointer;
-            transition: all 0.08s;
-            box-shadow: 0 4px 0 #0a1a0a;
-        }
-        .menu-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a1a0a;
-        }
-        .menu-btn.inventory { border-color: #66aaff; color: #88ddff; }
-        .menu-btn.website { border-color: #ffaa66; color: #ffdd88; }
-        .menu-btn.login { border-color: #dd88ff; color: #ddbbff; }
-        .menu-close {
-            margin-top: 10px;
-            padding: 14px;
-            background: #2a1a1a;
-            border: 2px solid #6a3a3a;
-            border-radius: 60px;
-            color: #dd9999;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .menu-close:active { background: #3a2a2a; }
 
-        /* ========== 登录弹窗 ========== */
-        .login-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1100;
+        .chat-bubble {
+            max-width: 78%;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            word-break: break-word;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
         }
-        .login-overlay.active { display: flex; }
-        .login-box {
-            background: #1a1a2a;
-            border: 3px solid #dd88ff;
-            border-radius: 40px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
+        .chat-bubble.left {
+            align-self: flex-start;
+            background: #f0f4fa;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble.right {
+            align-self: flex-end;
+            background: #e6edf6;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-bubble .sender {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 2px;
+        }
+        .chat-bubble .sender.me {
+            color: #475569;
+        }
+
+        .chat-date {
             text-align: center;
-            box-shadow: 0 0 80px rgba(200,100,255,0.15);
-            animation: popIn 0.3s;
+            font-size: 13px;
+            color: #6b7a8f;
+            padding: 10px 0 6px;
+            font-weight: 500;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 2px;
         }
-        .login-box h2 {
-            color: #dd88ff;
+
+        .chat-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 10px 0 6px;
+        }
+        .chat-actions .action-btn {
+            padding: 10px 28px;
+            background: #eef2f6;
+            border: 1px solid #d0d7e0;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1e2a3a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chat-actions .action-btn:hover {
+            background: #e2e8ed;
+            border-color: #b0bccd;
+        }
+
+        .password-box {
+            background: #f8faff;
+            border-radius: 32px;
+            padding: 40px 36px 36px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            max-width: 540px;
+            margin: 10px auto;
+        }
+        .password-box .logo-icon {
+            font-size: 56px;
+            margin-bottom: 4px;
+        }
+        .password-box h2 {
             font-size: 28px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: #1e2a3a;
         }
-        .login-box .sub {
-            color: #8866aa;
-            font-size: 14px;
+        .password-box .sub {
+            font-size: 16px;
+            color: #5e6f88;
             margin-bottom: 24px;
         }
-        .login-box label {
-            color: #ccbbdd;
+        .password-box input {
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 60px;
+            border: 1px solid #d0d7e0;
+            background: #ffffff;
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 6px;
+            outline: none;
+            transition: 0.2s;
+            color: #1e2a3a;
+        }
+        .password-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+        }
+        .password-box .enter-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            background: #3b82f6;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .password-box .enter-btn:hover {
+            background: #2563eb;
+        }
+        .password-box .error-msg {
+            color: #dc2626;
+            font-size: 15px;
+            margin-top: 12px;
+            min-height: 24px;
+        }
+
+        .system-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0 16px;
+            border-bottom: 2px solid #eef2f6;
+            margin-bottom: 20px;
+        }
+        .system-header .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1e2a3a;
+        }
+        .system-header .title span {
+            color: #2563eb;
+        }
+        .system-header .avatar-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #eef2f6;
+            border: 2px solid #d0d7e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2c3e50;
+        }
+        .system-header .avatar-btn:hover {
+            background: #e2e8ed;
+            border-color: #b0bccd;
+        }
+
+        .system-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .system-card {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 20px 22px;
+            border: 1px solid #e2e8f0;
+        }
+        .system-card .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e2a3a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+        .system-card .person {
+            font-size: 15px;
+            padding: 5px 0;
+            color: #1e2a3a;
+        }
+        .system-card .person .role {
+            color: #5e6f88;
+            font-size: 13px;
+            margin-left: 6px;
+        }
+
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: 8px 0 10px;
+        }
+        .record-item {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px 22px;
+            border-left: 5px solid #3b82f6;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.02);
+        }
+        .record-item .date {
             font-size: 14px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .record-item .desc {
+            font-size: 15px;
+            color: #1e2a3a;
+            margin-top: 2px;
+            line-height: 1.6;
+        }
+        .record-item .mark {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 14px;
+            color: #3b82f6;
+            background: #eef4fa;
+            padding: 2px 16px;
+            border-radius: 30px;
+        }
+        .record-item .mark-img {
+            font-size: 30px;
             display: block;
-            text-align: left;
-            margin-bottom: 4px;
+            margin-top: 4px;
+            letter-spacing: 6px;
+        }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .login-overlay.show {
+            display: flex;
+        }
+
+        .login-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 36px 32px 32px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+            animation: fadeUp 0.25s ease;
+        }
+        .login-box .close-login {
+            float: right;
+            background: none;
+            border: none;
+            color: #5e6f88;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .login-box .close-login:hover {
+            color: #1e2a3a;
+        }
+        .login-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e2a3a;
+        }
+        .login-box .sub {
+            font-size: 15px;
+            color: #5e6f88;
+            margin-bottom: 20px;
+        }
+        .login-box label {
+            display: block;
+            font-size: 14px;
             font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
         }
         .login-box input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #3a2a4a;
             border-radius: 30px;
-            background: #0f0f1a;
-            color: #ddccff;
+            border: 1px solid #d0d7e0;
+            background: #f8faff;
             font-size: 16px;
-            margin-bottom: 18px;
             outline: none;
             transition: 0.2s;
+            margin-bottom: 14px;
+            color: #1e2a3a;
         }
         .login-box input:focus {
-            border-color: #dd88ff;
-            box-shadow: 0 0 20px rgba(200,100,255,0.15);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
         }
         .login-box .login-submit {
             width: 100%;
-            padding: 14px;
-            background: #3a2a4a;
-            border: 2px solid #6a4a8a;
-            border-radius: 60px;
-            color: #ddccff;
-            font-size: 20px;
-            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            background: #3b82f6;
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
             cursor: pointer;
             transition: 0.2s;
         }
-        .login-box .login-submit:active { background: #4a3a5a; }
+        .login-box .login-submit:hover {
+            background: #2563eb;
+        }
         .login-box .login-error {
-            color: #ff6666;
+            color: #dc2626;
             font-size: 14px;
             margin-top: 12px;
-            display: none;
-        }
-        .login-box .login-close {
-            margin-top: 16px;
-            color: #8866aa;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .login-box .login-close:hover { color: #ddccff; }
-
-        /* ========== 操作面板 ========== */
-        .operation-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1200;
-        }
-        .operation-overlay.active { display: flex; }
-        .operation-box {
-            background: #1a1a2a;
-            border: 3px solid #ff88dd;
-            border-radius: 40px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
             text-align: center;
-            box-shadow: 0 0 80px rgba(255,100,200,0.15);
-            animation: popIn 0.3s;
         }
-        .operation-box h2 {
-            color: #ff88dd;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        .operation-box .welcome {
-            color: #cc99bb;
-            font-size: 16px;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .op-btn {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            margin-bottom: 14px;
-            font-size: 20px;
-            font-weight: bold;
-            background: #1a0f1a;
-            border: 2px solid #4a3a4a;
-            border-radius: 60px;
-            color: #ddccdd;
-            cursor: pointer;
-            transition: 0.08s;
-            box-shadow: 0 4px 0 #0a0a0a;
-        }
-        .op-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a0a0a;
-        }
-        .op-btn.modify { border-color: #66aaff; color: #88ddff; }
-        .op-btn.destroy { border-color: #ff6666; color: #ff8888; }
-        .op-btn.exit-op { border-color: #666688; color: #9999bb; }
 
-        /* ========== 销毁确认流程 ========== */
         .confirm-overlay {
-            display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(2px);
+            z-index: 210;
+            display: none;
             align-items: center;
-            z-index: 1300;
+            justify-content: center;
+            padding: 24px;
         }
-        .confirm-overlay.active { display: flex; }
-        .confirm-box {
-            background: #1a0a0a;
-            border: 3px solid #ff3333;
-            border-radius: 40px;
-            padding: 40px 30px;
-            max-width: 380px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 80px rgba(255,0,0,0.2);
-            animation: popIn 0.3s;
-        }
-        .confirm-box .q {
-            color: #ff6666;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .confirm-box .btn-group {
+        .confirm-overlay.show {
             display: flex;
-            gap: 16px;
-            justify-content: center;
         }
-        .confirm-box .btn-group button {
-            padding: 14px 32px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: 0.08s;
-        }
-        .confirm-box .btn-group .yes {
-            background: #3a1a1a;
-            border: 2px solid #aa3333;
-            color: #ff8888;
-        }
-        .confirm-box .btn-group .yes:active { background: #4a2a2a; }
-        .confirm-box .btn-group .no {
-            background: #1a1a2a;
-            border: 2px solid #444466;
-            color: #9999bb;
-        }
-        .confirm-box .btn-group .no:active { background: #2a2a3a; }
 
-        /* ========== 销毁终局 ========== */
-        .final-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            justify-content: center;
-            align-items: center;
-            z-index: 1400;
-            flex-direction: column;
-            cursor: pointer;
-        }
-        .final-overlay.active { display: flex; }
-        .final-box {
+        .confirm-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 32px 28px 28px;
+            max-width: 360px;
+            width: 100%;
             text-align: center;
-            color: #ff4444;
-            animation: popIn 0.5s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
         }
-        .final-box .big {
-            font-size: 48px;
-            font-weight: bold;
-            text-shadow: 0 0 40px #ff000066;
+        .confirm-box p {
+            font-size: 18px;
+            color: #1e2a3a;
             margin-bottom: 20px;
         }
-        .final-box .sub {
-            font-size: 22px;
-            color: #aa6666;
-            margin-bottom: 30px;
+        .confirm-box .btn-row {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
         }
-        .final-box .final-btn {
-            padding: 16px 40px;
-            background: #2a1a1a;
-            border: 2px solid #aa3333;
-            border-radius: 60px;
-            color: #ff8888;
-            font-size: 20px;
+        .confirm-box .btn-row button {
+            padding: 10px 32px;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
         }
-        .final-box .final-btn:active { background: #3a2a2a; }
-        .final-box .final-end {
-            margin-top: 30px;
-            color: #664444;
-            font-size: 18px;
-            display: none;
+        .confirm-box .btn-row button:hover {
+            transform: translateY(-2px);
         }
-        .final-box .final-end.show { display: block; }
+        .confirm-box .btn-row .yes {
+            background: #dc2626;
+            color: #fff;
+        }
+        .confirm-box .btn-row .no {
+            background: #eef2f6;
+            color: #2c3e50;
+        }
 
-        /* ========== 物品栏 ========== */
-        .inventory-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            z-index: 1001;
-        }
-        .inventory-overlay.active { display: flex; }
-        .inventory-box {
-            background: #12121f;
-            border: 3px solid #66aaff;
-            border-radius: 40px;
-            padding: 30px 25px;
-            max-width: 400px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 0 80px rgba(100,170,255,0.15);
-            animation: popIn 0.3s;
-        }
-        .inventory-box h2 {
-            color: #88ddff;
-            font-size: 28px;
-            text-align: center;
+            padding: 8px 0 14px;
+            border-bottom: 2px solid #eef2f6;
             margin-bottom: 20px;
-            border-bottom: 2px solid #2a4a6a;
-            padding-bottom: 12px;
         }
-        .inv-item {
+        .dash-header .time {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+        .dash-header .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e2a3a;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .dash-card {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 20px 22px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dash-card:hover {
+            background: #f0f4fa;
+            border-color: #c0ccdd;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.02);
+        }
+        .dash-card .card-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e2a3a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dash-card .card-label .icon {
+            font-size: 24px;
+        }
+        .dash-card .card-preview {
+            font-size: 14px;
+            color: #5e6f88;
+            margin-top: 6px;
+            padding-left: 34px;
+        }
+
+        .detail-content {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+        .detail-content .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2a3a;
+            margin-bottom: 12px;
+        }
+        .detail-content .body {
+            font-size: 15px;
+            color: #1e2a3a;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .detail-content .body .highlight {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .contact-item {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 14px 16px;
-            background: #0a0a18;
+            padding: 14px 20px;
+            background: #f8faff;
             border-radius: 20px;
-            margin-bottom: 12px;
-            border: 1px solid #2a4a6a;
-        }
-        .inv-item .icon { font-size: 32px; width: 50px; text-align: center; }
-        .inv-item .name { color: #ddffdd; font-size: 20px; }
-        .inv-item .count { color: #88aaff; font-size: 18px; margin-left: auto; }
-        .inv-empty {
-            color: #6688aa;
-            text-align: center;
-            padding: 30px 0;
-            font-size: 20px;
-        }
-        .inv-close {
-            margin-top: 20px;
-            padding: 14px;
-            background: #1a2a3a;
-            border: 2px solid #3a5a7a;
-            border-radius: 60px;
-            color: #88bbdd;
-            font-size: 20px;
-            text-align: center;
+            border: 1px solid #e2e8f0;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .inv-close:active { background: #2a3a4a; }
+        .contact-item:hover {
+            background: #f0f4fa;
+            border-color: #c0ccdd;
+        }
+        .contact-item .avatar {
+            font-size: 36px;
+        }
+        .contact-item .info .name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1e2a3a;
+        }
+        .contact-item .info .preview {
+            font-size: 14px;
+            color: #5e6f88;
+        }
 
-        /* ========== 官网页面 ========== */
-        #officialSite {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #f5f0eb;
-            z-index: 2000;
+        .chat-detail-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+            max-height: 500px;
             overflow-y: auto;
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
-            padding: 20px;
+            padding-right: 4px;
         }
-        #officialSite.active { display: block; }
-        .site-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 30px;
-            padding: 40px 45px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        .chat-detail-box::-webkit-scrollbar {
+            width: 5px;
         }
-        .site-header {
+        .chat-detail-box::-webkit-scrollbar-thumb {
+            background: #d0d7e0;
+            border-radius: 10px;
+        }
+
+        .special-banner {
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            border: 1px solid #c7d2fe;
+            border-radius: 24px;
+            padding: 24px 22px;
             text-align: center;
-            border-bottom: 3px solid #d4c5b2;
-            padding-bottom: 25px;
-            margin-bottom: 30px;
+            grid-column: 1 / -1;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .site-header h1 {
-            font-size: 44px;
-            color: #3d2b1f;
-            letter-spacing: 6px;
-            font-weight: 700;
+        .special-banner:hover {
+            background: #e0e7ff;
+            border-color: #a5b4fc;
         }
-        .site-header p {
-            color: #8a7a6a;
-            font-size: 18px;
-            margin-top: 8px;
+        .special-banner .title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #4338ca;
             letter-spacing: 2px;
         }
-        .site-section {
-            margin-bottom: 38px;
-            background: #faf8f5;
-            border-radius: 24px;
-            padding: 25px 30px;
-            border-left: 6px solid #b8a594;
+        .special-banner .sub {
+            font-size: 15px;
+            color: #4f46e5;
+            margin-top: 4px;
         }
-        .site-section h2 {
-            font-size: 28px;
-            color: #4a372a;
-            margin-bottom: 16px;
-            display: flex;
+
+        .question-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(4px);
+            z-index: 220;
+            display: none;
             align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .question-overlay.show {
+            display: flex;
+        }
+
+        .question-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 36px 32px 32px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+            text-align: center;
+        }
+        .question-box .q-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2a3a;
+            margin-bottom: 8px;
+        }
+        .question-box .q-sub {
+            font-size: 15px;
+            color: #5e6f88;
+            margin-bottom: 20px;
+        }
+        .question-box input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 30px;
+            border: 1px solid #d0d7e0;
+            background: #f8faff;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 14px;
+            color: #1e2a3a;
+        }
+        .question-box input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+        }
+        .question-box .q-btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 30px;
+            background: #3b82f6;
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .question-box .q-btn:hover {
+            background: #2563eb;
+        }
+        .question-box .q-error {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 22px;
+        }
+        .question-box .close-q {
+            float: right;
+            background: none;
+            border: none;
+            color: #5e6f88;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .question-box .close-q:hover {
+            color: #1e2a3a;
+        }
+
+        .choice-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 20px 0 10px;
+        }
+        .choice-btn {
+            padding: 16px 48px;
+            border: none;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .choice-btn.red {
+            background: #dc2626;
+        }
+        .choice-btn.red:hover {
+            background: #b91c1c;
+            transform: scale(1.04);
+        }
+        .choice-btn.blue {
+            background: #2563eb;
+        }
+        .choice-btn.blue:hover {
+            background: #1d4ed8;
+            transform: scale(1.04);
+        }
+
+        .blackout {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            flex-direction: column;
             gap: 12px;
         }
-        .site-section p, .site-section li {
-            font-size: 17px;
-            line-height: 1.9;
-            color: #3d3a36;
-        }
-        .site-section ul {
-            padding-left: 25px;
-            list-style-type: square;
-        }
-        .site-section ul li { margin-bottom: 6px; }
-        .site-section .quote {
-            font-style: italic;
-            color: #6a5a4a;
-            padding: 12px 20px;
-            background: #f0ece6;
-            border-radius: 12px;
-            margin: 8px 0;
-        }
-        .site-close {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 40px;
-            background: #3d2b1f;
-            border: none;
-            border-radius: 60px;
-            color: #f5f0eb;
-            font-size: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .site-close:hover { background: #5a4030; }
-        .site-footer {
-            text-align: center;
-            color: #aaa69a;
-            font-size: 14px;
-            border-top: 1px solid #e0d6cc;
-            padding-top: 25px;
-            margin-top: 20px;
-        }
-        .site-link {
-            color: #c0392b;
-            font-weight: 600;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .site-link:hover { color: #8a2a1a; }
-
-        /* ========== 老虎机界面 ========== */
-        #gamePage {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border-radius: 40px;
-            padding: 25px 18px 35px;
-            border: 3px solid #ff0066;
-            box-shadow: 0 0 50px rgba(255, 0, 100, 0.3);
-            position: relative;
-        }
-        .top-bar {
+        .blackout.show {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            color: #ffaa44;
+        }
+        .blackout .sub {
             font-size: 18px;
-            background: #00000055;
-            padding: 8px 16px;
-            border-radius: 40px;
-            border: 1px solid #ffaa0066;
+            font-weight: 400;
+            color: #888;
         }
-        .top-bar .coins { font-weight: bold; color: #ffdd77; text-shadow: 0 0 15px #ffaa00aa; }
-        .top-bar .spin-count { color: #88aaff; }
 
-        .screen {
-            background: #0f0e17;
-            border-radius: 30px;
-            padding: 25px 10px;
-            border: 3px solid #ff0066;
-            margin: 10px 0 20px;
-            box-shadow: inset 0 0 40px #00000088;
-        }
-        .reels {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            gap: 8px;
-        }
-        .reel {
-            font-size: 72px;
-            background: #1a1926;
-            padding: 18px 0;
-            width: 30%;
-            text-align: center;
-            border-radius: 25px;
-            border: 2px solid #555;
-            color: #fff;
-            text-shadow: 0 0 30px #ff006644;
-            transition: all 0.1s;
-            min-height: 130px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .spin-btn {
-            width: 100%;
-            padding: 22px;
-            font-size: 30px;
-            font-weight: bold;
-            background: linear-gradient(180deg, #ff1a4a, #b30033);
-            border: none;
-            border-radius: 60px;
-            color: white;
-            letter-spacing: 6px;
-            box-shadow: 0 8px 0 #66001a;
-            cursor: pointer;
-            transition: all 0.08s ease;
-            margin-top: 6px;
-            text-shadow: 0 2px 4px #00000088;
-        }
-        .spin-btn:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #66001a;
-        }
-        .spin-btn:disabled {
-            opacity: 0.5;
-            transform: translateY(4px);
-            box-shadow: 0 4px 0 #66001a;
-        }
-        .hint {
-            color: #8888aa;
-            text-align: center;
-            margin: 12px 0 20px;
-            font-size: 16px;
-            letter-spacing: 2px;
-        }
-        .bottom-bar {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .bottom-btn {
-            flex: 1;
-            padding: 16px 0;
-            font-size: 22px;
-            font-weight: bold;
-            border: 2px solid #555;
-            border-radius: 50px;
-            background: #1a1a2a;
-            color: #ccccdd;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.08s;
-            box-shadow: 0 4px 0 #0a0a12;
-        }
-        .bottom-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #0a0a12;
-        }
-        .bottom-btn.shop { background: #1a2a1a; border-color: #3a6a3a; color: #99dd99; }
-        .bottom-btn.exit-btn { background: #2a1a1a; border-color: #6a3a3a; color: #dd9999; }
-
-        /* ========== 商店界面 ========== */
-        #shopPage {
-            background: linear-gradient(145deg, #1a1a2a, #0f0f1a);
-            border-radius: 40px;
-            padding: 25px 18px 35px;
-            border: 3px solid #66aa66;
-            box-shadow: 0 0 50px rgba(0, 255, 100, 0.15);
-            min-height: 700px;
-            position: relative;
-        }
-        #shopPage h2 {
-            color: #88dd88;
-            text-align: center;
-            font-size: 32px;
-            letter-spacing: 4px;
-            border-bottom: 2px solid #2a4a2a;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .shop-item {
-            background: #12121f;
-            border: 1px solid #2a4a2a;
-            border-radius: 20px;
-            padding: 15px 18px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-        .shop-item .icon { font-size: 36px; width: 50px; text-align: center; }
-        .shop-item .info {
-            flex: 1;
-            min-width: 140px;
-        }
-        .shop-item .info .name {
-            color: #ddffdd;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .shop-item .info .desc {
-            color: #99aa99;
-            font-size: 14px;
-            margin-top: 2px;
-            font-style: italic;
-        }
-        .shop-item .info .limit {
-            color: #cc8844;
-            font-size: 13px;
-            margin-top: 2px;
-        }
-        .shop-item .price {
-            color: #ffdd77;
-            font-size: 20px;
-            font-weight: bold;
-            margin-right: 6px;
-        }
-        .shop-item .buy-btn {
-            background: #2a4a2a;
-            border: none;
-            border-radius: 40px;
-            padding: 10px 22px;
-            color: #ddffdd;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.08s;
-            box-shadow: 0 4px 0 #0a2a0a;
-            margin-left: auto;
-        }
-        .shop-item .buy-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a2a0a;
-        }
-        .shop-item .buy-btn:disabled {
-            opacity: 0.4;
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a2a0a;
-            pointer-events: none;
-        }
-        /* 新增：物品互动按钮（锁、唱片机、桌子） */
-        .shop-item .action-btn {
-            background: #3a4a6a;
-            border: none;
-            border-radius: 40px;
-            padding: 10px 22px;
-            color: #ccddff;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.08s;
-            box-shadow: 0 4px 0 #1a2a3a;
-            margin-left: auto;
-        }
-        .shop-item .action-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #1a2a3a;
-        }
-        .shop-item .action-btn:disabled {
-            opacity: 0.4;
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #1a2a3a;
-            pointer-events: none;
-        }
-        .shop-item .action-btn.lock { background: #3a4a3a; border-color: #3a6a3a; color: #99dd99; }
-        .shop-item .action-btn.record { background: #4a3a4a; border-color: #6a3a6a; color: #dd99dd; }
-        .shop-item .action-btn.table { background: #4a4a3a; border-color: #6a6a3a; color: #dddd99; }
-
-        /* 新增：密码输入弹窗（商店内） */
-        .password-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1500;
-        }
-        .password-overlay.active { display: flex; }
-        .password-box {
-            background: #1a1a2a;
-            border: 3px solid #ffdd77;
-            border-radius: 40px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 80px rgba(255,220,100,0.15);
-            animation: popIn 0.3s;
-        }
-        .password-box h3 {
-            color: #ffdd77;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        .password-box .sub {
-            color: #aa9966;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .password-box input {
-            width: 100%;
-            padding: 14px 16px;
-            background: #0f0f1a;
-            border: 2px solid #3a3a2a;
-            border-radius: 40px;
-            color: #ffdd77;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 4px;
-            outline: none;
-            margin-bottom: 18px;
-        }
-        .password-box input:focus {
-            border-color: #ffdd77;
-        }
-        .password-box .pw-submit {
-            width: 100%;
-            padding: 14px;
-            background: #3a3a2a;
-            border: none;
-            border-radius: 40px;
-            color: #ffdd77;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .password-box .pw-submit:hover { background: #4a4a3a; }
-        .password-box .pw-error {
-            color: #ff6666;
-            font-size: 14px;
+        .mt-12 {
             margin-top: 12px;
-            display: none;
         }
-        .password-box .pw-close {
+        .mt-16 {
             margin-top: 16px;
-            color: #887766;
-            cursor: pointer;
+        }
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .text-muted {
+            color: #5e6f88;
             font-size: 14px;
         }
-        .password-box .pw-close:hover { color: #ccbbaa; }
-
-        /* ========== 随机内容展示弹窗 ========== */
-        .message-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            justify-content: center;
-            align-items: center;
-            z-index: 1600;
-            backdrop-filter: blur(4px);
-        }
-        .message-overlay.active { display: flex; }
-        .message-box {
-            background: #1a1a1a;
-            border: 2px solid #4a4a4a;
-            border-radius: 30px;
-            padding: 30px 32px;
-            max-width: 420px;
-            width: 90%;
-            text-align: center;
-            animation: popIn 0.3s;
-            box-shadow: 0 0 60px rgba(0,0,0,0.6);
-        }
-        .message-box .msg-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-        }
-        .message-box .msg-text {
-            color: #d0c8c0;
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-        .message-box .msg-close {
-            padding: 10px 32px;
-            background: #2a2a2a;
-            border: 1px solid #4a4a4a;
-            border-radius: 40px;
-            color: #b0a8a0;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .message-box .msg-close:hover { background: #3a3a3a; }
-
-        /* ========== 通用弹窗动画 ========== */
-        @keyframes popIn {
-            0% { transform: scale(0.85); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* ========== Toast ========== */
-        .reward-toast {
-            display: none;
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a3a1a;
-            border: 3px solid #66dd66;
-            border-radius: 30px;
-            padding: 20px 40px;
-            color: #bbffbb;
-            font-size: 32px;
-            font-weight: bold;
-            box-shadow: 0 0 60px #66dd6688;
-            z-index: 1000;
-            text-align: center;
-            animation: popIn 0.3s;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        .reward-toast span {
-            font-size: 20px;
-            display: block;
-            color: #aaddaa;
-            margin-top: 5px;
-        }
-        .buy-toast {
-            display: none;
-            position: fixed;
-            bottom: 30%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a2a1a;
-            border: 2px solid #88dd88;
-            border-radius: 20px;
-            padding: 16px 30px;
-            color: #ddffdd;
-            font-size: 22px;
-            box-shadow: 0 0 40px #88dd8844;
-            z-index: 1001;
-            animation: popIn 0.3s;
+        .text-center {
             text-align: center;
         }
 
-        /* ========== 错误弹窗 ========== */
-        .error-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-        .error-overlay.active { display: flex; }
-        .error-box {
-            background: #1a0a0a;
-            border: 3px solid #ff3333;
-            border-radius: 30px;
-            padding: 40px 30px;
-            max-width: 320px;
-            text-align: center;
-            color: #ff6666;
-            font-size: 24px;
-            font-weight: bold;
-            box-shadow: 0 0 80px #ff000066;
-            animation: popIn 0.3s;
-        }
-        .error-box small {
-            display: block;
-            font-size: 16px;
-            color: #aa5555;
-            margin-top: 10px;
-        }
-        .error-box .close-error {
-            margin-top: 25px;
-            padding: 12px 40px;
-            background: #2a1a1a;
-            border: 2px solid #6a2a2a;
-            border-radius: 40px;
-            color: #ffaaaa;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .error-box .close-error:active { background: #3a2a2a; }
-
-        .shop-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 25px;
-            width: 100%;
-        }
-        .shop-back, .shop-exit {
-            padding: 16px;
-            border-radius: 60px;
-            font-size: 22px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.08s;
-            box-shadow: 0 4px 0 #0a1a0a;
-            width: 100%;
-        }
-        .shop-back {
-            background: #1a2a2a;
-            border: 2px solid #3a5a3a;
-            color: #aaddaa;
-        }
-        .shop-back:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #0a1a0a;
-        }
-        .shop-exit {
-            background: #2a1a1a;
-            border: 2px solid #6a3a3a;
-            color: #dd9999;
-            box-shadow: 0 4px 0 #1a0a0a;
-        }
-        .shop-exit:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px 0 #1a0a0a;
+        @media (max-width: 820px) {
+            .app {
+                padding: 16px 14px 24px;
+                border-radius: 16px;
+            }
+            .system-grid,
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+            .home-card {
+                padding: 28px 20px;
+            }
+            .password-box {
+                padding: 28px 20px;
+            }
+            .chat-bubble {
+                max-width: 92%;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- ============================================================ -->
-<!-- ===== 开始界面 ===== -->
-<div id="startPage" class="page active">
-    <h1>🎰 Happy Life</h1>
-    <button class="start-btn game" id="btnGameStart">▶ Game Start</button>
-    <button class="start-btn exit" id="btnExitStart">✖ Exit</button>
-    <button class="start-btn menu" id="btnMenuStart">☰ Menu</button>
-</div>
+    <div class="app">
 
-<!-- ===== Menu 弹出层 ===== -->
-<div class="menu-overlay" id="menuOverlay">
-    <div class="menu-box">
-        <h2>☰ Menu</h2>
-        <button class="menu-btn inventory" id="menuInventoryBtn">🎒 物品栏</button>
-        <button class="menu-btn website" id="menuWebsiteBtn">🌐 官网网址</button>
-        <button class="menu-btn login" id="menuLoginBtn">🔐 登录</button>
-        <div class="menu-close" id="menuCloseBtn">关闭</div>
-    </div>
-</div>
-
-<!-- ===== 登录弹窗 ===== -->
-<div class="login-overlay" id="loginOverlay">
-    <div class="login-box">
-        <h2>🔐 登录</h2>
-        <div class="sub">请输入账号密码</div>
-        <label>账户</label>
-        <input type="text" id="loginUser" placeholder="请输入账户">
-        <label>密码</label>
-        <input type="password" id="loginPass" placeholder="请输入密码">
-        <button class="login-submit" id="loginSubmitBtn">登录</button>
-        <div class="login-error" id="loginError">账户或密码错误，请重试</div>
-        <div class="login-close" id="loginCloseBtn">取消</div>
-    </div>
-</div>
-
-<!-- ===== 操作面板 ===== -->
-<div class="operation-overlay" id="operationOverlay">
-    <div class="operation-box">
-        <h2>⚙️ 操作面板</h2>
-        <div class="welcome">欢迎你！总程序员张希之！<br>您想要进行什么操作？</div>
-        <button class="op-btn modify" id="opModifyBtn">📝 修改程序</button>
-        <button class="op-btn destroy" id="opDestroyBtn">💀 销毁程序</button>
-        <button class="op-btn exit-op" id="opExitBtn">Exit</button>
-    </div>
-</div>
-
-<!-- ===== 销毁确认 ===== -->
-<div class="confirm-overlay" id="confirmOverlay">
-    <div class="confirm-box">
-        <div class="q" id="confirmQuestion">您确定吗？</div>
-        <div class="btn-group" id="confirmBtnGroup">
-            <button class="yes" id="confirmYes">确定</button>
-            <button class="no" id="confirmNo">取消</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== 销毁终局 ===== -->
-<div class="final-overlay" id="finalOverlay">
-    <div class="final-box">
-        <div class="big" id="finalBig">销毁成功</div>
-        <div class="sub" id="finalSub"></div>
-        <button class="final-btn" id="finalBtn">林凡呢？</button>
-        <div class="final-end" id="finalEnd">存在与消失，已无区别</div>
-    </div>
-</div>
-
-<!-- ===== 物品栏 ===== -->
-<div class="inventory-overlay" id="inventoryOverlay">
-    <div class="inventory-box">
-        <h2>🎒 物品栏</h2>
-        <div id="inventoryList"></div>
-        <div class="inv-close" id="invCloseBtn">关闭</div>
-    </div>
-</div>
-
-<!-- ===== 官网页面 ===== -->
-<div id="officialSite">
-    <div class="site-container">
-        <div class="site-header">
-            <h1>🎨 Happy Life 创作团队</h1>
-            <p>—— 用爱发电，用心创作 ——</p>
-        </div>
-        <div class="site-section">
-            <h2>📋 创作人员名单</h2>
-            <ul>
-                <li><strong>发起人：</strong>林凡 夏爽</li>
-                <li><strong>代码 / 设计：</strong>夏爽 张希之</li>
-                <li><strong>美工：</strong>张希之 张硕</li>
-                <li><strong>特别鸣谢：</strong>音乐、鼓点、节奏</li>
-            </ul>
-        </div>
-        <div class="site-section">
-            <h2>📖 创作背景</h2>
-            <div class="quote"><p><strong>林凡：</strong>大家可能想象不到，我与夏爽、张希之在大学第一学期就找到了人生目标，这一人生目标是夏爽率先提出的，他是一个聪明的女生，比我们都先参悟到一些事物的真谛，所以，Happy Life在她的规划下诞生了。</p></div>
-            <div class="quote"><p><strong>夏爽：</strong>林凡是我在大学交往的男朋友，当我决定做Happy Life的时候邀请了林凡加入，他的思维能力很强，但表达能力较弱，说话有时会显得前言不搭后语。开个玩笑，一个人有优点就会有缺点，不是吗？</p></div>
-            <div class="quote"><p><strong>张硕：</strong>我是在项目要结束的时候才参与进来的，当时看招聘说缺少美工设计，我就来应聘了，来了之后才知道，因为上一任美工设计张希之的离职带走了不少设计画稿，所以急需一个新的美术设计，无论我设计的如何，林凡都会聘用我。</p></div>
-        </div>
-        <div class="site-section">
-            <h2>💡 我们的忠告</h2>
-            <p>无论如何，这都是个游戏，切勿沉迷，而且而且而且而且而且而且而且而且而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而而</p>
-            <p style="margin-top:12px; font-weight:600; color:#c0392b;">不要传播</p>
-        </div>
-        <div class="site-section">
-            <h2>🔗 更多 Happy Life 相关信息</h2>
-            <p>Happy Life 官网：<br><a href="https://luhezi0703-oss.github.io/happy-life/" target="_blank" class="site-link">https://luhezi0703-oss.github.io/happy-life/</a></p>
-        </div>
-        <button class="site-close" id="siteCloseBtn">✕ 关闭官网</button>
-        <div class="site-footer">© 2026 Happy Life 创作团队 · 仅供内部娱乐</div>
-    </div>
-</div>
-
-<!-- ===== 老虎机界面 ===== -->
-<div id="gamePage" class="page">
-    <div class="top-bar">
-        <span class="coins">💰 <span id="coinDisplay">200</span></span>
-        <span class="spin-count">🎲 <span id="spinCountDisplay">0</span> 次</span>
-    </div>
-    <div class="screen">
-        <div class="reels">
-            <div class="reel" id="reel1">💀</div>
-            <div class="reel" id="reel2">👻</div>
-            <div class="reel" id="reel3">🕷️</div>
-        </div>
-    </div>
-    <button class="spin-btn" id="spinBtn">▶ 转动</button>
-    <div class="hint">💀 20币 / 次  💀 三同奖励100币</div>
-    <div class="bottom-bar">
-        <div class="bottom-btn shop" id="shopBtn">🛒 Shop</div>
-        <div class="bottom-btn exit-btn" id="exitToMenuBtn">Exit</div>
-    </div>
-</div>
-
-<!-- ===== 商店界面 ===== -->
-<div id="shopPage" class="page">
-    <h2>🛒 神秘商店</h2>
-    <div id="shopItemsContainer"></div>
-    <div class="shop-bottom">
-        <div class="shop-back" id="shopBackBtn">← 返回老虎机</div>
-        <div class="shop-exit" id="shopExitBtn">🚪 退出到主界面</div>
-    </div>
-</div>
-
-<!-- ===== Toast ===== -->
-<div class="reward-toast" id="rewardToast">🎉 奖励 +100 金币<span>已到账！</span></div>
-<div class="buy-toast" id="buyToast"></div>
-
-<!-- ===== 错误弹窗 ===== -->
-<div class="error-overlay" id="errorOverlay">
-    <div class="error-box">
-        ⚡ 系统错误，请重试
-        <small>错误代码：0x7F</small>
-        <div class="close-error" id="closeErrorBtn">确定</div>
-    </div>
-</div>
-
-<!-- ===== 密码输入弹窗（商店内） ===== -->
-<div class="password-overlay" id="passwordOverlay">
-    <div class="password-box">
-        <h3>💵 密码</h3>
-        <div class="sub">请输入密码以获取金币</div>
-        <input type="text" id="passwordInput" placeholder="输入密码">
-        <button class="pw-submit" id="passwordSubmitBtn">确认</button>
-        <div class="pw-error" id="passwordError">密码无效，请重试</div>
-        <div class="pw-close" id="passwordCloseBtn">取消</div>
-    </div>
-</div>
-
-<!-- ===== 随机内容展示弹窗 ===== -->
-<div class="message-overlay" id="messageOverlay">
-    <div class="message-box">
-        <div class="msg-icon" id="msgIcon">📜</div>
-        <div class="msg-text" id="msgText">内容加载中...</div>
-        <button class="msg-close" id="msgCloseBtn">确定</button>
-    </div>
-</div>
-
-<script>
-// ================================================================
-// ========== 商品数据（价格已更新） ==========
-const shopItems = [
-    { id: 'key', icon: '🔑', name: '钥匙', price: 1300, maxBuy: Infinity, desc: '在某些地方或许会有很大的作用。', limitText: '' },
-    { id: 'cake', icon: '🍰', name: '蛋糕', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
-    { id: 'lollipop', icon: '🍭', name: '棒棒糖', price: 40, maxBuy: 4, desc: '有人会喜欢？', limitText: '最多购买 4 个' },
-    { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑', price: 1000, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
-    { id: 'book', icon: '📖', name: 'Lin 的绘本', price: 1000, maxBuy: 4, desc: '可能会让你或其他人感到身心愉悦。', limitText: '最多购买 4 个' },
-    { id: 'coinpack', icon: '🪙', name: '100 金币', price: 0, maxBuy: 14, desc: '乱码中间夹杂非必要不够买几个字', limitText: '可购买 14 次' },
-    // 新增：密码（不占用库存，单独处理）
-    { id: 'password', icon: '💵', name: '密码', price: 0, maxBuy: Infinity, desc: '输入密码获得额外金币', limitText: '' },
-    // 新增：锁（不占用库存，单独处理）
-    { id: 'lock', icon: '🔒', name: '锁', price: 0, maxBuy: Infinity, desc: '可以用商店中的钥匙打开。', limitText: '' },
-    // 新增：唱片机
-    { id: 'recordplayer', icon: '🎵', name: '唱片机', price: 0, maxBuy: Infinity, desc: '应该能想起来什么。', limitText: '' },
-    // 新增：桌子
-    { id: 'table', icon: '🪑', name: '桌子', price: 0, maxBuy: Infinity, desc: '应该能了解到一些新的事情。', limitText: '' }
-];
-
-// ========== 锁内容池（每条只能出现一次） ==========
-let lockContentPool = [
-    '据《Happy Life》的忠实玩家所说，自从夏爽创建HT公司后，《Happy Life》就不再对外运营了，大家都无法点进游戏。',
-    '据同校学生透露，林凡似乎并不太喜欢新员工张硕，只是表面功夫装的很好，很少有人能看出来而已。',
-    '因为夏爽工作量较大，张希之有参与到《Happy Life》的代码编写中，所以张希之对《Happy Life》的了解很深，不易忘却。',
-    '网传公司HT并不是因为破产而倒闭，而是因为夏爽的不作为。'
-];
-let lockUsedIndices = [];
-
-// ========== 唱片机内容池 ==========
-let recordContentPool = [
-    '我好像和大家都没有深仇大恨。',
-    '我好像有其他社交账号。',
-    '我好像与某人永远不能相融。',
-    '我的灵魂好像有进入过《Happy Life》。'
-];
-let recordUsedIndices = [];
-
-// ========== 桌子内容池 ==========
-let tableContentPool = [
-    '林凡和夏爽是关系密切、没有隔阂的情侣',
-    '参与代码制作的夏爽发现游戏代码中有很多无法破解的问题，并告知了林凡，但广受好评的游戏和即将达成的愿望让林凡和夏爽决定忽视隐瞒这个问题。',
-    '似乎无法查出网友"清风"的IP。',
-    '因为给了张希之较少的薪水，林凡也似乎也理解张希之的离开，所以决定在项目中保留张希之的名字，但详细介绍中就去掉他了。'
-];
-let tableUsedIndices = [];
-
-// ========== 库存 ==========
-let inventory = {
-    key: 0, cake: 0, lollipop: 0, cd: 0, book: 0, coinpack: 0
-};
-
-// ========== 游戏状态 ==========
-let coins = 200;
-let spinCount = 0;
-let isSpinning = false;
-let destroyStep = 0;
-let isLoggedIn = false;
-
-// ================================================================
-// ========== DOM 引用 ==========
-const coinDisplay = document.getElementById('coinDisplay');
-const spinCountDisplay = document.getElementById('spinCountDisplay');
-const spinBtn = document.getElementById('spinBtn');
-const reel1 = document.getElementById('reel1');
-const reel2 = document.getElementById('reel2');
-const reel3 = document.getElementById('reel3');
-const errorOverlay = document.getElementById('errorOverlay');
-const closeErrorBtn = document.getElementById('closeErrorBtn');
-const rewardToast = document.getElementById('rewardToast');
-const buyToast = document.getElementById('buyToast');
-
-const startPage = document.getElementById('startPage');
-const gamePage = document.getElementById('gamePage');
-const shopPage = document.getElementById('shopPage');
-const shopItemsContainer = document.getElementById('shopItemsContainer');
-const officialSite = document.getElementById('officialSite');
-
-const menuOverlay = document.getElementById('menuOverlay');
-const menuInventoryBtn = document.getElementById('menuInventoryBtn');
-const menuWebsiteBtn = document.getElementById('menuWebsiteBtn');
-const menuLoginBtn = document.getElementById('menuLoginBtn');
-const menuCloseBtn = document.getElementById('menuCloseBtn');
-
-const inventoryOverlay = document.getElementById('inventoryOverlay');
-const inventoryList = document.getElementById('inventoryList');
-const invCloseBtn = document.getElementById('invCloseBtn');
-
-const loginOverlay = document.getElementById('loginOverlay');
-const loginUser = document.getElementById('loginUser');
-const loginPass = document.getElementById('loginPass');
-const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-const loginError = document.getElementById('loginError');
-const loginCloseBtn = document.getElementById('loginCloseBtn');
-
-const operationOverlay = document.getElementById('operationOverlay');
-const opModifyBtn = document.getElementById('opModifyBtn');
-const opDestroyBtn = document.getElementById('opDestroyBtn');
-const opExitBtn = document.getElementById('opExitBtn');
-
-const confirmOverlay = document.getElementById('confirmOverlay');
-const confirmQuestion = document.getElementById('confirmQuestion');
-const confirmYes = document.getElementById('confirmYes');
-const confirmNo = document.getElementById('confirmNo');
-
-const finalOverlay = document.getElementById('finalOverlay');
-const finalBig = document.getElementById('finalBig');
-const finalSub = document.getElementById('finalSub');
-const finalBtn = document.getElementById('finalBtn');
-const finalEnd = document.getElementById('finalEnd');
-
-const passwordOverlay = document.getElementById('passwordOverlay');
-const passwordInput = document.getElementById('passwordInput');
-const passwordSubmitBtn = document.getElementById('passwordSubmitBtn');
-const passwordError = document.getElementById('passwordError');
-const passwordCloseBtn = document.getElementById('passwordCloseBtn');
-
-const messageOverlay = document.getElementById('messageOverlay');
-const msgIcon = document.getElementById('msgIcon');
-const msgText = document.getElementById('msgText');
-const msgCloseBtn = document.getElementById('msgCloseBtn');
-
-const btnGameStart = document.getElementById('btnGameStart');
-const btnExitStart = document.getElementById('btnExitStart');
-const btnMenuStart = document.getElementById('btnMenuStart');
-const exitToMenuBtn = document.getElementById('exitToMenuBtn');
-const shopBtn = document.getElementById('shopBtn');
-const shopBackBtn = document.getElementById('shopBackBtn');
-const shopExitBtn = document.getElementById('shopExitBtn');
-const siteCloseBtn = document.getElementById('siteCloseBtn');
-
-// ================================================================
-// ========== 页面切换 ==========
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    if (pageId === 'shopPage') renderShop();
-}
-
-// ========== 金币更新 ==========
-function updateCoins() {
-    coinDisplay.textContent = coins;
-}
-
-// ========== Toast ==========
-function showReward() {
-    rewardToast.style.display = 'block';
-    setTimeout(() => { rewardToast.style.display = 'none'; }, 2000);
-}
-
-function showBuyToast(msg) {
-    buyToast.textContent = msg;
-    buyToast.style.display = 'block';
-    setTimeout(() => { buyToast.style.display = 'none'; }, 1500);
-}
-
-// ========== 错误弹窗 ==========
-function showError() { errorOverlay.classList.add('active'); }
-function hideError() { errorOverlay.classList.remove('active'); }
-closeErrorBtn.addEventListener('click', hideError);
-errorOverlay.addEventListener('click', function(e) {
-    if (e.target === errorOverlay) hideError();
-});
-
-// ========== 随机整数 ==========
-function rand(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// ========== 密码池匹配 ==========
-function checkPassword(input) {
-    // 去掉空格，统一格式
-    const clean = input.replace(/\s/g, '');
-    
-    // 第一组：增加100-200金币
-    const group1 = ['5497','6648','8761','3254','6678','6481','6546','2216','6646','6215','4125','6687','6331','6655','7741','2369','8688','9955','2214','6354','2158','3781','8524','7225','5316','5789','9533','1472','3905','5193','7026','4839','2701','9140','3075','5812','8297'];
-    if (group1.includes(clean)) {
-        const reward = rand(100, 200);
-        coins += reward;
-        updateCoins();
-        showBuyToast('💰 获得 ' + reward + ' 金币！');
-        return true;
-    }
-    
-    // 第二组：增加200-400金币
-    const group2 = ['1036','1159','1382','1507','1693','1825','1948','3102','3279','3461','3587','3690','3814','4017','4238','4362','4570','4793','4906','7135','7308','7469','7592','7810','8037','8156','8372','8491','9028','9264'];
-    if (group2.includes(clean)) {
-        const reward = rand(200, 400);
-        coins += reward;
-        updateCoins();
-        showBuyToast('💰 获得 ' + reward + ' 金币！');
-        return true;
-    }
-    
-    // 第三组：增加500-800金币
-    const group3 = ['0179','0253','0418','0562','0734','0891','1209','1743','2067','2419','2603','2851','3094','3715','4082','4627','5013','5290','6071','6932'];
-    if (group3.includes(clean)) {
-        const reward = rand(500, 800);
-        coins += reward;
-        updateCoins();
-        showBuyToast('💰 获得 ' + reward + ' 金币！');
-        return true;
-    }
-    
-    return false;
-}
-
-// ========== 随机抽取内容（不重复） ==========
-function getRandomContent(pool, usedIndices) {
-    if (usedIndices.length >= pool.length) {
-        return null; // 所有内容已用完
-    }
-    let available = [];
-    for (let i = 0; i < pool.length; i++) {
-        if (!usedIndices.includes(i)) {
-            available.push(i);
-        }
-    }
-    if (available.length === 0) return null;
-    const idx = available[rand(0, available.length - 1)];
-    usedIndices.push(idx);
-    return pool[idx];
-}
-
-// ========== 显示消息弹窗 ==========
-function showMessage(icon, text) {
-    msgIcon.textContent = icon;
-    msgText.textContent = text;
-    messageOverlay.classList.add('active');
-}
-
-msgCloseBtn.addEventListener('click', function() {
-    messageOverlay.classList.remove('active');
-});
-messageOverlay.addEventListener('click', function(e) {
-    if (e.target === messageOverlay) messageOverlay.classList.remove('active');
-});
-
-// ================================================================
-// ========== 商店渲染 ==========
-function renderShop() {
-    let html = '';
-    shopItems.forEach(item => {
-        const bought = inventory[item.id] || 0;
-        const isCoinPack = item.id === 'coinpack';
-        const isPassword = item.id === 'password';
-        const isLock = item.id === 'lock';
-        const isRecord = item.id === 'recordplayer';
-        const isTable = item.id === 'table';
-        const priceDisplay = (isCoinPack || isPassword || isLock || isRecord || isTable) ? '' : `${item.price} 币`;
-        const disabled = (bought >= item.maxBuy) || (isCoinPack ? false : coins < item.price);
-        
-        let descText = item.desc;
-        if (isCoinPack) descText = generateGarbledText();
-        
-        // 特殊处理锁：显示可用钥匙数量
-        let extraInfo = '';
-        if (isLock) {
-            const keyCount = inventory.key || 0;
-            extraInfo = ` (可用钥匙：${keyCount})`;
-        }
-        if (isRecord) {
-            const cdCount = inventory.cd || 0;
-            extraInfo = ` (可用专辑：${cdCount})`;
-        }
-        if (isTable) {
-            const bookCount = inventory.book || 0;
-            extraInfo = ` (可用绘本：${bookCount})`;
-        }
-        
-        html += `
-            <div class="shop-item">
-                <div class="icon">${item.icon}</div>
-                <div class="info">
-                    <div class="name">${item.name}</div>
-                    <div class="desc">${descText}${extraInfo}</div>
-                    <div class="limit">${item.limitText || ''} ${bought > 0 ? `(已购 ${bought})` : ''}</div>
+        <!-- ============================================================ -->
+        <!-- 页面 1: 首页 -->
+        <!-- ============================================================ -->
+        <div class="page active" id="page-home">
+            <div class="home-card">
+                <span class="avatar-big">👤</span>
+                <div class="name-tag">张羽祥</div>
+                <div class="msg-preview">
+                    <span class="from">张羽祥：</span>在线求助，给你看个东西。
                 </div>
-                <div class="price">${priceDisplay}</div>
-                ${isPassword ? `<button class="buy-btn" id="passwordOpenBtn">输入</button>` :
-                  isLock ? `<button class="action-btn lock" id="lockUseBtn" ${(inventory.key || 0) === 0 ? 'disabled' : ''}>🔑 使用钥匙</button>` :
-                  isRecord ? `<button class="action-btn record" id="recordUseBtn" ${(inventory.cd || 0) === 0 ? 'disabled' : ''}>💿 投入专辑</button>` :
-                  isTable ? `<button class="action-btn table" id="tableUseBtn" ${(inventory.book || 0) === 0 ? 'disabled' : ''}>📖 投入绘本</button>` :
-                  `<button class="buy-btn" data-id="${item.id}" ${disabled ? 'disabled' : ''}>购买</button>`}
+                <button class="primary-btn" onclick="goToChat()">📩 查看消息</button>
             </div>
-        `;
-    });
-    shopItemsContainer.innerHTML = html;
-    
-    // 购买事件
-    document.querySelectorAll('.shop-item .buy-btn[data-id]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            handleBuy(id);
-        });
-    });
-    
-    // 密码输入按钮
-    const pwBtn = document.getElementById('passwordOpenBtn');
-    if (pwBtn) {
-        pwBtn.addEventListener('click', function() {
-            passwordInput.value = '';
-            passwordError.style.display = 'none';
-            passwordOverlay.classList.add('active');
-            passwordInput.focus();
-        });
-    }
-    
-    // 锁使用按钮
-    const lockBtn = document.getElementById('lockUseBtn');
-    if (lockBtn) {
-        lockBtn.addEventListener('click', function() {
-            if ((inventory.key || 0) <= 0) {
-                showBuyToast('没有钥匙！');
-                return;
-            }
-            const content = getRandomContent(lockContentPool, lockUsedIndices);
-            if (content === null) {
-                showBuyToast('所有秘密已解锁！');
-                return;
-            }
-            inventory.key -= 1;
-            showMessage('🔓', content);
-            renderShop();
-        });
-    }
-    
-    // 唱片机使用按钮
-    const recordBtn = document.getElementById('recordUseBtn');
-    if (recordBtn) {
-        recordBtn.addEventListener('click', function() {
-            if ((inventory.cd || 0) <= 0) {
-                showBuyToast('没有Rico Zayd专辑！');
-                return;
-            }
-            const content = getRandomContent(recordContentPool, recordUsedIndices);
-            if (content === null) {
-                showBuyToast('所有回忆已解锁！');
-                return;
-            }
-            inventory.cd -= 1;
-            showMessage('🎵', content);
-            renderShop();
-        });
-    }
-    
-    // 桌子使用按钮
-    const tableBtn = document.getElementById('tableUseBtn');
-    if (tableBtn) {
-        tableBtn.addEventListener('click', function() {
-            if ((inventory.book || 0) <= 0) {
-                showBuyToast('没有Lin的绘本！');
-                return;
-            }
-            const content = getRandomContent(tableContentPool, tableUsedIndices);
-            if (content === null) {
-                showBuyToast('所有知识已解锁！');
-                return;
-            }
-            inventory.book -= 1;
-            showMessage('📖', content);
-            renderShop();
-        });
-    }
-}
+            <p style="text-align:center;color:#8899b0;font-size:14px;margin-top:24px;">— 很久没见的朋友发来了消息 —</p>
+        </div>
 
-// ========== 密码提交 ==========
-passwordSubmitBtn.addEventListener('click', function() {
-    const input = passwordInput.value.trim();
-    if (checkPassword(input)) {
-        passwordOverlay.classList.remove('active');
-        renderShop();
-    } else {
-        passwordError.style.display = 'block';
-        passwordInput.value = '';
-        passwordInput.focus();
-    }
-});
-passwordCloseBtn.addEventListener('click', function() {
-    passwordOverlay.classList.remove('active');
-});
-passwordOverlay.addEventListener('click', function(e) {
-    if (e.target === passwordOverlay) passwordOverlay.classList.remove('active');
-});
-passwordInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        passwordSubmitBtn.click();
-    }
-});
+        <!-- ============================================================ -->
+        <!-- 页面 2: 聊天（张羽祥初始） -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-chat">
+            <button class="back-btn" onclick="goHome()"><span class="arrow">‹</span> 返回</button>
+            <div style="font-weight:700;color:#1e2a3a;font-size:20px;margin-bottom:8px;">💬 张羽祥</div>
+            <div class="chat-container" id="chatContainer"></div>
+            <div class="chat-actions" id="chatActions"></div>
+        </div>
 
-// ========== 生成乱码 ==========
-function generateGarbledText() {
-    const chars = '!@#$%^&*()_+{}|:<>?~`-=[]\\;\',./';
-    const words = ['非', '必', '要', '不', '够', '买', '几', '个'];
-    let result = '';
-    for (let i = 0; i < 50; i++) {
-        if (i % 7 === 0 && words.length > 0) {
-            result += words.shift();
-        } else {
-            result += chars[Math.floor(Math.random() * chars.length)];
-        }
-    }
-    return result;
-}
+        <!-- ============================================================ -->
+        <!-- 页面 3: 密码输入 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-password">
+            <button class="back-btn" onclick="goHome()"><span class="arrow">‹</span> 返回</button>
+            <div class="password-box">
+                <div class="logo-icon">🔬</div>
+                <h2>“光线”科研部</h2>
+                <div class="sub">输入密码以进入系统</div>
+                <input type="password" id="pwdInput" placeholder="请输入密码" maxlength="10" inputmode="numeric">
+                <button class="enter-btn" onclick="checkPassword()">🔓 进入系统</button>
+                <div class="error-msg" id="pwdError"></div>
+            </div>
+        </div>
 
-// ========== 购买逻辑 ==========
-function handleBuy(id) {
-    const item = shopItems.find(i => i.id === id);
-    if (!item) return;
-    const bought = inventory[id] || 0;
-    const isCoinPack = id === 'coinpack';
-    if (bought >= item.maxBuy) {
-        showBuyToast('已达到购买上限');
-        return;
-    }
-    if (!isCoinPack && coins < item.price) {
-        showBuyToast('金币不足，请购买100金币');
-        renderShop();
-        const coinBtn = document.querySelector('.shop-item button[data-id="coinpack"]');
-        if (coinBtn) {
-            coinBtn.style.border = '3px solid #ffdd77';
-            setTimeout(() => { coinBtn.style.border = ''; }, 2000);
-        }
-        return;
-    }
-    if (!isCoinPack) {
-        coins -= item.price;
-        inventory[id] = bought + 1;
-        showBuyToast(`✅ 购买了 ${item.name}`);
-    } else {
-        if (bought < item.maxBuy) {
-            coins += 100;
-            inventory[id] = bought + 1;
-            showBuyToast('感谢您的付出。');
-        } else {
-            showBuyToast('已达到购买上限');
-            return;
-        }
-    }
-    updateCoins();
-    renderShop();
-}
-
-// ================================================================
-// ========== 物品栏 ==========
-function renderInventory() {
-    const items = [
-        { id: 'key', icon: '🔑', name: '钥匙' },
-        { id: 'cake', icon: '🍰', name: '蛋糕' },
-        { id: 'lollipop', icon: '🍭', name: '棒棒糖' },
-        { id: 'cd', icon: '💿', name: 'Rico Zayd 专辑' },
-        { id: 'book', icon: '📖', name: 'Lin 的绘本' }
-    ];
-    let html = '';
-    let hasItem = false;
-    items.forEach(item => {
-        const count = inventory[item.id] || 0;
-        if (count > 0) {
-            hasItem = true;
-            html += `
-                <div class="inv-item">
-                    <span class="icon">${item.icon}</span>
-                    <span class="name">${item.name}</span>
-                    <span class="count">× ${count}</span>
+        <!-- ============================================================ -->
+        <!-- 页面 4: 系统主界面 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-system">
+            <div class="system-header">
+                <div class="title">“光线”<span>科研部</span></div>
+                <div class="avatar-btn" id="avatarBtn" onclick="toggleLogin()">👤</div>
+            </div>
+            <div class="system-grid">
+                <div class="system-card">
+                    <div class="card-title">👥 人员介绍</div>
+                    <div class="person">许以 <span class="role">· 实验总指挥官</span></div>
+                    <div class="person">张硕金 <span class="role">· 机械工程师</span></div>
+                    <div class="person">闫科 <span class="role">· 项目实验控制</span></div>
+                    <div class="person">张羽祥 <span class="role">· 生物与心理检测</span></div>
+                    <div class="person">张进祥 <span class="role">· 记录员</span></div>
                 </div>
-            `;
-        }
-    });
-    if (!hasItem) {
-        html = `<div class="inv-empty">🛒 还没有任何物品<br><span style="font-size:14px;color:#445566;">去商店逛逛吧</span></div>`;
-    }
-    inventoryList.innerHTML = html;
-}
+                <div class="system-card">
+                    <div class="card-title">📂 信息收纳</div>
+                    <div class="person" style="border-bottom:1px dashed #e2e8f0;padding:6px 0;">• 实验记录归档</div>
+                    <div class="person" style="border-bottom:1px dashed #e2e8f0;padding:6px 0;">• 人员档案</div>
+                    <div class="person" style="border-bottom:1px dashed #e2e8f0;padding:6px 0;">• 时间线报告</div>
+                    <div class="person" style="padding:6px 0;">• 穿越标记图鉴</div>
+                </div>
+            </div>
 
-// ================================================================
-// ========== 老虎机 ==========
-const symbols = ['💀', '👻', '🕷️', '🦇', '☠️', '👹', '👺', '👿', '💀', '👻'];
+            <div style="font-size:18px;font-weight:700;color:#1e2a3a;margin-bottom:12px;">📋 tripling 实验记录</div>
+            <div class="record-list">
+                <div class="record-item">
+                    <div class="date">2018.6.6</div>
+                    <div class="desc">植物“毛球”从2023年6月6日穿越一个来回</div>
+                    <div class="mark">穿越标记：双重圆形标记</div>
+                    <div class="mark-img">⭕ ⓪</div>
+                </div>
+                <div class="record-item">
+                    <div class="date">2022.5.1</div>
+                    <div class="desc">历时四年，光线机已做好植物穿越实验的准备，为了不改变时间进程，我们五人决定在2023年6月6日进行首次植物穿越实验。</div>
+                </div>
+                <div class="record-item">
+                    <div class="date">2022.6.6</div>
+                    <div class="desc">动物“白兔”从2025年6月6日穿越一个来回</div>
+                    <div class="mark">穿越标记：单圆形标记</div>
+                    <div class="mark-img">⭕</div>
+                </div>
+                <div class="record-item">
+                    <div class="date">2023.6.6</div>
+                    <div class="desc">我们按照计划进行了植物穿越实验，结果显而易见，成功。</div>
+                </div>
+                <div class="record-item">
+                    <div class="date">2025.6.6</div>
+                    <div class="desc">我们按照计划进行了植物穿越实验，结果显而易见，成功。如果没有意外，我们会在2026年6月6日进行首次真人穿越实验。</div>
+                </div>
+                <div class="record-item">
+                    <div class="date">2025.6.7</div>
+                    <div class="desc" style="color:#dc2626;">项目取消。</div>
+                </div>
+            </div>
+            <p style="text-align:center;color:#8899b0;font-size:13px;margin-top:20px;">— 点击右上角头像登录 —</p>
+        </div>
 
-function spinReels() {
-    if (isSpinning) return;
-    if (coins < 20) {
-        alert('金币不足！请去商店购买金币。');
-        return;
-    }
-    coins -= 20;
-    updateCoins();
-    isSpinning = true;
-    spinBtn.disabled = true;
-    spinCount++;
-    spinCountDisplay.textContent = spinCount;
+        <!-- ============================================================ -->
+        <!-- 登录弹窗 -->
+        <!-- ============================================================ -->
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-box">
+                <button class="close-login" onclick="closeLogin()">✕</button>
+                <h3>🔐 登录</h3>
+                <div class="sub">请输入账号与密码</div>
+                <label>账号</label>
+                <input type="text" id="loginUser" placeholder="请输入账号">
+                <label>密码</label>
+                <input type="password" id="loginPass" placeholder="请输入密码">
+                <button class="login-submit" onclick="doLogin()">登录</button>
+                <div class="login-error" id="loginError"></div>
+            </div>
+        </div>
 
-    const isTriple = (Math.random() < 0.1);
-    let result1, result2, result3;
-    if (isTriple) {
-        const idx = Math.floor(Math.random() * symbols.length);
-        const symbol = symbols[idx];
-        result1 = result2 = result3 = symbol;
-    } else {
-        result1 = symbols[Math.floor(Math.random() * symbols.length)];
-        result2 = symbols[Math.floor(Math.random() * symbols.length)];
-        result3 = symbols[Math.floor(Math.random() * symbols.length)];
-    }
+        <!-- ============================================================ -->
+        <!-- 退出确认 -->
+        <!-- ============================================================ -->
+        <div class="confirm-overlay" id="confirmOverlay">
+            <div class="confirm-box">
+                <p>确定要退出登录吗？</p>
+                <div class="btn-row">
+                    <button class="yes" onclick="confirmLogout(true)">退出</button>
+                    <button class="no" onclick="confirmLogout(false)">否</button>
+                </div>
+            </div>
+        </div>
 
-    let rollCount = 0;
-    const rollInterval = setInterval(() => {
-        reel1.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        reel2.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        reel3.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        rollCount++;
-        if (rollCount >= 8) {
-            clearInterval(rollInterval);
-            reel1.textContent = result1;
-            reel2.textContent = result2;
-            reel3.textContent = result3;
-            if (isTriple) {
-                coins += 100;
-                updateCoins();
-                showReward();
-            }
-            isSpinning = false;
-            spinBtn.disabled = false;
-        }
-    }, 100);
-}
+        <!-- ============================================================ -->
+        <!-- 页面 5: 许以仪表盘 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-xuyi">
+            <button class="back-btn" onclick="backToSystem()"><span class="arrow">‹</span> 返回系统</button>
+            <div class="dash-header">
+                <span class="time">📅 2025.6.7</span>
+                <span class="user-name">👤 许以</span>
+            </div>
+            <div class="dash-grid">
+                <div class="dash-card" onclick="openNote()">
+                    <div class="card-label"><span class="icon">📓</span> 笔记</div>
+                    <div class="card-preview">2023.6.6 日记 · 记忆分支...</div>
+                </div>
+                <div class="dash-card" onclick="openHealth()">
+                    <div class="card-label"><span class="icon">❤️</span> 身体健康实时监测</div>
+                    <div class="card-preview">心跳突破一百四十，请注意休息</div>
+                </div>
+                <div class="dash-card full-width" onclick="openMessages()">
+                    <div class="card-label"><span class="icon">💬</span> 消息</div>
+                    <div class="card-preview">4 位联系人</div>
+                </div>
+            </div>
+        </div>
 
-// ================================================================
-// ========== 登录系统 ==========
-function openLogin() {
-    loginOverlay.classList.add('active');
-    loginError.style.display = 'none';
-    loginUser.value = '';
-    loginPass.value = '';
-}
+        <!-- ============================================================ -->
+        <!-- 页面 6: 闫科仪表盘 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-yanke">
+            <button class="back-btn" onclick="backToSystem()"><span class="arrow">‹</span> 返回系统</button>
+            <div class="dash-header">
+                <span class="time">📅 2025.6.7</span>
+                <span class="user-name">👤 闫科</span>
+            </div>
+            <div class="dash-grid">
+                <div class="special-banner full-width" onclick="openBigUniverse()">
+                    <div class="title">🌌 大时间宇宙</div>
+                    <div class="sub">点击进入 · 探寻终极真相</div>
+                </div>
+                <div class="dash-card full-width" onclick="openYankeNote()">
+                    <div class="card-label"><span class="icon">📓</span> 笔记</div>
+                    <div class="card-preview">2025.6.7 日记 · 关于循环</div>
+                </div>
+            </div>
+        </div>
 
-function closeLogin() {
-    loginOverlay.classList.remove('active');
-}
+        <!-- ============================================================ -->
+        <!-- 页面 7: 许以笔记 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-note">
+            <button class="back-btn" onclick="backToXuyi()"><span class="arrow">‹</span> 返回</button>
+            <div class="detail-content">
+                <div class="title">📓 2023.6.6 日记</div>
+                <div class="body">
+                    时空穿梭可能会多出很多意外因素，植物“毛球”实验进行后，我的记忆出现了分支，一个是原本的我，我称为<span class="highlight">original</span>，另一个是看见毛球穿越后的我，我称为<span class="highlight">plural</span>，plural记忆中我在18年发现了毛球被穿越过，且植被上出现单圆形标记，好在，其他实验室的朋友们也出现了相同的记忆，空间似乎还没有到不可控的地步。
 
-function handleLogin() {
-    const user = loginUser.value.trim();
-    const pass = loginPass.value.trim();
-    if (user === '2020621' && pass === '1311') {
-        closeLogin();
-        closeMenu();
-        operationOverlay.classList.add('active');
-    } else {
-        loginError.style.display = 'block';
-    }
-}
+                    那18年那个没有发现毛球穿越的original我呢？会随着时间慢慢和plural我合为一体，还是会有新的、我完全不知道的时间分支在等着我？
 
-loginSubmitBtn.addEventListener('click', handleLogin);
-loginCloseBtn.addEventListener('click', closeLogin);
-loginOverlay.addEventListener('click', function(e) {
-    if (e.target === loginOverlay) closeLogin();
-});
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && loginOverlay.classList.contains('active')) {
-        handleLogin();
-    }
-});
+                    实验不能停滞在这种阶段，有新的发现时，我会记录下来。
+                </div>
+            </div>
+            <div class="detail-content mt-16">
+                <div class="title">📓 2024.8.7 日记</div>
+                <div class="body">
+                    今天是闫科的28岁生日，忙了这么久，前几次都没有好好准备，我偷偷让大家背着闫科组织生日会的时候，张硕金都要激动死了。
 
-// ================================================================
-// ========== 操作面板 ==========
-function closeOperation() {
-    operationOverlay.classList.remove('active');
-    destroyStep = 0;
-}
+                    都这样了，闫科还觉得张硕金不一定喜欢她，果然还得要我助力一下。
+                </div>
+            </div>
+            <div class="detail-content mt-16">
+                <div class="title">📓 2025.6.6 日记</div>
+                <div class="body">
+                    白兔实验成功，我也出现了新的记忆分支，现在大脑很乱，我不知道能不能讲清楚。
 
-opExitBtn.addEventListener('click', closeOperation);
-operationOverlay.addEventListener('click', function(e) {
-    if (e.target === operationOverlay) closeOperation();
-});
+                    各种情况的分支出现，现在最基本的时空应该是现在这条：毛球因为两次穿越，所以身上有两重圆形标记，而兔子身上仅有一条，其余的分支因为各种情况，有的是毛球实验original成功但plural未成功所以毛球只有一重圆形标记，有的plural白兔实验未成功所以白兔并未出现圆形标记……
 
-opModifyBtn.addEventListener('click', function() {
-    alert('程序已经固定并投入使用，无法修改');
-});
+                    更没想到的是，经过询问，我现在的队员们似乎并不处于同一时间线。
 
-opDestroyBtn.addEventListener('click', function() {
-    destroyStep = 0;
-    confirmQuestion.textContent = '您确定吗？';
-    confirmOverlay.classList.add('active');
-});
+                    如果继续进行实验，肯定会有更多分支出现，不知道大脑能不能承受这种穿越性的记忆……无论如何，都到这一步了，还是要继续下去的，至少现在还在可控范围内，也都是已经料到的结果。
+                </div>
+            </div>
+        </div>
 
-confirmYes.addEventListener('click', function() {
-    destroyStep++;
-    if (destroyStep === 1) {
-        confirmQuestion.textContent = '是否已经决定？';
-    } else if (destroyStep === 2) {
-        confirmQuestion.textContent = '销毁程序，林凡或许会永远被困在这里';
-    } else if (destroyStep === 3) {
-        confirmOverlay.classList.remove('active');
-        operationOverlay.classList.remove('active');
-        finalBig.textContent = '销毁成功';
-        finalSub.textContent = '';
-        finalEnd.classList.remove('show');
-        finalBtn.textContent = '林凡呢？';
-        finalBtn.style.display = 'inline-block';
-        finalOverlay.classList.add('active');
-    }
-});
+        <!-- ============================================================ -->
+        <!-- 页面 8: 健康 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-health">
+            <button class="back-btn" onclick="backToXuyi()"><span class="arrow">‹</span> 返回</button>
+            <div class="detail-content">
+                <div class="title">❤️ 健康监测</div>
+                <div class="body">您好许以，检测到您今日的心跳突破了一百四十，请您调养生息，不要过度运动。</div>
+            </div>
+        </div>
 
-confirmNo.addEventListener('click', function() {
-    confirmOverlay.classList.remove('active');
-    showPage('startPage');
-    closeOperation();
-});
+        <!-- ============================================================ -->
+        <!-- 页面 9: 消息列表 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-messages">
+            <button class="back-btn" onclick="backToXuyi()"><span class="arrow">‹</span> 返回</button>
+            <div style="font-weight:700;color:#1e2a3a;font-size:20px;margin-bottom:12px;">💬 联系人</div>
+            <div class="contact-list" id="contactList"></div>
+        </div>
 
-confirmOverlay.addEventListener('click', function(e) {
-    if (e.target === confirmOverlay) {
-        confirmOverlay.classList.remove('active');
-        showPage('startPage');
-        closeOperation();
-    }
-});
+        <!-- ============================================================ -->
+        <!-- 页面 10: 聊天详情（许以视角） -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-chat-detail">
+            <button class="back-btn" onclick="backToMessages()"><span class="arrow">‹</span> 返回</button>
+            <div style="font-weight:700;color:#1e2a3a;font-size:20px;margin-bottom:8px;" id="chatDetailTitle">💬 联系人</div>
+            <div class="chat-detail-box" id="chatDetailBox"></div>
+        </div>
 
-// ================================================================
-// ========== 终局 ==========
-finalBtn.addEventListener('click', function() {
-    finalSub.textContent = '';
-    finalEnd.classList.add('show');
-    finalBtn.style.display = 'none';
-});
+        <!-- ============================================================ -->
+        <!-- 页面 11: 张羽祥对话（许以消息中） -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-zhangyuxiang-chat">
+            <button class="back-btn" onclick="backToXuyi()"><span class="arrow">‹</span> 返回</button>
+            <div style="font-weight:700;color:#1e2a3a;font-size:20px;margin-bottom:8px;">💬 张羽祥</div>
+            <div class="chat-container" id="zhangyuxiangContainer"></div>
+            <div class="chat-actions" id="zhangyuxiangActions"></div>
+        </div>
 
-finalOverlay.addEventListener('click', function() {
-    if (finalEnd.classList.contains('show')) {
-        finalBig.textContent = '游戏结束';
-        finalSub.textContent = '';
-        finalEnd.classList.remove('show');
-        finalBtn.style.display = 'none';
-    } else {
-        finalSub.textContent = '存在与消失，已无区别';
-    }
-});
+        <!-- ============================================================ -->
+        <!-- 页面 12: 闫科笔记 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-yanke-note">
+            <button class="back-btn" onclick="backToYanke()"><span class="arrow">‹</span> 返回</button>
+            <div class="detail-content">
+                <div class="title">📓 2025.6.7 日记</div>
+                <div class="body">
+                    今天是2025年6月7日，我本想去按照以前的做法去光线机调整机器状态，结果被张硕金拉住了。
 
-// ================================================================
-// ========== Menu ==========
-function openMenu() {
-    menuOverlay.classList.add('active');
-}
-function closeMenu() {
-    menuOverlay.classList.remove('active');
-}
+                    他跟我说自己来自original4，还告诉我，original有很多隐藏线，且时间速度不一致，导致一切发生的，就是original4，在那个时空里，“毛球”实验与白兔实验均为传回过去，但无法传回来，张进祥为了救他2020年车祸去世的八岁养女，威胁我强制打开光线机，结果我偷偷启动了安保系统，唯独可惜啊，安保系统似乎只是为了保障光线机，不是为了保护我。
 
-btnMenuStart.addEventListener('click', openMenu);
-menuCloseBtn.addEventListener('click', closeMenu);
-menuOverlay.addEventListener('click', function(e) {
-    if (e.target === menuOverlay) closeMenu();
-});
+                    在original5中，我拼命抵抗，没有死在张进祥手上，但在original4中，我还是没能躲过，25年6月7日，抢救无效死亡。
 
-menuInventoryBtn.addEventListener('click', function() {
-    closeMenu();
-    renderInventory();
-    inventoryOverlay.classList.add('active');
-});
-invCloseBtn.addEventListener('click', function() {
-    inventoryOverlay.classList.remove('active');
-});
-inventoryOverlay.addEventListener('click', function(e) {
-    if (e.target === inventoryOverlay) inventoryOverlay.classList.remove('active');
-});
+                    我靠在张硕金身上，听着他熟练的讲着这个事件。我问他，这个事情，你和我讲过多少次？
 
-menuWebsiteBtn.addEventListener('click', function() {
-    closeMenu();
-    officialSite.classList.add('active');
-    document.body.style.overflow = 'hidden';
-});
-siteCloseBtn.addEventListener('click', function() {
-    officialSite.classList.remove('active');
-    document.body.style.overflow = '';
-});
+                    他拉开领口，脖子上露出了六重圆形标记。
 
-menuLoginBtn.addEventListener('click', function() {
-    closeMenu();
-    openLogin();
-});
+                    我死了六次吗？
 
-// ================================================================
-// ========== 其他事件绑定 ==========
-btnGameStart.addEventListener('click', () => showPage('gamePage'));
-btnExitStart.addEventListener('click', () => alert('确定退出吗？\n（开始界面）'));
+                    可能吧，也许不止，他回答。
 
-exitToMenuBtn.addEventListener('click', showError);
-shopBtn.addEventListener('click', () => {
-    showPage('shopPage');
-    renderShop();
-});
-shopBackBtn.addEventListener('click', () => showPage('gamePage'));
-shopExitBtn.addEventListener('click', () => showPage('startPage'));
+                    那这次呢？
 
-spinBtn.addEventListener('click', spinReels);
+                    他熟练的靠在我肩上，告诉我，这次他不走了。
 
-// ESC 键关闭各种覆盖层
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        if (finalOverlay.classList.contains('active')) return;
-        if (messageOverlay.classList.contains('active')) {
-            messageOverlay.classList.remove('active');
-            return;
-        }
-        if (passwordOverlay.classList.contains('active')) {
-            passwordOverlay.classList.remove('active');
-            return;
-        }
-        if (confirmOverlay.classList.contains('active')) {
-            confirmOverlay.classList.remove('active');
-            showPage('startPage');
-            closeOperation();
-            return;
-        }
-        if (operationOverlay.classList.contains('active')) {
-            closeOperation();
-            return;
-        }
-        if (loginOverlay.classList.contains('active')) {
+                    以前呢？
+
+                    以前都会去下一个你有危险的时空找你，但是现在，我不想再反复看到你在六月七日死去了。
+
+                    或许是在他的第五次穿越，那个时空的我跟他说，既然是注定，那就放弃吧，无论如何，我们现在还在这里，就算是一起走到了最后。
+
+                    ——闫科，2025.6.7
+                </div>
+            </div>
+            <div class="detail-content mt-16">
+                <div class="title">📓 2024.8.7 日记</div>
+                <div class="body">
+                    养父在我小时候就离开我去搞科研了，现在还不知所踪，所以我并不清楚是不是该叫他养父，为了找他，我也投身于科学事业中，当许以组织起时空穿梭研究时，我主动申请加入了。
+
+                    我不记得他长什么样子，不知道他的名字，甚至为了摆脱他改名换姓，甚至他有可能已经死了，但找他似乎已经成为了无聊生活的调味剂，好像只要还有这个目标，我就可以是有家人的闫科。
+
+                    张硕金的出现让我终于有勇气不再找养父了，从此以后，我应该可以放松的活下去。
+
+                    ——闫科，2024.8.7
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 大时间宇宙 – 问题弹窗 -->
+        <!-- ============================================================ -->
+        <div class="question-overlay" id="questionOverlay">
+            <div class="question-box">
+                <button class="close-q" onclick="closeQuestion()">✕</button>
+                <div class="q-title">🌌 大时间宇宙</div>
+                <div class="q-sub">张进祥的养女是？</div>
+                <input type="text" id="questionInput" placeholder="请输入答案">
+                <button class="q-btn" onclick="checkAnswer()">确认</button>
+                <div class="q-error" id="questionError"></div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 页面 13: 大时间宇宙聊天（最终对话） – 修复版 -->
+        <!-- ============================================================ -->
+        <div class="page" id="page-biguniverse-chat">
+            <button class="back-btn" onclick="backToYanke()"><span class="arrow">‹</span> 返回</button>
+            <div style="font-weight:700;color:#1e2a3a;font-size:20px;margin-bottom:8px;">🌌 大时间宇宙 · 群聊</div>
+            <div class="chat-container" id="bigUniverseContainer"></div>
+            <div class="chat-actions" id="bigUniverseActions"></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 黑屏结束 -->
+        <!-- ============================================================ -->
+        <div class="blackout" id="blackout" onclick="closeBlackout()">
+            <div>游戏结束</div>
+            <div class="sub">点击任意处关闭</div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===================== JavaScript ============================= -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // 状态管理
+        // ============================================================
+        const state = {
+            currentPage: 'page-home',
+            loggedIn: false,
+            currentUser: null, // 'xuyi' | 'yanke'
+            bigUniverseStep: 0, // 控制大宇宙聊天进度
+        };
+
+        // ============================================================
+        // 页面导航
+        // ============================================================
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            state.currentPage = id;
             closeLogin();
-            return;
+            closeConfirm();
+            closeQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        if (inventoryOverlay.classList.contains('active')) {
-            inventoryOverlay.classList.remove('active');
-            return;
-        }
-        if (officialSite.classList.contains('active')) {
-            officialSite.classList.remove('active');
-            document.body.style.overflow = '';
-            return;
-        }
-        if (menuOverlay.classList.contains('active')) {
-            closeMenu();
-            return;
-        }
-    }
-});
 
-// ================================================================
-// ========== 初始化 ==========
-showPage('startPage');
-updateCoins();
-spinCountDisplay.textContent = '0';
-console.log('🎰 Happy Life 已启动！');
-</script>
+        function goHome() { showPage('page-home'); }
+
+        function goToChat() {
+            showPage('page-chat');
+            renderZhangChat();
+        }
+
+        function goToPassword() {
+            showPage('page-password');
+            document.getElementById('pwdInput').value = '';
+            document.getElementById('pwdError').textContent = '';
+        }
+
+        function goToSystem() { showPage('page-system'); }
+
+        function backToSystem() {
+            if (state.loggedIn) showPage('page-system');
+            else showPage('page-system');
+        }
+
+        function backToXuyi() {
+            if (state.currentUser === 'xuyi') showPage('page-xuyi');
+            else if (state.currentUser === 'yanke') showPage('page-yanke');
+            else showPage('page-system');
+        }
+        function backToYanke() {
+            if (state.currentUser === 'yanke') showPage('page-yanke');
+            else showPage('page-system');
+        }
+        function backToMessages() { showPage('page-messages'); }
+
+        // ============================================================
+        // 张羽祥初始聊天
+        // ============================================================
+        let zhangChatData = [{ from: 'zhang', text: '在线求助，给你看个东西。' }];
+
+        function renderZhangChat() {
+            const container = document.getElementById('chatContainer');
+            const actions = document.getElementById('chatActions');
+            container.innerHTML = '';
+            actions.innerHTML = '';
+
+            zhangChatData.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `chat-bubble ${msg.from === 'zhang' ? 'left' : 'right'}`;
+                const sender = msg.from === 'zhang' ? '张羽祥' : '我';
+                bubble.innerHTML = `<div class="sender">${sender}</div>${msg.text}`;
+                container.appendChild(bubble);
+            });
+
+            const last = zhangChatData[zhangChatData.length - 1];
+            if (last.from === 'zhang' && last.text === '在线求助，给你看个东西。') {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.textContent = '什么？';
+                btn.onclick = function() {
+                    zhangChatData.push({ from: 'me', text: '什么？' });
+                    setTimeout(() => {
+                        zhangChatData.push({ from: 'zhang', text: '83955.com' });
+                        renderZhangChat();
+                        const actions2 = document.getElementById('chatActions');
+                        actions2.innerHTML = '';
+                        const viewBtn = document.createElement('button');
+                        viewBtn.className = 'action-btn';
+                        viewBtn.textContent = '🔍 查看';
+                        viewBtn.onclick = function() { goToPassword(); };
+                        actions2.appendChild(viewBtn);
+                    }, 400);
+                    renderZhangChat();
+                };
+                actions.appendChild(btn);
+            }
+        }
+
+        // ============================================================
+        // 密码验证
+        // ============================================================
+        function checkPassword() {
+            const input = document.getElementById('pwdInput').value.trim();
+            const error = document.getElementById('pwdError');
+            if (input === '83955') {
+                error.textContent = '';
+                goToSystem();
+            } else {
+                error.textContent = '❌ 密码错误，请重试';
+            }
+        }
+        document.getElementById('pwdInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // ============================================================
+        // 登录系统
+        // ============================================================
+        const ACCOUNTS = {
+            '许以': { password: '201866', id: 'xuyi' },
+            '闫科': { password: '199687', id: 'yanke' }
+        };
+
+        function toggleLogin() {
+            if (state.loggedIn) {
+                document.getElementById('confirmOverlay').classList.add('show');
+            } else {
+                document.getElementById('loginOverlay').classList.add('show');
+                document.getElementById('loginUser').value = '';
+                document.getElementById('loginPass').value = '';
+                document.getElementById('loginError').textContent = '';
+            }
+        }
+
+        function closeLogin() { document.getElementById('loginOverlay').classList.remove('show'); }
+
+        function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); }
+
+        function doLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const error = document.getElementById('loginError');
+
+            if (!user || !pass) { error.textContent = '请输入账号和密码'; return; }
+
+            const account = ACCOUNTS[user];
+            if (!account || account.password !== pass) {
+                error.textContent = '❌ 账号或密码错误';
+                return;
+            }
+
+            state.loggedIn = true;
+            state.currentUser = account.id;
+            error.textContent = '';
+            closeLogin();
+
+            document.getElementById('avatarBtn').textContent = '👤';
+
+            if (account.id === 'xuyi') showPage('page-xuyi');
+            else if (account.id === 'yanke') showPage('page-yanke');
+        }
+
+        function confirmLogout(confirm) {
+            closeConfirm();
+            if (confirm) {
+                state.loggedIn = false;
+                state.currentUser = null;
+                document.getElementById('avatarBtn').textContent = '👤';
+                showPage('page-system');
+            }
+        }
+
+        // ============================================================
+        // 许以仪表盘
+        // ============================================================
+        function openNote() { showPage('page-note'); }
+
+        function openHealth() { showPage('page-health'); }
+
+        function openMessages() {
+            showPage('page-messages');
+            renderContacts();
+        }
+
+        // ============================================================
+        // 闫科仪表盘
+        // ============================================================
+        function openYankeNote() {
+            showPage('page-yanke-note');
+        }
+
+        function openBigUniverse() {
+            document.getElementById('questionOverlay').classList.add('show');
+            document.getElementById('questionInput').value = '';
+            document.getElementById('questionError').textContent = '';
+        }
+
+        function closeQuestion() {
+            document.getElementById('questionOverlay').classList.remove('show');
+        }
+
+        function checkAnswer() {
+            const ans = document.getElementById('questionInput').value.trim();
+            const error = document.getElementById('questionError');
+            if (ans === '闫科') {
+                error.textContent = '';
+                closeQuestion();
+                // 进入大宇宙聊天，重置状态
+                state.bigUniverseStep = 0;
+                // 清空消息数组
+                bigUniverseMessages = [];
+                showPage('page-biguniverse-chat');
+                renderBigUniverseChat();
+            } else {
+                error.textContent = '❌ 答案错误，请再想想';
+            }
+        }
+
+        // ============================================================
+        // 许以消息联系人
+        // ============================================================
+        const contactData = [
+            { id: 'zhangshuojin', name: '张硕金', avatar: '🔧', preview: '许哥！今年闫科的生日...' },
+            { id: 'yanke', name: '闫科', avatar: '🔬', preview: '是的，有什么事吗？' },
+            { id: 'zhangjinxiang_msg', name: '张进祥', avatar: '📋', preview: '兔子穿越都已经圆满完成了...' },
+            { id: 'zhangyuxiang_msg', name: '张羽祥', avatar: '🧬', preview: '许哥你怎么样了？' }
+        ];
+
+        function renderContacts() {
+            const container = document.getElementById('contactList');
+            container.innerHTML = '';
+            contactData.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'contact-item';
+                div.innerHTML =
+                    `<span class="avatar">${c.avatar}</span><div class="info"><div class="name">${c.name}</div><div class="preview">${c.preview}</div></div>`;
+                div.onclick = function() { openChatDetail(c.id); };
+                container.appendChild(div);
+            });
+        }
+
+        // ============================================================
+        // 聊天详情（许以视角）
+        // ============================================================
+        const chatDetails = {
+            'zhangshuojin': {
+                title: '💬 张硕金',
+                messages: [
+                    { type: 'date', text: '2025.6.5' },
+                    { from: 'zhangshuojin', text: '许哥！今年闫科的生日要不要也隆重一点办啊，今年可是我们在一起一周年！' },
+                    { from: 'xuyi', text: '第一次见面要办派对，第一次加聊天方式要办庆祝会，上次庆祝会还是我给你掏的钱。' },
+                    { from: 'zhangshuojin', text: '这次保证！八月七号之后，我一定给你还上！' },
+                    { from: 'xuyi', text: '好吧，我这么大功臣，游戏机是不是得借我玩儿两天？' },
+                    { type: 'date', text: '2025.6.7' },
+                    { from: 'xuyi', text: '我问你一个问题。' },
+                    { from: 'zhangshuojin', text: '怎么了许哥？' },
+                    { from: 'xuyi', text: '你现在正和闫科在一起吗？' },
+                    { from: 'zhangshuojin', text: '是' },
+                    { from: 'xuyi', text: '好……' },
+                    { from: 'xuyi', text: '我想问你' },
+                    { from: 'xuyi', text: '你的脖子上，为什么有六重圆形标记？' }
+                ]
+            },
+            'yanke': {
+                title: '💬 闫科',
+                messages: [
+                    { type: 'date', text: '2025.6.7' },
+                    { from: 'xuyi', text: '闫科，你和张硕金在一起吗？' },
+                    { from: 'yanke', text: '是的，有什么事吗？' },
+                    { from: 'xuyi', text: '张硕金有和你说什么吗？' },
+                    { from: 'yanke', text: '说了很多，但是很抱歉，我不能告诉你。' },
+                    { from: 'xuyi', text: '为什么？' },
+                    { from: 'yanke', text: '（语音转文字，为张硕金的声音）有太多的事发展到现在都会与我们的意愿相违背，你是我的恩人，也是闫科的恩人，所以想做什么，尽管去做吧，等到你真正成功的那一天，我们还会见面的。' }
+                ]
+            },
+            'zhangjinxiang_msg': {
+                title: '💬 张进祥',
+                messages: [
+                    { type: 'date', text: '2025.6.6' },
+                    { from: 'zhangjinxiang_msg', text: '兔子穿越都已经圆满完成了，啥时候才能真人测验啊？' },
+                    { from: 'xuyi', text: '兔子体型小，可以控制它穿梭到我们想让它去到的时间' },
+                    { from: 'xuyi', text: '如果现在进行真人测验的话，保不准会传到什么时候去。' },
+                    { from: 'zhangjinxiang_msg', text: '不是穿回光线机发明以前会稳妥一点吗？' },
+                    { from: 'xuyi', text: '老张，我知道你养女的去世是你一大心结，但你不能把我们所有人都搭进去' },
+                    { from: 'xuyi', text: '如果你在光线机真出了事，要担的责任，比你我想象的都要多，到时候，光线机也必须摧毁，所以付出都会功亏一篑。' }
+                ]
+            },
+            'zhangyuxiang_msg': {
+                title: '💬 张羽祥',
+                messages: [{ type: 'date', text: '2025.6.7' }, { from: 'zhangyuxiang_msg', text: '许哥你怎么样了？' }],
+                isSpecial: true
+            }
+        };
+
+        function openChatDetail(contactId) {
+            const data = chatDetails[contactId];
+            if (!data) return;
+
+            if (contactId === 'zhangyuxiang_msg') {
+                showPage('page-zhangyuxiang-chat');
+                renderZhangyuxiangChat();
+                return;
+            }
+
+            showPage('page-chat-detail');
+            document.getElementById('chatDetailTitle').textContent = data.title;
+            const container = document.getElementById('chatDetailBox');
+            container.innerHTML = '';
+
+            data.messages.forEach(msg => {
+                if (msg.type === 'date') {
+                    const d = document.createElement('div');
+                    d.className = 'chat-date';
+                    d.textContent = msg.text;
+                    container.appendChild(d);
+                    return;
+                }
+                const bubble = document.createElement('div');
+                const isLeft = msg.from === 'xuyi' ? false : true;
+                bubble.className = `chat-bubble ${isLeft ? 'left' : 'right'}`;
+                let senderName = '';
+                if (msg.from === 'xuyi') senderName = '许以';
+                else if (msg.from === 'zhangshuojin') senderName = '张硕金';
+                else if (msg.from === 'yanke') senderName = '闫科';
+                else if (msg.from === 'zhangjinxiang_msg') senderName = '张进祥';
+                else if (msg.from === 'zhangyuxiang_msg') senderName = '张羽祥';
+                bubble.innerHTML = `<div class="sender">${senderName}</div>${msg.text}`;
+                container.appendChild(bubble);
+            });
+        }
+
+        // ============================================================
+        // 张羽祥对话（许以消息中）
+        // ============================================================
+        let zhangyuxiangChat = [{ from: 'zhangyuxiang_msg', text: '许哥你怎么样了？' }];
+
+        function renderZhangyuxiangChat() {
+            const container = document.getElementById('zhangyuxiangContainer');
+            const actions = document.getElementById('zhangyuxiangActions');
+            container.innerHTML = '';
+            actions.innerHTML = '';
+
+            const d = document.createElement('div');
+            d.className = 'chat-date';
+            d.textContent = '2025.6.7';
+            container.appendChild(d);
+
+            zhangyuxiangChat.forEach(msg => {
+                const bubble = document.createElement('div');
+                const isLeft = msg.from === 'zhangyuxiang_msg' ? true : false;
+                bubble.className = `chat-bubble ${isLeft ? 'left' : 'right'}`;
+                const sender = msg.from === 'zhangyuxiang_msg' ? '张羽祥' : '我';
+                bubble.innerHTML = `<div class="sender">${sender}</div>${msg.text}`;
+                container.appendChild(bubble);
+            });
+
+            const last = zhangyuxiangChat[zhangyuxiangChat.length - 1];
+            if (last.from === 'zhangyuxiang_msg' && last.text === '许哥你怎么样了？') {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.textContent = '是我，你朋友！';
+                btn.onclick = function() {
+                    zhangyuxiangChat.push({ from: 'me', text: '是我，你朋友！' });
+                    setTimeout(() => {
+                        zhangyuxiangChat.push({ from: 'zhangyuxiang_msg',
+                            text: '我就知道，事情发展到我也无可奈何的时候，我一定会让你来帮忙。' });
+                        renderZhangyuxiangChat();
+                        const actions2 = document.getElementById('zhangyuxiangActions');
+                        actions2.innerHTML = '';
+                        const btn2 = document.createElement('button');
+                        btn2.className = 'action-btn';
+                        btn2.textContent = '今天发生什么了？';
+                        btn2.onclick = function() {
+                            zhangyuxiangChat.push({ from: 'me', text: '今天发生什么了？' });
+                            setTimeout(() => {
+                                zhangyuxiangChat.push({ from: 'zhangyuxiang_msg',
+                                    text: '今天早上许以把所有人叫去会议室开会，结果张进祥没来，我们还以为他喝酒喝的跑肚子，就没管他，先开始开会了。结果直到会议室结束都没看见张进祥人影，我们四处找也找不到。'
+                                });
+                                renderZhangyuxiangChat();
+                                const actions3 = document.getElementById('zhangyuxiangActions');
+                                actions3.innerHTML = '';
+                                const btn3 = document.createElement('button');
+                                btn3.className = 'action-btn';
+                                btn3.textContent = '然后呢？';
+                                btn3.onclick = function() {
+                                    zhangyuxiangChat.push({ from: 'me', text: '然后呢？' });
+                                    setTimeout(() => {
+                                        zhangyuxiangChat.push({ from: 'zhangyuxiang_msg',
+                                            text: '结果一看，光线机在昨天晚上有运作，我叫许哥来将穿越的东西复原回来，结果看见了张进祥的尸体，但是看起来……老了很多很多，脖子上还有五重圆形标记，然后我看许哥好像和那俩没过来的人发了点儿什么，紧接着就拉着我去实验仓库了，一看，俩人一个被砸没了一个自刎了。'
+                                        });
+                                        renderZhangyuxiangChat();
+                                        const actions4 = document.getElementById(
+                                        'zhangyuxiangActions');
+                                        actions4.innerHTML = '';
+                                        const btn4 = document.createElement('button');
+                                        btn4.className = 'action-btn';
+                                        btn4.textContent = '张羽祥，你是哪个时空的？';
+                                        btn4.onclick = function() {
+                                            zhangyuxiangChat.push({ from: 'me',
+                                                text: '张羽祥，你是哪个时空的？' });
+                                            setTimeout(() => {
+                                                zhangyuxiangChat.push({ from: 'zhangyuxiang_msg',
+                                                    text: '我不知道，我是负责生物和心理的，实验内容我根本没权参与，我哪儿知道自己是哪个时空的，我只记着当时大家好像说什么毛球上有个单圆形标记，白兔实验好像是没有成功？'
+                                                });
+                                                renderZhangyuxiangChat();
+                                                const actions5 = document.getElementById(
+                                                    'zhangyuxiangActions');
+                                                actions5.innerHTML =
+                                                    '<div style="color:#5e6f88;font-size:14px;padding:8px 0;">— 对话结束 —</div>';
+                                            }, 500);
+                                            renderZhangyuxiangChat();
+                                        };
+                                        actions4.appendChild(btn4);
+                                    }, 500);
+                                    renderZhangyuxiangChat();
+                                };
+                                actions3.appendChild(btn3);
+                            }, 500);
+                            renderZhangyuxiangChat();
+                        };
+                        actions2.appendChild(btn2);
+                    }, 500);
+                    renderZhangyuxiangChat();
+                };
+                actions.appendChild(btn);
+            }
+        }
+
+        // ============================================================
+        // 大时间宇宙聊天 – 状态机（修复版）
+        // ============================================================
+        let bigUniverseMessages = [];
+
+        // 定义步骤：每一步包含要添加的消息（数组）和下一步的按钮（数组）
+        // 每一步的按钮文本和对应的处理函数
+        const bigUniverseSteps = [
+            // 步骤0: 初始，显示"有人吗？"
+            {
+                messages: [], // 初始无消息
+                buttons: [
+                    { text: '有人吗？', nextStep: 1 }
+                ]
+            },
+            // 步骤1: 有人吗？ → 张硕金回应 "你是？"
+            {
+                messages: [
+                    { from: 'system', text: '有人吗？' },
+                    { from: 'zhangshuojin', text: '你是？' }
+                ],
+                buttons: [
+                    { text: '你那边现在是几几年？', nextStep: 2 }
+                ]
+            },
+            // 步骤2
+            {
+                messages: [
+                    { from: 'system', text: '你那边现在是几几年？' },
+                    { from: 'zhangshuojin', text: '啊~你是张羽祥的朋友？' }
+                ],
+                buttons: [
+                    { text: '你知道我？', nextStep: 3 }
+                ]
+            },
+            // 步骤3
+            {
+                messages: [
+                    { from: 'system', text: '你知道我？' },
+                    { from: 'zhangshuojin', text: '大概吧。' }
+                ],
+                buttons: [
+                    { text: '所以现在是哪个时空的张硕金？', nextStep: 4 }
+                ]
+            },
+            // 步骤4
+            {
+                messages: [
+                    { from: 'system', text: '所以现在是哪个时空的张硕金？' },
+                    { from: 'zhangshuojin', text: 'original4' }
+                ],
+                buttons: [
+                    { text: '你不是已经死了吗？', nextStep: 5 }
+                ]
+            },
+            // 步骤5
+            {
+                messages: [
+                    { from: 'system', text: '你不是已经死了吗？' },
+                    { from: 'zhangshuojin', text: '我是死了，但是original4里的张羽祥和许以还在呢。' },
+                    { from: 'zhangshuojin', text: '或者说，tripling和new universe的许以也在，你刚才一直看的就是tripling许以的账号。' }
+                ],
+                buttons: [
+                    { text: '然后呢？', nextStep: 6 }
+                ]
+            },
+            // 步骤6
+            {
+                messages: [
+                    { from: 'system', text: '然后呢？' },
+                    { from: 'xuyi', text: '然后我把张硕金传送回来了，现在他的脖子上应该是有七重圆形标记了，大的像特地做的文身。' },
+                    { from: 'zhangshuojin', text: '闫科被张进祥杀害之后，经过original4许以的同意和帮助，我随机来到了一个时空，虽然original4的光线机还不好用，但是至少是可以随机传一个时空，如果传到一个好用的光线机那就中大奖了。' }
+                ],
+                buttons: [
+                    { text: '看来你确实是中大奖了，有了好用的光线机，传往各种时空的2025年6月6日。', nextStep: 7 }
+                ]
+            },
+            // 步骤7
+            {
+                messages: [
+                    { from: 'system', text: '看来你确实是中大奖了，有了好用的光线机，传往各种时空的2025年6月6日。' },
+                    { from: 'xuyi', text: '我也很卖力，让你传来传去的，最后光线机都快要用坏了。' },
+                    { from: 'zhangyuxiang', text: '刚刚在忙！聊到哪儿了？' }
+                ],
+                buttons: [
+                    { text: '诶？这是最开始让我帮忙的张羽祥吗？', nextStep: 8 }
+                ]
+            },
+            // 步骤8
+            {
+                messages: [
+                    { from: 'system', text: '诶？这是最开始让我帮忙的张羽祥吗？' },
+                    { from: 'zhangyuxiang', text: '是的是的，你可以叫我original4张羽祥嘿嘿。' }
+                ],
+                buttons: [
+                    { text: '好的，那张羽祥嘿嘿同志，究竟是什么忙让你大动干戈的穿到我的时空给我发消息呢？', nextStep: 9 }
+                ]
+            },
+            // 步骤9
+            {
+                messages: [
+                    { from: 'system', text: '好的，那张羽祥嘿嘿同志，究竟是什么忙让你大动干戈的穿到我的时空给我发消息呢？' },
+                    { from: 'zhangyuxiang', text: '再聊会儿嘛，再聊会儿你就知道了。' },
+                    { from: 'xuyi', text: '或许你还有什么其他想知道的吗？' }
+                ],
+                buttons: [
+                    { text: '那你们现在在哪个时空？', nextStep: 10 }
+                ]
+            },
+            // 步骤10
+            {
+                messages: [
+                    { from: 'system', text: '那你们现在在哪个时空？' },
+                    { from: 'xuyi', text: 'new universe，简单介绍一下，就是所有时间线中进度最快的时间线，现在是2026年6月5日，规避风险一年了，马上要进行第一次真人测验。' }
+                ],
+                buttons: [
+                    { text: '怎么来这个时空了？', nextStep: 11 }
+                ]
+            },
+            // 步骤11
+            {
+                messages: [
+                    { from: 'system', text: '怎么来这个时空了？' },
+                    { from: 'zhangshuojin', text: '嘶……有点复杂，new universe的许以在看到我马上要无的时候，直接把我传回来了，我可以把这个结果称作tripling2，tripling1的结果就是你和那个许以看到的结果，我死啦。' },
+                    { from: 'xuyi', text: '我刚把张硕金送回original4，让它去自己的原宇宙待着，结果发现自己多出了tripling宇宙的记忆。' }
+                ],
+                buttons: [
+                    { text: '好巧啊。', nextStep: 12 }
+                ]
+            },
+            // 步骤12
+            {
+                messages: [
+                    { from: 'system', text: '好巧啊。' },
+                    { from: 'zhangshuojin', text: '而且我们找到闫科了！' }
+                ],
+                buttons: [
+                    { text: '？', nextStep: 13 }
+                ]
+            },
+            // 步骤13
+            {
+                messages: [
+                    { from: 'system', text: '？' },
+                    { from: 'zhangshuojin', text: '（表情包）' }
+                ],
+                buttons: [
+                    { text: '别发这个，我只能看到文字。', nextStep: 14 }
+                ]
+            },
+            // 步骤14
+            {
+                messages: [
+                    { from: 'system', text: '别发这个，我只能看到文字。' },
+                    { from: 'xuyi', text: '在所有世界里，我们一直忘了一个世界，original初。' },
+                    { from: 'xuyi', text: 'original初是从最开始就被划分的宇宙，也就是，我没有组织过穿梭实验，从这个宇宙里，我找到了活过了25年的闫科。' }
+                ],
+                buttons: [
+                    { text: '啊……', nextStep: 15 }
+                ]
+            },
+            // 步骤15
+            {
+                messages: [
+                    { from: 'system', text: '啊……' },
+                    { from: 'zhangshuojin', text: '其他宇宙的闫科无论如何都会在25年6月7去世，或者更早，但初宇宙里她与一切穿梭都没有交集，太好了，我决定去初宇宙找她！' }
+                ],
+                buttons: [
+                    { text: '天。', nextStep: 16 }
+                ]
+            },
+            // 步骤16
+            {
+                messages: [
+                    { from: 'system', text: '天。' },
+                    { from: 'xuyi', text: '到时候又多一层圆形标记。' }
+                ],
+                buttons: [
+                    { text: '（私信）张羽祥发来私信', nextStep: 17 }
+                ]
+            },
+            // 步骤17 – 私信开始
+            {
+                messages: [
+                    { from: 'private', text: '张羽祥发来私信' },
+                    { from: 'zhangyuxiang', text: '你知道闫科的养父是谁了吧。' }
+                ],
+                buttons: [
+                    { text: '知道了……', nextStep: 18 }
+                ]
+            },
+            // 步骤18
+            {
+                messages: [
+                    { from: 'system', text: '知道了……' },
+                    { from: 'zhangyuxiang', text: '初宇宙的闫科确实和穿越没有关系了，但是和张进祥依旧有关系，而且无论哪个宇宙，他都和张进祥有关系，因为所有宇宙中，张进祥都收养了闫科做养女留后。' }
+                ],
+                buttons: [
+                    { text: '所有宇宙中，闫科都会因为张进祥而死。', nextStep: 19 }
+                ]
+            },
+            // 步骤19
+            {
+                messages: [
+                    { from: 'system', text: '所有宇宙中，闫科都会因为张进祥而死。' },
+                    { from: 'zhangyuxiang', text: '这就是我想让你帮我的事情，做出选择。' }
+                ],
+                buttons: [
+                    { text: '我来选？？', nextStep: 20 }
+                ]
+            },
+            // 步骤20
+            {
+                messages: [
+                    { from: 'system', text: '我来选？？' },
+                    { from: 'zhangyuxiang', text: '我会给你两个按钮，红色，是一切重新洗牌，在所有宇宙中清除我们五个人的存在，因为绑定太深，不能单独清掉，否则未清除的人要承下太多记忆；蓝色，是继续一切，跟随许可的发展。' }
+                ],
+                buttons: [
+                    { text: '为什么要我来选，至少要考虑当事人吧？你应该问他们，然后一起选啊。', nextStep: 21 }
+                ]
+            },
+            // 步骤21
+            {
+                messages: [
+                    { from: 'system', text: '为什么要我来选，至少要考虑当事人吧？你应该问他们，然后一起选啊。' },
+                    { from: 'zhangyuxiang', text: '唉，我也太执拗了……' }
+                ],
+                buttons: [
+                    { text: '？', nextStep: 22 }
+                ]
+            },
+            // 步骤22
+            {
+                messages: [
+                    { from: 'system', text: '？' },
+                    { from: 'zhangyuxiang', text: '想到什么了吗？' }
+                ],
+                buttons: [
+                    { text: '什么意思？', nextStep: 23 }
+                ]
+            },
+            // 步骤23
+            {
+                messages: [
+                    { from: 'system', text: '什么意思？' },
+                    { from: 'zhangyuxiang', text: '张羽祥啊，初宇宙的你也帮不上我什么忙。' }
+                ],
+                buttons: [
+                    { text: '我是……你？', nextStep: 24 }
+                ]
+            },
+            // 步骤24
+            {
+                messages: [
+                    { from: 'system', text: '我是……你？' },
+                    { from: 'zhangyuxiang', text: '这个决定太难做，如果问他们两个，恐怕压力也是太大，我全程都没做什么事，如果要选一个恶人决定大家的生死，那还是我来做好了。' }
+                ],
+                buttons: [
+                    { text: '所以我做了网页，让你了解所有过程，再把这个决定，交给另一个我，现在，是时候做决定了。', nextStep: 25 }
+                ]
+            },
+            // 步骤25 – 最终红蓝按钮
+            {
+                messages: [
+                    { from: 'zhangyuxiang', text: '所以我做了网页，让你了解所有过程，再把这个决定，交给另一个我，现在，是时候做决定了。' }
+                ],
+                buttons: [
+                    { text: '🔴 红色', nextStep: 'end' },
+                    { text: '🔵 蓝色', nextStep: 'end' }
+                ]
+            }
+        ];
+
+        let bigUniverseCurrentStep = 0;
+
+        function renderBigUniverseChat() {
+            const container = document.getElementById('bigUniverseContainer');
+            const actions = document.getElementById('bigUniverseActions');
+            container.innerHTML = '';
+            actions.innerHTML = '';
+
+            // 显示所有已存储的消息
+            bigUniverseMessages.forEach(msg => {
+                if (msg.from === 'system') {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-bubble right';
+                    bubble.innerHTML = `<div class="sender me">我</div>${msg.text}`;
+                    container.appendChild(bubble);
+                } else if (msg.from === 'private') {
+                    const div = document.createElement('div');
+                    div.style.cssText =
+                        'text-align:center;padding:6px 0;color:#2563eb;font-weight:600;border-top:1px dashed #d0d7e0;margin-top:6px;';
+                    div.textContent = '📩 张羽祥发来私信';
+                    container.appendChild(div);
+                } else {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-bubble left';
+                    let senderName = msg.from === 'zhangshuojin' ? '张硕金' :
+                        msg.from === 'xuyi' ? '许以' :
+                        msg.from === 'zhangyuxiang' ? '张羽祥' : '';
+                    bubble.innerHTML = `<div class="sender">${senderName}</div>${msg.text}`;
+                    container.appendChild(bubble);
+                }
+            });
+
+            // 获取当前步骤
+            if (bigUniverseCurrentStep >= bigUniverseSteps.length) return;
+
+            const step = bigUniverseSteps[bigUniverseCurrentStep];
+            // 如果是最终步骤（红蓝按钮），特殊处理
+            if (step.buttons.length > 0 && step.buttons[0].nextStep === 'end') {
+                const red = document.createElement('button');
+                red.className = 'choice-btn red';
+                red.textContent = '🔴 红色';
+                red.onclick = function() { endGame(); };
+                const blue = document.createElement('button');
+                blue.className = 'choice-btn blue';
+                blue.textContent = '🔵 蓝色';
+                blue.onclick = function() { endGame(); };
+                actions.appendChild(red);
+                actions.appendChild(blue);
+                return;
+            }
+
+            // 普通按钮
+            step.buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.className = 'action-btn';
+                button.textContent = btn.text;
+                button.onclick = function() {
+                    // 1. 添加当前步骤的 messages（可能已有消息被添加过，但我们要避免重复）
+                    // 但是我们的步骤设计已经包含了新增消息，所以直接添加该步骤的所有消息（除了已经添加的）
+                    // 由于我们可能跳转，所以需要检查是否已经添加过这些消息
+                    // 简便方法：一次性添加该步骤的所有消息（但可能重复）
+                    // 我们维护一个已添加消息的计数器，或者直接添加
+                    // 改进：每次点击按钮，我们推进步骤，并将该步骤的 messages 全部 push 到 bigUniverseMessages
+                    // 但消息可能包含上一步已有的，所以我们只添加步骤中 messages 的最后一个？不对，步骤的消息是新增的。
+                    // 更好的办法：在步骤中，messages 是本次新增的，直接全部添加。
+                    // 但注意步骤0的 messages 为空，步骤1包含系统消息和张硕金回应，这些是新增的。
+                    // 然而，我们点击“有人吗？”时，步骤0的messages为空，我们点击后跳到步骤1，步骤1的messages包含了“有人吗？”和“你是？”，
+                    // 但是“有人吗？”是用户发的，我们已经在点击按钮时手动添加了系统消息？我们需要统一。
+                    // 我们改变策略：点击按钮时，先根据当前步骤，如果当前步骤有 messages，且不是已经显示过，则添加。
+                    // 但为了简单，我们重构：点击按钮时，先添加当前步骤的所有消息（如果还没添加），然后推进 step。
+                    // 我们用标志来防止重复添加。
+                    // 简单起见，我们在这里手动添加消息，并推进步骤。
+                    // 因为我们有明确的步骤定义，所以点击按钮时，我们执行：
+                    // 1. 添加当前步骤的 messages（如果还没添加）
+                    // 2. 推进到 nextStep
+                    // 为了简洁，我们直接根据当前步骤的 messages 添加，但注意步骤的 messages 中可能包含上一步已添加的，所以我们只添加那些不在 bigUniverseMessages 中的。
+                    // 或者我们重新设计：每个步骤只包含该步骤新增的消息，我们直接 push。
+                    // 但步骤0的messages为空，步骤1包含两条消息，步骤2包含两条，等等。
+                    // 我们采用每次点击按钮时，先判断当前步骤的 messages 是否已全部添加，如果没有，则添加。
+                    // 但这里我们通过判断 bigUniverseMessages 的长度和步骤索引来简化。
+                    // 最简单的实现：我们维护一个 stepIndex，每次渲染时根据 stepIndex 显示对应的消息。
+                    // 但因为我们之前已经在 bigUniverseMessages 中存储了所有消息，所以我们只需要在点击按钮时 push 新消息即可。
+                    // 因此，我们修改设计：在点击按钮时，我们手动 push 两条消息（用户的和对方的），然后推进 step。
+                    // 但这样代码会很长，不如直接根据步骤定义来 push。
+                    // 最终决定：在 renderBigUniverseChat 中，根据 bigUniverseCurrentStep 显示对应的消息，而不是从 bigUniverseMessages 读取。
+                    // 但 bigUniverseMessages 用于存储已显示的消息，方便滚动。
+                    // 我们采用混合方式：每次渲染时，根据 bigUniverseCurrentStep 构建消息列表，然后渲染。
+                    // 这样就不需要 bigUniverseMessages 了，但为了保留已显示消息，我们还是用它。
+                    // 我们简化：每次点击按钮，我们手动 push 该步骤的 messages，然后推进 step，再重新渲染。
+                    // 但为了确保不重复，我们每次点击按钮时，先检查该步骤是否已经被处理过，通过一个 visited 数组。
+                    // 这里实现太复杂，我们采用直接硬编码每个按钮的点击处理，就像之前那样，但这次我们使用步骤定义来简化。
+                    // 由于时间有限，我们放弃复杂的步骤系统，回到硬编码方式，但确保消息能正常弹出。
+                    // 我们直接重写为硬编码的对话流程，保证功能。
+                    // 但因为用户希望修复，我们使用步骤系统，但点击按钮时直接执行硬编码的 push 并推进。
+                    // 我们简单粗暴：在每个按钮点击中，直接添加对应的消息，然后调用 renderBigUniverseChat。
+                    // 我们已经在步骤中定义了 messages，可以遍历添加。
+                    // 但为了不重复，我们使用一个标志数组记录哪些消息已经添加。
+                    // 简化：我们使用 step 索引，渲染时只显示当前 step 之前的所有消息，但这样会丢失历史。
+                    // 我决定用最直接的硬编码方式，在按钮点击中直接添加消息，不依赖步骤定义。
+                    // 但那样代码太长。由于用户等不及，我们简单修复原有 bug：原来点击“有人吗？”后没有自动显示后续消息，因为原脚本中点击后只 push 了系统消息，没有自动取脚本的下一条。
+                    // 我们修复原逻辑：在点击“有人吗？”按钮时，除了 push 系统消息，还取脚本的下一条消息 push。
+                    // 但原脚本定义复杂，我们直接重写大宇宙聊天功能，采用硬编码步骤，但每个按钮点击时明确添加消息。
+                    // 我们采用更稳健的方式：使用一个数组存储所有对话（包括用户和系统），然后渲染时显示所有消息，并在底部根据当前索引显示按钮。
+                    // 我们定义一个对话列表，每个条目是 { type: 'user'|'other', from, text }。
+                    // 我们定义一个当前索引，点击按钮时，根据索引决定下一步。
+                    // 这种状态机方式最可靠。
+                };
+                // 由于上面太复杂，我直接采用硬编码状态机，不再使用步骤数组。
+                // 为了节省时间，我们直接重写 renderBigUniverseChat 为硬编码版本，确保每一步都能正确推进。
+                // 我将在下面的代码中直接重写整个函数。
+            });
+        }
+
+        // 重写大宇宙聊天 – 硬编码状态机
+        // 我们使用一个 step 变量，并在函数中根据 step 显示消息和按钮。
+        // 消息存储在一个数组中。
+        let buMessages = [];
+
+        function renderBigUniverseChat() {
+            const container = document.getElementById('bigUniverseContainer');
+            const actions = document.getElementById('bigUniverseActions');
+            container.innerHTML = '';
+            actions.innerHTML = '';
+
+            // 显示所有已存消息
+            buMessages.forEach(msg => {
+                if (msg.from === 'system') {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-bubble right';
+                    bubble.innerHTML = `<div class="sender me">我</div>${msg.text}`;
+                    container.appendChild(bubble);
+                } else if (msg.from === 'private') {
+                    const div = document.createElement('div');
+                    div.style.cssText =
+                        'text-align:center;padding:6px 0;color:#2563eb;font-weight:600;border-top:1px dashed #d0d7e0;margin-top:6px;';
+                    div.textContent = '📩 张羽祥发来私信';
+                    container.appendChild(div);
+                } else {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'chat-bubble left';
+                    let senderName = msg.from === 'zhangshuojin' ? '张硕金' :
+                        msg.from === 'xuyi' ? '许以' :
+                        msg.from === 'zhangyuxiang' ? '张羽祥' : '';
+                    bubble.innerHTML = `<div class="sender">${senderName}</div>${msg.text}`;
+                    container.appendChild(bubble);
+                }
+            });
+
+            // 根据 step 显示按钮
+            const step = state.bigUniverseStep;
+            switch (step) {
+                case 0:
+                    // 初始：显示"有人吗？"
+                    const btn0 = document.createElement('button');
+                    btn0.className = 'action-btn';
+                    btn0.textContent = '有人吗？';
+                    btn0.onclick = function() {
+                        // 添加系统消息
+                        buMessages.push({ from: 'system', text: '有人吗？' });
+                        // 添加张硕金回应
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: '你是？' });
+                            state.bigUniverseStep = 1;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn0);
+                    break;
+                case 1:
+                    // 显示"你那边现在是几几年？"
+                    const btn1 = document.createElement('button');
+                    btn1.className = 'action-btn';
+                    btn1.textContent = '你那边现在是几几年？';
+                    btn1.onclick = function() {
+                        buMessages.push({ from: 'system', text: '你那边现在是几几年？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: '啊~你是张羽祥的朋友？' });
+                            state.bigUniverseStep = 2;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn1);
+                    break;
+                case 2:
+                    const btn2 = document.createElement('button');
+                    btn2.className = 'action-btn';
+                    btn2.textContent = '你知道我？';
+                    btn2.onclick = function() {
+                        buMessages.push({ from: 'system', text: '你知道我？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: '大概吧。' });
+                            state.bigUniverseStep = 3;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn2);
+                    break;
+                case 3:
+                    const btn3 = document.createElement('button');
+                    btn3.className = 'action-btn';
+                    btn3.textContent = '所以现在是哪个时空的张硕金？';
+                    btn3.onclick = function() {
+                        buMessages.push({ from: 'system', text: '所以现在是哪个时空的张硕金？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: 'original4' });
+                            state.bigUniverseStep = 4;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn3);
+                    break;
+                case 4:
+                    const btn4 = document.createElement('button');
+                    btn4.className = 'action-btn';
+                    btn4.textContent = '你不是已经死了吗？';
+                    btn4.onclick = function() {
+                        buMessages.push({ from: 'system', text: '你不是已经死了吗？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin',
+                            text: '我是死了，但是original4里的张羽祥和许以还在呢。' });
+                            buMessages.push({ from: 'zhangshuojin',
+                                text: '或者说，tripling和new universe的许以也在，你刚才一直看的就是tripling许以的账号。'
+                            });
+                            state.bigUniverseStep = 5;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn4);
+                    break;
+                case 5:
+                    const btn5 = document.createElement('button');
+                    btn5.className = 'action-btn';
+                    btn5.textContent = '然后呢？';
+                    btn5.onclick = function() {
+                        buMessages.push({ from: 'system', text: '然后呢？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'xuyi', text: '然后我把张硕金传送回来了，现在他的脖子上应该是有七重圆形标记了，大的像特地做的文身。' });
+                            buMessages.push({ from: 'zhangshuojin',
+                                text: '闫科被张进祥杀害之后，经过original4许以的同意和帮助，我随机来到了一个时空，虽然original4的光线机还不好用，但是至少是可以随机传一个时空，如果传到一个好用的光线机那就中大奖了。'
+                            });
+                            state.bigUniverseStep = 6;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn5);
+                    break;
+                case 6:
+                    const btn6 = document.createElement('button');
+                    btn6.className = 'action-btn';
+                    btn6.textContent = '看来你确实是中大奖了，有了好用的光线机，传往各种时空的2025年6月6日。';
+                    btn6.onclick = function() {
+                        buMessages.push({ from: 'system', text: '看来你确实是中大奖了，有了好用的光线机，传往各种时空的2025年6月6日。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'xuyi', text: '我也很卖力，让你传来传去的，最后光线机都快要用坏了。' });
+                            buMessages.push({ from: 'zhangyuxiang', text: '刚刚在忙！聊到哪儿了？' });
+                            state.bigUniverseStep = 7;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn6);
+                    break;
+                case 7:
+                    const btn7 = document.createElement('button');
+                    btn7.className = 'action-btn';
+                    btn7.textContent = '诶？这是最开始让我帮忙的张羽祥吗？';
+                    btn7.onclick = function() {
+                        buMessages.push({ from: 'system', text: '诶？这是最开始让我帮忙的张羽祥吗？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '是的是的，你可以叫我original4张羽祥嘿嘿。' });
+                            state.bigUniverseStep = 8;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn7);
+                    break;
+                case 8:
+                    const btn8 = document.createElement('button');
+                    btn8.className = 'action-btn';
+                    btn8.textContent = '好的，那张羽祥嘿嘿同志，究竟是什么忙让你大动干戈的穿到我的时空给我发消息呢？';
+                    btn8.onclick = function() {
+                        buMessages.push({ from: 'system',
+                            text: '好的，那张羽祥嘿嘿同志，究竟是什么忙让你大动干戈的穿到我的时空给我发消息呢？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '再聊会儿嘛，再聊会儿你就知道了。' });
+                            buMessages.push({ from: 'xuyi', text: '或许你还有什么其他想知道的吗？' });
+                            state.bigUniverseStep = 9;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn8);
+                    break;
+                case 9:
+                    const btn9 = document.createElement('button');
+                    btn9.className = 'action-btn';
+                    btn9.textContent = '那你们现在在哪个时空？';
+                    btn9.onclick = function() {
+                        buMessages.push({ from: 'system', text: '那你们现在在哪个时空？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'xuyi',
+                                text: 'new universe，简单介绍一下，就是所有时间线中进度最快的时间线，现在是2026年6月5日，规避风险一年了，马上要进行第一次真人测验。'
+                            });
+                            state.bigUniverseStep = 10;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn9);
+                    break;
+                case 10:
+                    const btn10 = document.createElement('button');
+                    btn10.className = 'action-btn';
+                    btn10.textContent = '怎么来这个时空了？';
+                    btn10.onclick = function() {
+                        buMessages.push({ from: 'system', text: '怎么来这个时空了？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin',
+                                text: '嘶……有点复杂，new universe的许以在看到我马上要无的时候，直接把我传回来了，我可以把这个结果称作tripling2，tripling1的结果就是你和那个许以看到的结果，我死啦。'
+                            });
+                            buMessages.push({ from: 'xuyi', text: '我刚把张硕金送回original4，让它去自己的原宇宙待着，结果发现自己多出了tripling宇宙的记忆。' });
+                            state.bigUniverseStep = 11;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn10);
+                    break;
+                case 11:
+                    const btn11 = document.createElement('button');
+                    btn11.className = 'action-btn';
+                    btn11.textContent = '好巧啊。';
+                    btn11.onclick = function() {
+                        buMessages.push({ from: 'system', text: '好巧啊。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: '而且我们找到闫科了！' });
+                            state.bigUniverseStep = 12;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn11);
+                    break;
+                case 12:
+                    const btn12 = document.createElement('button');
+                    btn12.className = 'action-btn';
+                    btn12.textContent = '？';
+                    btn12.onclick = function() {
+                        buMessages.push({ from: 'system', text: '？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin', text: '（表情包）' });
+                            state.bigUniverseStep = 13;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn12);
+                    break;
+                case 13:
+                    const btn13 = document.createElement('button');
+                    btn13.className = 'action-btn';
+                    btn13.textContent = '别发这个，我只能看到文字。';
+                    btn13.onclick = function() {
+                        buMessages.push({ from: 'system', text: '别发这个，我只能看到文字。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'xuyi', text: '在所有世界里，我们一直忘了一个世界，original初。' });
+                            buMessages.push({ from: 'xuyi',
+                                text: 'original初是从最开始就被划分的宇宙，也就是，我没有组织过穿梭实验，从这个宇宙里，我找到了活过了25年的闫科。'
+                            });
+                            state.bigUniverseStep = 14;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn13);
+                    break;
+                case 14:
+                    const btn14 = document.createElement('button');
+                    btn14.className = 'action-btn';
+                    btn14.textContent = '啊……';
+                    btn14.onclick = function() {
+                        buMessages.push({ from: 'system', text: '啊……' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangshuojin',
+                                text: '其他宇宙的闫科无论如何都会在25年6月7去世，或者更早，但初宇宙里她与一切穿梭都没有交集，太好了，我决定去初宇宙找她！'
+                            });
+                            state.bigUniverseStep = 15;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn14);
+                    break;
+                case 15:
+                    const btn15 = document.createElement('button');
+                    btn15.className = 'action-btn';
+                    btn15.textContent = '天。';
+                    btn15.onclick = function() {
+                        buMessages.push({ from: 'system', text: '天。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'xuyi', text: '到时候又多一层圆形标记。' });
+                            state.bigUniverseStep = 16;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn15);
+                    break;
+                case 16:
+                    // 私信入口
+                    const btn16 = document.createElement('button');
+                    btn16.className = 'action-btn';
+                    btn16.textContent = '（私信）张羽祥发来私信';
+                    btn16.onclick = function() {
+                        buMessages.push({ from: 'private', text: '张羽祥发来私信' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '你知道闫科的养父是谁了吧。' });
+                            state.bigUniverseStep = 17;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn16);
+                    break;
+                case 17:
+                    const btn17 = document.createElement('button');
+                    btn17.className = 'action-btn';
+                    btn17.textContent = '知道了……';
+                    btn17.onclick = function() {
+                        buMessages.push({ from: 'system', text: '知道了……' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang',
+                                text: '初宇宙的闫科确实和穿越没有关系了，但是和张进祥依旧有关系，而且无论哪个宇宙，他都和张进祥有关系，因为所有宇宙中，张进祥都收养了闫科做养女留后。'
+                            });
+                            state.bigUniverseStep = 18;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn17);
+                    break;
+                case 18:
+                    const btn18 = document.createElement('button');
+                    btn18.className = 'action-btn';
+                    btn18.textContent = '所有宇宙中，闫科都会因为张进祥而死。';
+                    btn18.onclick = function() {
+                        buMessages.push({ from: 'system', text: '所有宇宙中，闫科都会因为张进祥而死。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '这就是我想让你帮我的事情，做出选择。' });
+                            state.bigUniverseStep = 19;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn18);
+                    break;
+                case 19:
+                    const btn19 = document.createElement('button');
+                    btn19.className = 'action-btn';
+                    btn19.textContent = '我来选？？';
+                    btn19.onclick = function() {
+                        buMessages.push({ from: 'system', text: '我来选？？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang',
+                                text: '我会给你两个按钮，红色，是一切重新洗牌，在所有宇宙中清除我们五个人的存在，因为绑定太深，不能单独清掉，否则未清除的人要承下太多记忆；蓝色，是继续一切，跟随许可的发展。'
+                            });
+                            state.bigUniverseStep = 20;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn19);
+                    break;
+                case 20:
+                    const btn20 = document.createElement('button');
+                    btn20.className = 'action-btn';
+                    btn20.textContent = '为什么要我来选，至少要考虑当事人吧？你应该问他们，然后一起选啊。';
+                    btn20.onclick = function() {
+                        buMessages.push({ from: 'system',
+                            text: '为什么要我来选，至少要考虑当事人吧？你应该问他们，然后一起选啊。' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '唉，我也太执拗了……' });
+                            state.bigUniverseStep = 21;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn20);
+                    break;
+                case 21:
+                    const btn21 = document.createElement('button');
+                    btn21.className = 'action-btn';
+                    btn21.textContent = '？';
+                    btn21.onclick = function() {
+                        buMessages.push({ from: 'system', text: '？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '想到什么了吗？' });
+                            state.bigUniverseStep = 22;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn21);
+                    break;
+                case 22:
+                    const btn22 = document.createElement('button');
+                    btn22.className = 'action-btn';
+                    btn22.textContent = '什么意思？';
+                    btn22.onclick = function() {
+                        buMessages.push({ from: 'system', text: '什么意思？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang', text: '张羽祥啊，初宇宙的你也帮不上我什么忙。' });
+                            state.bigUniverseStep = 23;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn22);
+                    break;
+                case 23:
+                    const btn23 = document.createElement('button');
+                    btn23.className = 'action-btn';
+                    btn23.textContent = '我是……你？';
+                    btn23.onclick = function() {
+                        buMessages.push({ from: 'system', text: '我是……你？' });
+                        setTimeout(() => {
+                            buMessages.push({ from: 'zhangyuxiang',
+                                text: '这个决定太难做，如果问他们两个，恐怕压力也是太大，我全程都没做什么事，如果要选一个恶人决定大家的生死，那还是我来做好了。'
+                            });
+                            state.bigUniverseStep = 24;
+                            renderBigUniverseChat();
+                        }, 400);
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn23);
+                    break;
+                case 24:
+                    const btn24 = document.createElement('button');
+                    btn24.className = 'action-btn';
+                    btn24.textContent = '所以我做了网页，让你了解所有过程，再把这个决定，交给另一个我，现在，是时候做决定了。';
+                    btn24.onclick = function() {
+                        buMessages.push({ from: 'system',
+                            text: '所以我做了网页，让你了解所有过程，再把这个决定，交给另一个我，现在，是时候做决定了。' });
+                        // 直接显示红蓝按钮
+                        state.bigUniverseStep = 25;
+                        renderBigUniverseChat();
+                    };
+                    actions.appendChild(btn24);
+                    break;
+                case 25:
+                    // 最终红蓝按钮
+                    const red = document.createElement('button');
+                    red.className = 'choice-btn red';
+                    red.textContent = '🔴 红色';
+                    red.onclick = function() { endGame(); };
+                    const blue = document.createElement('button');
+                    blue.className = 'choice-btn blue';
+                    blue.textContent = '🔵 蓝色';
+                    blue.onclick = function() { endGame(); };
+                    actions.appendChild(red);
+                    actions.appendChild(blue);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // ============================================================
+        // 结束游戏
+        // ============================================================
+        function endGame() {
+            document.getElementById('blackout').classList.add('show');
+        }
+
+        function closeBlackout() {
+            document.getElementById('blackout').classList.remove('show');
+            goHome();
+        }
+
+        // ============================================================
+        // 键盘事件
+        // ============================================================
+        document.getElementById('loginPass').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') doLogin();
+        });
+        document.getElementById('loginUser').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('loginPass').focus();
+        });
+        document.getElementById('questionInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // ============================================================
+        // 初始化
+        // ============================================================
+        console.log('🔬 “光线”科研部 已加载 (修复大宇宙聊天)');
+        console.log('📝 登录许以 (账号: 许以 / 密码: 201866)');
+        console.log('📝 登录闫科 (账号: 闫科 / 密码: 199687)');
+
+        // 预置 bigUniverse 初始状态
+        state.bigUniverseStep = 0;
+        buMessages = [];
+    </script>
+
 </body>
 </html>
