@@ -149,7 +149,6 @@
   }
   .btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
-  /* 房主浮动按钮 */
   #hostPanel {
     display: none;
     position: fixed; top: 12px; right: 12px;
@@ -207,7 +206,7 @@
 <div id="join">
   <div class="box">
     <h1>🀄 文字麻将</h1>
-    <p>4 人联机 · 出牌投票 · 打完获胜</p>
+    <p>5 人联机 · 出牌投票 · 打完获胜</p>
     <input id="inputName" placeholder="输入昵称" maxlength="8" autocomplete="off">
     <button onclick="createRoom()">创建房间（当房主）</button>
     <button class="ghost" onclick="showJoinInput()">加入房间</button>
@@ -223,7 +222,7 @@
     房间号
     <span class="code" id="roomCodeTag">------</span>
   </div>
-  <button class="botBtn" id="botBtn" onclick="addBots()">🤖 加 3 个机器人</button>
+  <button class="botBtn" id="botBtn" onclick="addBots()">🤖 加 4 个机器人</button>
 </div>
 
 <div id="app">
@@ -245,25 +244,56 @@
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-/* ==================== 字库 ==================== */
-const CHAR_POOL = [
-  // —— 连接词 / 虚词 / 助词（新增，造句必备）——
-  '像','是','的','了','在','和','与','也','都','就','才','又','还','很','太','更','最','不','没','别','让','被','把','给','向','从','到','对','为','以','之','其','且','或','但','而','则','如','若','因','所','能','会','要','想','得','着','过','吧','呢','啊','呀','吗','哦','嗯',
-  // —— 代词 / 称呼（新增主语）——
-  '你','我','他','她','它','咱','谁','啥','爷','奶','爸','妈','哥','姐','弟','妹','姨','叔','舅','伯','婶','嫂','娃','孩','宝','佬','仔','妮','妞',
-  // —— 高频动词（新增）——
-  '说','做','想','看','听','走','跑','来','去','吃','喝','睡','醒','玩','打','拿','放','开','关','买','卖','写','读','唱','跳','笑','哭','骂','夸','爱','恨','怕','等','找','藏','偷','抢','送','收','问','答','叫','喊','拍','踢','抱','背','推','拉','扔','接','踩','爬','滚','飞','游','漂','沉','浮',
-  // —— 名词 / 主体（原有）——
-  '儿','地','日','操','拉','屎','尿','屁','水','疯','子','山','草','口','海','江','死','黑','土','白','金','石','光','病','夜','痛','春','夏','干','冬',
-  '花','吧','树','叶','爆','炸','鸟','魔','丸','马','牛','龙','大','太','监','恶','心','狼','鹿','象','鹤','鹰','蛇','龟',
-  '心','人','狗','梦','想','思','念','情','爱','恨','愁','喜','怒','哀','乐','悲','欢','离','合','生','死','命','运','手','分','时','空','虚','实','真','假','美','丑','善','恶','是','非','对','错','得','失','成','败','因','果',
-  '大','小','多','少','高','低','长','短','情','热','战','鸡','左','右','上','下','里','外','了','西','南','北','中','间',
-  '野','猪','墙','路','桥','灯','偷','酒','情','书','笔','裤','衩','剑','刀','衣','帽','鞋','车','船','城','村','激','吻',
-  '失','宠','逼','吊','傻','跑','快','啊','声','色','味','香','苦','甜','酸','辣','咸','淡','静','动',
-  // —— 数字 / 量词 ——
-  '一','二','三','四','五','六','七','八','九','十','百','千','万','亿','个','只','条','张','把','块','件','群','堆','双','对'
-];
-const HAND_SIZE = 20;
+/* ==================== 字库（250字）==================== */
+/* ==================== 字库（分类，用于平均发牌）==================== */
+const CHAR_GROUPS = {
+  connect: [
+    '像','是','的','了','在','和','与','也','都','就','才','又','还','很','太','更','最','不','没','别','让','被','把','给','向','从','到','对','为','以','之','其','且','或','但','而','则','如','若','因','所','能','会','要','想','得','着','过','吧','呢','啊','呀','吗','哦','嗯'
+  ],
+  pronoun: [
+    '你','我','他','她','它','咱','谁','啥','爷','奶','爸','妈','哥','姐','弟','妹','姨','叔','嫂','娃','孩'
+  ],
+  action: [
+    '说','做','看','听','走','跑','来','去','吃','喝','睡','醒','玩','打','拿','放','开','关','买','卖','写','读','唱','跳','笑','哭','骂','夸','等','找','藏','收','问','答','叫','喊','拍','踢','抱','背','推','拉','扔','接','踩','爬','滚','飞','游','漂','沉','浮','操','干'
+  ],
+  emotion: [
+    '爱','恨','怕','思','念','喜','怒','哀','乐','悲','欢','愁'
+  ],
+  exchange: [
+    '送','偷','抢','接','收','给','让','被','把'
+  ],
+  body: [
+    '儿','地','屎','尿','屁','水','疯','子','口','死','病','痛','手','肥','激','吻','失','宠','逼','吊','傻'
+  ],
+  nature: [
+    '山','草','海','江','黑','土','白','金','石','光','夜','春','夏','冬','花','树','叶','鸟','马','牛','龙','狼','鹿','象','鹤','鹰','蛇','龟','猪'
+  ],
+  people: [
+    '女','人','狗','魔','丸','大','太','监','恶','心','爷','奶','爸','妈','哥','姐','弟','妹','姨','叔','嫂','娃','孩','男'
+  ],
+  abstract: [
+    '梦','情','命','运','分','时','实','真','假','美','丑','善','恶','是','非','对','错','得','失','成','败','因','果','热','战','新','静','动'
+  ],
+  adj: [
+    '大','小','多','少','高','低','长','短','左','右','上','下','里','外','西','东','中','间','快','慢','香','苦','甜','酸','辣','咸','淡','野'
+  ],
+  object: [
+    '路','桥','灯','酒','书','笔','裤','衩','衣','帽','鞋','车','船','城','村','声','色','味'
+  ],
+  number: [
+    '一','二','三','四','五','千','万','亿'
+  ],
+  quantifier: [
+    '个','只','条','张','把','块','件','群','堆','双','对','串','斤','辆'
+  ],
+  sound: [
+    '吧','呢','啊','呀','吗','哦','嗯','爆','炸'
+  ]
+};
+
+// 所有字合并去重（用于检验）
+const CHAR_POOL = [...new Set(Object.values(CHAR_GROUPS).flat())];
+const HAND_SIZE = 30; // 每人30张
 
 /* ==================== 工具 ==================== */
 function shuffle(a) {
@@ -322,18 +352,16 @@ function createRoom() {
     players: [{ id: 'host', name: myName, hand: [] }],
     phase: 'waiting', turn: 0, deck: [],
     currentPlay: null, votes: {},
-    drewFlags: [false, false, false, false],
+    drewFlags: [false, false, false, false, false], // 5人
     winner: null, history: []
   };
 
-  // 先进入界面（不等 PeerJS）
   $('app').classList.add('show');
   $('join').style.display = 'none';
   $('hostPanel').classList.add('show');
   $('roomCodeTag').textContent = roomCode;
   hostBroadcast();
 
-  // 后台尝试连接 PeerJS
   try {
     peer = new Peer('mahjong-' + roomCode, { debug: 1 });
     peer.on('connection', (conn) => {
@@ -378,9 +406,9 @@ function addBots() {
   if (!isHost || !room) return;
   if (room.phase !== 'waiting') { addLog('⚠️ 游戏已开始，无法再加机器人'); return; }
 
-  const botNames = ['🤖阿强', '🤖小美', '🤖老王'];
+  const botNames = ['🤖阿强', '🤖小美', '🤖老王', '🤖老李'];
   let bi = 0;
-  while (room.players.length < 4 && bi < botNames.length) {
+  while (room.players.length < 5 && bi < botNames.length) {
     const bid = 'bot_' + (bi + 1);
     if (!room.players.find(p => p.id === bid)) {
       room.players.push({ id: bid, name: botNames[bi], hand: [], isBot: true });
@@ -390,9 +418,9 @@ function addBots() {
   hostLog('🤖 机器人已加入，凑齐 ' + room.players.length + ' 人');
   hostBroadcast();
 
-  if (room.players.length === 4) {
+  if (room.players.length === 5) {
     setTimeout(() => {
-      if (room.players.length === 4 && room.phase === 'waiting') hostStart();
+      if (room.players.length === 5 && room.phase === 'waiting') hostStart();
     }, 500);
   }
 }
@@ -451,14 +479,14 @@ function hostHandle(conn, data) {
   const peerId = conn.peer;
   if (data.type === 'join') {
     if (room.players.find(p => p.id === peerId)) return;
-    if (room.players.length >= 4) { conn.send({ type: 'error', msg: '房间已满' }); return; }
+    if (room.players.length >= 5) { conn.send({ type: 'error', msg: '房间已满' }); return; }
     if (room.phase !== 'waiting') { conn.send({ type: 'error', msg: '游戏已开始' }); return; }
     conns[peerId] = conn;
     room.players.push({ id: peerId, name: String(data.name || '玩家').slice(0, 8), hand: [] });
-    hostLog('👋 ' + data.name + ' 加入了 (' + room.players.length + '/4)');
+    hostLog('👋 ' + data.name + ' 加入了 (' + room.players.length + '/5)');
     hostBroadcast();
-    if (room.players.length === 4) {
-      setTimeout(() => { if (room.players.length === 4 && room.phase === 'waiting') hostStart(); }, 800);
+    if (room.players.length === 5) {
+      setTimeout(() => { if (room.players.length === 5 && room.phase === 'waiting') hostStart(); }, 800);
     }
     return;
   }
@@ -475,22 +503,49 @@ function hostAction(pi, data) {
 }
 
 function hostStart() {
-  const pool = shuffle(CHAR_POOL);
-  let idx = 0;
+  // 把每个板块的字各自打乱，做成"发牌池"
+  const groups = Object.keys(CHAR_GROUPS).map(k => ({
+    key: k,
+    pool: shuffle(CHAR_GROUPS[k]),
+    used: 0
+  }));
+  const groupKeys = groups.map(g => g.key);
+
+  // 为每个玩家发牌：按板块轮流抽，直到凑够 30 张
+  function dealHand() {
+    const hand = [];
+    // 复制一份各板块当前进度（每个玩家独立抽，但共享字池避免重复）
+    let g = 0;
+    while (hand.length < HAND_SIZE) {
+      const grp = groups[g % groups.length];
+      // 该板块已经抽完，跳到下一个
+      if (grp.used >= grp.pool.length) { g++; if (g > groups.length * 3) break; continue; }
+      const tile = grp.pool[grp.used++];
+      hand.push(tile);
+      g++;
+    }
+    return hand.sort();
+  }
+
   room.players.forEach(p => {
-    p.hand = pool.slice(idx, idx + HAND_SIZE).sort();
-    idx += HAND_SIZE;
+    p.hand = dealHand();
   });
-  room.deck = pool.slice(idx);
+
+  // 剩下的字打乱做摸牌堆
+  const leftover = [];
+  groups.forEach(grp => {
+    for (let i = grp.used; i < grp.pool.length; i++) leftover.push(grp.pool[i]);
+  });
+  room.deck = shuffle(leftover);
+
   room.phase = 'playing';
   room.turn = 0;
-  room.drewFlags = [false, false, false, false];
+  room.drewFlags = new Array(room.players.length).fill(false);
   room.currentPlay = null;
   room.votes = {};
   room.winner = null;
   room.history = [];
-  hostLog('🎲 游戏开始！每人 20 张');
-  // 开局隐藏机器人按钮
+  hostLog('🎲 游戏开始！每人 30 张（各板块平均分配）');
   $('botBtn').style.display = 'none';
   hostBroadcast();
 }
@@ -532,7 +587,8 @@ function hostResolveVote() {
   const reject = Object.values(room.votes).filter(v => !v).length;
   const pi = cp.playerIndex;
   const tiles = cp.tiles;
-  const pass = approve >= 2;
+  // 5人局：4人投票，赞成票 > 反对票才通过（即3:1通过，2:2打回，1:3打回）
+  const pass = approve > reject;
 
   room.history.push({ name: room.players[pi].name, tiles: tiles, pass: pass });
 
@@ -545,7 +601,7 @@ function hostResolveVote() {
     hostLog('✅ 成立 (' + approve + '赞/' + reject + '踩) — ' + room.players[pi].name + ' 出了「' + tiles.join('') + '」');
     room.currentPlay = null;
     room.votes = {};
-    room.drewFlags = [false, false, false, false];
+    room.drewFlags = [false, false, false, false, false]; // 重置
 
     if (room.players[pi].hand.length === 0) {
       room.phase = 'over';
@@ -554,7 +610,7 @@ function hostResolveVote() {
       hostBroadcast();
       return;
     }
-    room.turn = (pi + 1) % 4;
+    room.turn = (pi + 1) % 5; // 5人轮转
     room.phase = 'playing';
     hostBroadcast();
   } else {
@@ -578,10 +634,10 @@ function hostDraw(pi) {
   hostLog('🀫 ' + room.players[pi].name + ' 摸了一张牌');
 
   if (room.drewFlags.every(Boolean)) {
-    room.drewFlags = [false, false, false, false];
+    room.drewFlags = [false, false, false, false, false]; // 刷新
     hostLog('🔄 一圈摸完，摸牌权限已刷新');
   }
-  room.turn = (pi + 1) % 4;
+  room.turn = (pi + 1) % 5; // 5人轮转
   hostBroadcast();
 }
 
@@ -597,9 +653,9 @@ function hostDisconnect(conn) {
   room.currentPlay = null;
   room.votes = {};
   room.winner = null;
-  room.drewFlags = [false, false, false, false];
+  room.drewFlags = [false, false, false, false, false];
   room.turn = 0;
-  if (room.players.length < 4) $('botBtn').style.display = 'block';
+  if (room.players.length < 5) $('botBtn').style.display = 'block';
   hostBroadcast();
 }
 
@@ -802,11 +858,11 @@ function render() {
   } else if (s.phase === 'waiting') {
     const tip = document.createElement('div');
     tip.className = 'tip';
-    tip.textContent = '等待玩家加入... (' + s.names.length + '/4)';
+    tip.textContent = '等待玩家加入... (' + s.names.length + '/5)';
     const sub = document.createElement('div');
     sub.className = 'tip';
     sub.style.marginTop = '8px';
-    sub.innerHTML = '房主可点右上角 <b style="color:#a78bfa">🤖 加 3 个机器人</b> 开始测试';
+    sub.innerHTML = '房主可点右上角 <b style="color:#a78bfa">🤖 加 4 个机器人</b> 开始测试';
     playArea.appendChild(tip);
     playArea.appendChild(sub);
   }
