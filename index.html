@@ -153,7 +153,7 @@
     display: none;
     position: fixed; top: 12px; right: 12px;
     z-index: 50;
-    display: none; flex-direction: column; gap: 8px;
+    flex-direction: column; gap: 8px;
     align-items: flex-end;
   }
   #hostPanel.show { display: flex; }
@@ -170,17 +170,24 @@
     font-size: 20px; font-weight: 800; letter-spacing: 2px;
     display: block; margin-top: 2px;
   }
-  #hostPanel .botBtn {
+  #hostPanel button {
     padding: 10px 18px;
     border-radius: 10px;
     border: none;
-    background: linear-gradient(180deg, #a78bfa, #8b5cf6);
-    color: #1e1b4b;
     font-size: 14px; font-weight: 700;
     cursor: pointer;
+  }
+  #hostPanel .botBtn {
+    background: linear-gradient(180deg, #a78bfa, #8b5cf6);
+    color: #1e1b4b;
     box-shadow: 0 4px 14px rgba(139,92,246,0.4);
   }
-  #hostPanel .botBtn:active { transform: scale(0.96); }
+  #hostPanel .startBtn {
+    background: linear-gradient(180deg, #4ade80, #22c55e);
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(74,222,128,0.4);
+  }
+  #hostPanel button:active { transform: scale(0.96); }
 
   #log {
     position: fixed; bottom: 8px; left: 8px;
@@ -206,7 +213,7 @@
 <div id="join">
   <div class="box">
     <h1>🀄 文字麻将</h1>
-    <p>5 人联机 · 出牌投票 · 打完获胜</p>
+    <p>2~5 人联机 · 出牌投票 · 打完获胜</p>
     <input id="inputName" placeholder="输入昵称" maxlength="8" autocomplete="off">
     <button onclick="createRoom()">创建房间（当房主）</button>
     <button class="ghost" onclick="showJoinInput()">加入房间</button>
@@ -222,7 +229,8 @@
     房间号
     <span class="code" id="roomCodeTag">------</span>
   </div>
-  <button class="botBtn" id="botBtn" onclick="addBots()">🤖 加 4 个机器人</button>
+  <button class="botBtn" id="botBtn" onclick="addBot()">🤖 加一个机器人</button>
+  <button class="startBtn" id="startBtn" onclick="startGame()">▶ 开始游戏</button>
 </div>
 
 <div id="app">
@@ -244,7 +252,6 @@
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-/* ==================== 字库（250字）==================== */
 /* ==================== 字库（分类，用于平均发牌）==================== */
 const CHAR_GROUPS = {
   connect: [
@@ -291,7 +298,6 @@ const CHAR_GROUPS = {
   ]
 };
 
-// 所有字合并去重（用于检验）
 const CHAR_POOL = [...new Set(Object.values(CHAR_GROUPS).flat())];
 const HAND_SIZE = 30; // 每人30张
 
@@ -352,7 +358,7 @@ function createRoom() {
     players: [{ id: 'host', name: myName, hand: [] }],
     phase: 'waiting', turn: 0, deck: [],
     currentPlay: null, votes: {},
-    drewFlags: [false, false, false, false, false], // 5人
+    drewFlags: [false],
     winner: null, history: []
   };
 
@@ -401,28 +407,28 @@ function joinRoom() {
   }, 300);
 }
 
-/* ==================== 加机器人 ==================== */
-function addBots() {
+/* ==================== 加一个机器人 ==================== */
+function addBot() {
   if (!isHost || !room) return;
   if (room.phase !== 'waiting') { addLog('⚠️ 游戏已开始，无法再加机器人'); return; }
+  if (room.players.length >= 5) { addLog('⚠️ 已达 5 人上限'); return; }
 
   const botNames = ['🤖阿强', '🤖小美', '🤖老王', '🤖老李'];
-  let bi = 0;
-  while (room.players.length < 5 && bi < botNames.length) {
-    const bid = 'bot_' + (bi + 1);
-    if (!room.players.find(p => p.id === bid)) {
-      room.players.push({ id: bid, name: botNames[bi], hand: [], isBot: true });
-    }
-    bi++;
-  }
-  hostLog('🤖 机器人已加入，凑齐 ' + room.players.length + ' 人');
-  hostBroadcast();
+  const usedNames = room.players.map(p => p.name);
+  const availName = botNames.find(n => !usedNames.includes(n)) || ('🤖机器人' + (room.players.length + 1));
 
-  if (room.players.length === 5) {
-    setTimeout(() => {
-      if (room.players.length === 5 && room.phase === 'waiting') hostStart();
-    }, 500);
-  }
+  room.players.push({ id: 'bot_' + Date.now(), name: availName, hand: [], isBot: true });
+  hostLog('🤖 ' + availName + ' 加入 (' + room.players.length + ' 人)');
+  hostBroadcast();
+}
+
+/* ==================== 房主点开始 ==================== */
+function startGame() {
+  if (!isHost || !room) return;
+  if (room.phase !== 'waiting') return;
+  if (room.players.length < 2) { addLog('⚠️ 至少需要 2 名玩家（真人+机器人一起算）'); return; }
+  if (room.players.length > 5) { addLog('⚠️ 最多 5 人'); return; }
+  hostStart();
 }
 
 /* ==================== 房主核心 ==================== */
@@ -479,15 +485,12 @@ function hostHandle(conn, data) {
   const peerId = conn.peer;
   if (data.type === 'join') {
     if (room.players.find(p => p.id === peerId)) return;
-    if (room.players.length >= 5) { conn.send({ type: 'error', msg: '房间已满' }); return; }
+    if (room.players.length >= 5) { conn.send({ type: 'error', msg: '房间已满（最多 5 人）' }); return; }
     if (room.phase !== 'waiting') { conn.send({ type: 'error', msg: '游戏已开始' }); return; }
     conns[peerId] = conn;
     room.players.push({ id: peerId, name: String(data.name || '玩家').slice(0, 8), hand: [] });
-    hostLog('👋 ' + data.name + ' 加入了 (' + room.players.length + '/5)');
+    hostLog('👋 ' + data.name + ' 加入了 (' + room.players.length + ' 人)');
     hostBroadcast();
-    if (room.players.length === 5) {
-      setTimeout(() => { if (room.players.length === 5 && room.phase === 'waiting') hostStart(); }, 800);
-    }
     return;
   }
   const pi = room.players.findIndex(p => p.id === peerId);
@@ -503,35 +506,28 @@ function hostAction(pi, data) {
 }
 
 function hostStart() {
-  // 把每个板块的字各自打乱，做成"发牌池"
   const groups = Object.keys(CHAR_GROUPS).map(k => ({
     key: k,
     pool: shuffle(CHAR_GROUPS[k]),
     used: 0
   }));
-  const groupKeys = groups.map(g => g.key);
 
-  // 为每个玩家发牌：按板块轮流抽，直到凑够 30 张
   function dealHand() {
     const hand = [];
-    // 复制一份各板块当前进度（每个玩家独立抽，但共享字池避免重复）
     let g = 0;
-    while (hand.length < HAND_SIZE) {
+    let safety = 0;
+    while (hand.length < HAND_SIZE && safety < 10000) {
+      safety++;
       const grp = groups[g % groups.length];
-      // 该板块已经抽完，跳到下一个
-      if (grp.used >= grp.pool.length) { g++; if (g > groups.length * 3) break; continue; }
-      const tile = grp.pool[grp.used++];
-      hand.push(tile);
+      if (grp.used >= grp.pool.length) { g++; continue; }
+      hand.push(grp.pool[grp.used++]);
       g++;
     }
     return hand.sort();
   }
 
-  room.players.forEach(p => {
-    p.hand = dealHand();
-  });
+  room.players.forEach(p => { p.hand = dealHand(); });
 
-  // 剩下的字打乱做摸牌堆
   const leftover = [];
   groups.forEach(grp => {
     for (let i = grp.used; i < grp.pool.length; i++) leftover.push(grp.pool[i]);
@@ -545,8 +541,9 @@ function hostStart() {
   room.votes = {};
   room.winner = null;
   room.history = [];
-  hostLog('🎲 游戏开始！每人 30 张（各板块平均分配）');
+  hostLog('🎲 游戏开始！' + room.players.length + ' 人局，每人 30 张');
   $('botBtn').style.display = 'none';
+  $('startBtn').style.display = 'none';
   hostBroadcast();
 }
 
@@ -587,7 +584,6 @@ function hostResolveVote() {
   const reject = Object.values(room.votes).filter(v => !v).length;
   const pi = cp.playerIndex;
   const tiles = cp.tiles;
-  // 5人局：4人投票，赞成票 > 反对票才通过（即3:1通过，2:2打回，1:3打回）
   const pass = approve > reject;
 
   room.history.push({ name: room.players[pi].name, tiles: tiles, pass: pass });
@@ -601,7 +597,7 @@ function hostResolveVote() {
     hostLog('✅ 成立 (' + approve + '赞/' + reject + '踩) — ' + room.players[pi].name + ' 出了「' + tiles.join('') + '」');
     room.currentPlay = null;
     room.votes = {};
-    room.drewFlags = [false, false, false, false, false]; // 重置
+    room.drewFlags = new Array(room.players.length).fill(false);
 
     if (room.players[pi].hand.length === 0) {
       room.phase = 'over';
@@ -610,7 +606,7 @@ function hostResolveVote() {
       hostBroadcast();
       return;
     }
-    room.turn = (pi + 1) % 5; // 5人轮转
+    room.turn = (pi + 1) % room.players.length;
     room.phase = 'playing';
     hostBroadcast();
   } else {
@@ -634,10 +630,10 @@ function hostDraw(pi) {
   hostLog('🀫 ' + room.players[pi].name + ' 摸了一张牌');
 
   if (room.drewFlags.every(Boolean)) {
-    room.drewFlags = [false, false, false, false, false]; // 刷新
+    room.drewFlags = new Array(room.players.length).fill(false);
     hostLog('🔄 一圈摸完，摸牌权限已刷新');
   }
-  room.turn = (pi + 1) % 5; // 5人轮转
+  room.turn = (pi + 1) % room.players.length;
   hostBroadcast();
 }
 
@@ -653,9 +649,10 @@ function hostDisconnect(conn) {
   room.currentPlay = null;
   room.votes = {};
   room.winner = null;
-  room.drewFlags = [false, false, false, false, false];
+  room.drewFlags = new Array(room.players.length).fill(false);
   room.turn = 0;
-  if (room.players.length < 5) $('botBtn').style.display = 'block';
+  $('botBtn').style.display = 'block';
+  $('startBtn').style.display = 'block';
   hostBroadcast();
 }
 
@@ -858,11 +855,11 @@ function render() {
   } else if (s.phase === 'waiting') {
     const tip = document.createElement('div');
     tip.className = 'tip';
-    tip.textContent = '等待玩家加入... (' + s.names.length + '/5)';
+    tip.textContent = '当前 ' + s.names.length + ' 人（支持 2~5 人）';
     const sub = document.createElement('div');
     sub.className = 'tip';
     sub.style.marginTop = '8px';
-    sub.innerHTML = '房主可点右上角 <b style="color:#a78bfa">🤖 加 4 个机器人</b> 开始测试';
+    sub.innerHTML = '房主可点右上角 <b style="color:#a78bfa">🤖 加一个机器人</b> 凑人，凑好后点 <b style="color:#4ade80">▶ 开始游戏</b>';
     playArea.appendChild(tip);
     playArea.appendChild(sub);
   }
