@@ -120,13 +120,28 @@
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 0 8px rgba(56,189,248,0.9);
   }
+  .tile.grabbable { cursor: pointer; }
+  .tile.grabbable:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 14px rgba(74,222,128,0.7); }
+  .tile.grabbed {
+    opacity: 0.35;
+    filter: grayscale(1);
+    cursor: not-allowed;
+    transform: none !important;
+  }
+  .tile.grabbed::after {
+    content: '✗';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #ef4444; font-size: 36px; font-weight: 900;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  }
 
   #bottombar {
     display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; padding: 4px 0 8px;
+    gap: 8px; padding: 4px 0 8px;
   }
   .btn {
-    padding: 12px 22px; border-radius: 10px; border: none;
+    padding: 12px 18px; border-radius: 10px; border: none;
     font-size: 15px; font-weight: 700; cursor: pointer;
     transition: all 0.15s; flex-shrink: 0;
   }
@@ -139,6 +154,10 @@
     background: rgba(255,255,255,0.08); color: #e6ecff;
     border: 1px solid rgba(255,255,255,0.15);
   }
+  .btn.discard {
+    background: linear-gradient(180deg, #fbbf24, #f59e0b);
+    color: #451a03; box-shadow: 0 4px 14px rgba(251,191,36,0.4);
+  }
   .btn.vote-yes {
     background: linear-gradient(180deg, #4ade80, #22c55e);
     color: #052e16; box-shadow: 0 4px 14px rgba(74,222,128,0.4);
@@ -146,6 +165,19 @@
   .btn.vote-no {
     background: linear-gradient(180deg, #f87171, #ef4444);
     color: #450a0a; box-shadow: 0 4px 14px rgba(248,113,113,0.4);
+  }
+  .btn.grab {
+    background: linear-gradient(180deg, #f87171, #dc2626);
+    color: #fff; box-shadow: 0 4px 14px rgba(239,68,68,0.5);
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+    50% { box-shadow: 0 4px 24px rgba(239,68,68,0.9); }
+  }
+  .btn.pass {
+    background: linear-gradient(180deg, #4ade80, #22c55e);
+    color: #052e16; box-shadow: 0 4px 14px rgba(74,222,128,0.4);
   }
   .btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
@@ -205,7 +237,36 @@
   }
   .history .ok { color: #4ade80; }
   .history .no { color: #f87171; }
+  .history .discard { color: #fbbf24; }
   .votehint { font-size: 13px; color: #7dd3fc; }
+
+  /* 抛弃动画覆盖 */
+  #discardOverlay {
+    position: fixed; inset: 0;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    pointer-events: none;
+  }
+  #discardOverlay.show { display: flex; }
+  #discardOverlay .bigText {
+    font-size: 90px; font-weight: 900;
+    color: #fbbf24;
+    text-shadow: 0 0 40px rgba(251,191,36,0.9), 0 0 80px rgba(251,191,36,0.6);
+    animation: discardPop 1s ease;
+    letter-spacing: 12px;
+  }
+  @keyframes discardPop {
+    0% { transform: scale(0.3); opacity: 0; }
+    40% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* 抢牌区 */
+  .grabArea { display: flex; flex-direction: column; align-items: center; gap: 12px; animation: pop 0.3s ease; }
+  .grabTitle { font-size: 16px; color: #fbbf24; font-weight: 700; }
+  .grabButtons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+  .grabHint { font-size: 13px; color: #a7f3d0; }
 </style>
 </head>
 <body>
@@ -213,7 +274,7 @@
 <div id="join">
   <div class="box">
     <h1>🀄 文字麻将</h1>
-    <p>2~5 人联机 · 出牌投票 · 打完获胜</p>
+    <p>2~5 人联机 · 出牌/抛弃/抢牌 · 打完获胜</p>
     <input id="inputName" placeholder="输入昵称" maxlength="8" autocomplete="off">
     <button onclick="createRoom()">创建房间（当房主）</button>
     <button class="ghost" onclick="showJoinInput()">加入房间</button>
@@ -243,16 +304,18 @@
   <div id="handArea"><div id="hand"></div></div>
   <div id="bottombar">
     <button id="btnDraw" class="btn secondary">摸一张</button>
+    <button id="btnDiscard" class="btn discard">抛弃</button>
     <div id="turnHint" class="tip"></div>
     <button id="btnPlay" class="btn primary">出牌</button>
   </div>
 </div>
 
+<div id="discardOverlay"><div class="bigText">抛 弃</div></div>
 <div id="log"></div>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-/* ==================== 字库（分类，用于平均发牌）==================== */
+/* ==================== 字库 ==================== */
 const CHAR_GROUPS = {
   connect: [
     '像','是','的','了','在','和','与','也','都','就','才','又','还','很','太','更','最','不','没','别','让','被','把','给','向','从','到','对','为','以','之','其','且','或','但','而','则','如','若','因','所','能','会','要','想','得','着','过','吧','呢','啊','呀','吗','哦','嗯'
@@ -299,7 +362,7 @@ const CHAR_GROUPS = {
 };
 
 const CHAR_POOL = [...new Set(Object.values(CHAR_GROUPS).flat())];
-const HAND_SIZE = 30; // 每人30张
+const HAND_SIZE = 30;
 
 /* ==================== 工具 ==================== */
 function shuffle(a) {
@@ -333,6 +396,7 @@ let room = null;
 let S = null;
 let selected = [];
 let botTimer = null;
+let grabTimer = null;
 
 /* ==================== 首页 ==================== */
 $('inputName').value = localStorage.getItem('mj_name') || '';
@@ -356,10 +420,20 @@ function createRoom() {
 
   room = {
     players: [{ id: 'host', name: myName, hand: [] }],
-    phase: 'waiting', turn: 0, deck: [],
-    currentPlay: null, votes: {},
+    phase: 'waiting',
+    turn: 0,
+    deck: [],
+    currentPlay: null,
+    votes: {},
     drewFlags: [false],
-    winner: null, history: []
+    // 抛弃 + 抢牌
+    discardTile: null,
+    discardFrom: -1,
+    passed: {},          // { pi: true } 表示这个玩家点过"过"
+    grabbedBy: -1,
+    grabMode: false,
+    winner: null,
+    history: []
   };
 
   $('app').classList.add('show');
@@ -378,9 +452,7 @@ function createRoom() {
       console.warn('PeerJS error:', e);
       addLog('⚠️ 联机服务暂时不可用（不影响和机器人玩）');
     });
-  } catch (e) {
-    console.warn(e);
-  }
+  } catch (e) { console.warn(e); }
 }
 
 /* ==================== 加入房间 ==================== */
@@ -426,7 +498,7 @@ function addBot() {
 function startGame() {
   if (!isHost || !room) return;
   if (room.phase !== 'waiting') return;
-  if (room.players.length < 2) { addLog('⚠️ 至少需要 2 名玩家（真人+机器人一起算）'); return; }
+  if (room.players.length < 2) { addLog('⚠️ 至少需要 2 名玩家'); return; }
   if (room.players.length > 5) { addLog('⚠️ 最多 5 人'); return; }
   hostStart();
 }
@@ -474,6 +546,14 @@ function buildState(room, myIdx) {
       playerName: room.players[cp.playerIndex].name,
       tiles: cp.tiles
     } : null,
+    // 抛弃 / 抢牌
+    discardTile: room.discardTile,
+    discardFrom: room.discardFrom,
+    discardFromName: room.discardFrom >= 0 ? room.players[room.discardFrom].name : '',
+    grabMode: room.grabMode,
+    grabbedBy: room.grabbedBy,
+    passed: Object.keys(room.passed).map(Number),
+    // 投票
     voteCount: Object.keys(room.votes).length,
     voteTotal: Math.max(0, room.players.length - 1),
     myVote: (cp && cp.playerIndex !== myIdx && room.votes[myIdx] !== undefined) ? room.votes[myIdx] : null,
@@ -503,19 +583,19 @@ function hostAction(pi, data) {
   if (data.type === 'play') hostPlay(pi, data.tiles);
   else if (data.type === 'vote') hostVote(pi, data.v);
   else if (data.type === 'draw') hostDraw(pi);
+  else if (data.type === 'discard') hostDiscard(pi, data.tile);
+  else if (data.type === 'grab') hostGrab(pi);
+  else if (data.type === 'pass') hostPass(pi);
 }
 
 function hostStart() {
   const groups = Object.keys(CHAR_GROUPS).map(k => ({
-    key: k,
-    pool: shuffle(CHAR_GROUPS[k]),
-    used: 0
+    key: k, pool: shuffle(CHAR_GROUPS[k]), used: 0
   }));
 
   function dealHand() {
     const hand = [];
-    let g = 0;
-    let safety = 0;
+    let g = 0, safety = 0;
     while (hand.length < HAND_SIZE && safety < 10000) {
       safety++;
       const grp = groups[g % groups.length];
@@ -539,6 +619,11 @@ function hostStart() {
   room.drewFlags = new Array(room.players.length).fill(false);
   room.currentPlay = null;
   room.votes = {};
+  room.discardTile = null;
+  room.discardFrom = -1;
+  room.passed = {};
+  room.grabbedBy = -1;
+  room.grabMode = false;
   room.winner = null;
   room.history = [];
   hostLog('🎲 游戏开始！' + room.players.length + ' 人局，每人 30 张');
@@ -547,6 +632,7 @@ function hostStart() {
   hostBroadcast();
 }
 
+/* ---------- 出牌 ---------- */
 function hostPlay(pi, tiles) {
   if (room.phase !== 'playing') return;
   if (pi !== room.turn) return;
@@ -557,7 +643,7 @@ function hostPlay(pi, tiles) {
     if (k === -1) return;
     copy.splice(k, 1);
   }
-  room.currentPlay = { playerIndex: pi, tiles: tiles };
+  room.currentPlay = { playerIndex: pi, tiles };
   room.votes = {};
   room.phase = 'voting';
   hostLog('🎴 ' + room.players[pi].name + ' 出牌：' + tiles.join('') + '，等待投票...');
@@ -586,7 +672,7 @@ function hostResolveVote() {
   const tiles = cp.tiles;
   const pass = approve > reject;
 
-  room.history.push({ name: room.players[pi].name, tiles: tiles, pass: pass });
+  room.history.push({ name: room.players[pi].name, tiles, pass });
 
   if (pass) {
     const hand = room.players[pi].hand;
@@ -618,6 +704,118 @@ function hostResolveVote() {
   }
 }
 
+/* ---------- 抛弃 + 抢牌 ---------- */
+function hostDiscard(pi, tile) {
+  if (room.phase !== 'playing') return;
+  if (pi !== room.turn) return;
+  if (!tile) return;
+  const hand = room.players[pi].hand;
+  const k = hand.indexOf(tile);
+  if (k === -1) return;
+
+  // 从手牌里移除
+  hand.splice(k, 1);
+
+  room.discardTile = tile;
+  room.discardFrom = pi;
+  room.grabbedBy = -1;
+  room.passed = {};
+  room.grabMode = true;
+  room.phase = 'grabbing';
+
+  hostLog('🗑️ ' + room.players[pi].name + ' 抛弃了「' + tile + '」，大家快抢！');
+
+  // 通知出牌人先看到"抛弃"动画（房主端 showOverlay；客户端通过 state 判断）
+  // 我们直接 broadcast，客户端自己处理动画时序
+  hostBroadcast();
+
+  // 1 秒后如果还没人抢，检查是否所有人都点过"过"，或者是否机器人需要操作
+  // 机器人抢牌由 checkBots 处理
+}
+
+function hostGrab(pi) {
+  if (room.phase !== 'grabbing') return;
+  if (room.grabbedBy !== -1) return; // 已经被抢
+  if (pi === room.discardFrom) return; // 不能抢自己抛弃的
+  if (room.passed[pi]) return; // 已经点过"过"
+
+  room.grabbedBy = pi;
+  // 把字加进抢到的人手里
+  room.players[pi].hand.push(room.discardTile);
+  room.players[pi].hand.sort();
+
+  hostLog('⚡ ' + room.players[pi].name + ' 抢到了「' + room.discardTile + '」！');
+
+  // 出牌人自动摸一张
+  hostAutoDrawForDiscarder();
+
+  // 短暂展示谁抢到了，再结束这一轮
+  hostBroadcast();
+  setTimeout(() => {
+    finishGrabPhase();
+  }, 1500);
+}
+
+function hostPass(pi) {
+  if (room.phase !== 'grabbing') return;
+  if (pi === room.discardFrom) return;
+  if (room.grabbedBy !== -1) return;
+  if (room.passed[pi]) return;
+
+  room.passed[pi] = true;
+  hostLog('💨 ' + room.players[pi].name + ' 选择不抢');
+  hostBroadcast();
+
+  // 检查是不是所有"可以抢的人"都点过"过"了
+  const eligible = room.players.map((_, i) => i).filter(i => i !== room.discardFrom);
+  if (eligible.every(i => room.passed[i])) {
+    // 没人抢
+    hostAutoDrawForDiscarder();
+    setTimeout(() => finishGrabPhase(), 800);
+  }
+}
+
+function hostAutoDrawForDiscarder() {
+  const pi = room.discardFrom;
+  if (pi < 0) return;
+  if (room.deck.length > 0) {
+    const t = room.deck.pop();
+    room.players[pi].hand.push(t);
+    room.players[pi].hand.sort();
+    hostLog('🀫 ' + room.players[pi].name + ' 摸了一张新牌');
+  } else {
+    hostLog('⚠️ 牌堆已空，' + room.players[pi].name + ' 无法摸牌');
+  }
+}
+
+function finishGrabPhase() {
+  if (room.phase !== 'grabbing') return;
+  const pi = room.discardFrom;
+
+  room.discardTile = null;
+  room.discardFrom = -1;
+  room.grabbedBy = -1;
+  room.passed = {};
+  room.grabMode = false;
+  room.currentPlay = null;
+  room.votes = {};
+  room.drewFlags = new Array(room.players.length).fill(false);
+
+  // 检查出牌人是否已经打光
+  if (room.players[pi] && room.players[pi].hand.length === 0) {
+    room.phase = 'over';
+    room.winner = pi;
+    hostLog('🏆 ' + room.players[pi].name + ' 打完了所有牌，获胜！');
+    hostBroadcast();
+    return;
+  }
+
+  room.turn = (pi + 1) % room.players.length;
+  room.phase = 'playing';
+  hostBroadcast();
+}
+
+/* ---------- 摸牌 ---------- */
 function hostDraw(pi) {
   if (room.phase !== 'playing') return;
   if (pi !== room.turn) return;
@@ -648,6 +846,11 @@ function hostDisconnect(conn) {
   room.players.forEach(p => { if (!p.isBot) p.hand = []; });
   room.currentPlay = null;
   room.votes = {};
+  room.discardTile = null;
+  room.discardFrom = -1;
+  room.grabbedBy = -1;
+  room.passed = {};
+  room.grabMode = false;
   room.winner = null;
   room.drewFlags = new Array(room.players.length).fill(false);
   room.turn = 0;
@@ -681,6 +884,23 @@ function checkBots() {
       return;
     }
   }
+
+  if (room.phase === 'grabbing' && room.discardTile) {
+    if (room.grabbedBy !== -1) return;
+    for (let i = 0; i < room.players.length; i++) {
+      const p = room.players[i];
+      if (i === room.discardFrom) continue;
+      if (!p.isBot) continue;
+      if (room.passed[i]) continue;
+      // 机器人有 50% 概率抢
+      botTimer = setTimeout(() => {
+        if (room.phase !== 'grabbing' || room.grabbedBy !== -1) return;
+        if (Math.random() < 0.5) hostGrab(i);
+        else hostPass(i);
+      }, 800 + Math.random() * 800);
+      return;
+    }
+  }
 }
 
 function botPlay(pi) {
@@ -688,7 +908,14 @@ function botPlay(pi) {
   const p = room.players[pi];
   if (!p || !p.isBot || p.hand.length === 0) return;
 
-  if (Math.random() < 0.3 && !room.drewFlags[pi] && room.deck.length > 0) {
+  const r = Math.random();
+  if (r < 0.15) {
+    // 15% 抛弃一张
+    const tile = p.hand[Math.floor(Math.random() * p.hand.length)];
+    hostDiscard(pi, tile);
+    return;
+  }
+  if (r < 0.4 && !room.drewFlags[pi] && room.deck.length > 0) {
     hostDraw(pi);
     return;
   }
@@ -732,6 +959,13 @@ function addLog(msg) {
   while ($('log').children.length > 30) $('log').removeChild($('log').firstChild);
 }
 
+/* ==================== 抛弃动画 ==================== */
+function showDiscardOverlay() {
+  const el = $('discardOverlay');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1000);
+}
+
 /* ==================== 按钮 ==================== */
 $('btnPlay').onclick = () => {
   if (!S || selected.length === 0) return;
@@ -744,7 +978,22 @@ $('btnDraw').onclick = () => {
   if (!S) return;
   sendAction({ type: 'draw' });
 };
+$('btnDiscard').onclick = () => {
+  if (!S || selected.length !== 1) {
+    if (S && selected.length !== 1) addLog('⚠️ 抛弃只能选 1 个字');
+    return;
+  }
+  if (S.turn !== S.you || S.phase !== 'playing') return;
+  const tile = selected[0];
+  // 本地先显示动画
+  showDiscardOverlay();
+  sendAction({ type: 'discard', tile });
+  selected = [];
+  render();
+};
 function vote(v) { sendAction({ type: 'vote', v: v }); }
+function grab() { sendAction({ type: 'grab' }); }
+function pass() { sendAction({ type: 'pass' }); }
 
 function toggleSelect(t) {
   if (!S || S.phase !== 'playing') return;
@@ -761,16 +1010,18 @@ function render() {
   const s = S;
   selected = selected.filter(t => s.myHand.indexOf(t) !== -1);
 
+  // 顶栏
   const top = $('topbar');
   top.innerHTML = '';
   s.names.forEach((name, i) => {
     if (i === s.you) return;
     const d = document.createElement('div');
-    d.className = 'seat' + (i === s.turn && s.phase !== 'over' ? ' active' : '');
+    d.className = 'seat' + (i === s.turn && (s.phase === 'playing' || s.phase === 'voting' || s.phase === 'grabbing') ? ' active' : '');
     d.innerHTML = escapeHtml(name) + ' <span class="cnt">' + s.handCounts[i] + '张</span>';
     top.appendChild(d);
   });
 
+  // 手牌
   const hand = $('hand');
   hand.innerHTML = '';
   const myTurn = s.turn === s.you && s.phase === 'playing';
@@ -837,11 +1088,81 @@ function render() {
       hint.textContent = '你的出牌正在被投票... (' + s.voteCount + '/' + s.voteTotal + ')';
       voteArea.appendChild(hint);
     }
+  } else if (s.phase === 'grabbing' && s.discardTile) {
+    const fromMe = s.discardFrom === s.you;
+    const g = document.createElement('div');
+    g.className = 'grabArea';
+
+    // 标题
+    const t1 = document.createElement('div');
+    t1.className = 'grabTitle';
+    if (s.grabbedBy === -1) {
+      t1.textContent = fromMe ? '你抛弃了这张牌，等待其他人抢...' : (s.discardFromName + ' 抛弃了这张牌，快抢！');
+    } else {
+      t1.textContent = s.names[s.grabbedBy] + ' 抢到了！';
+    }
+    g.appendChild(t1);
+
+    // 抛弃的牌
+    const row = document.createElement('div');
+    row.className = 'play-tiles';
+    const tileEl = document.createElement('div');
+    const canGrab = !fromMe && s.grabbedBy === -1 && !s.passed.includes(s.you);
+    tileEl.className = 'tile big' + (canGrab ? ' grabbable' : '') + (s.grabbedBy !== -1 ? ' grabbed' : '');
+    tileEl.textContent = s.discardTile;
+    row.appendChild(tileEl);
+    g.appendChild(row);
+
+    // 操作按钮
+    if (fromMe) {
+      // 出牌人等待
+      if (s.grabbedBy === -1) {
+        const hint = document.createElement('div');
+        hint.className = 'grabHint';
+        const notPassed = s.names.map((_, i) => i).filter(i => i !== s.discardFrom && !s.passed.includes(i));
+        hint.textContent = '等待中... (' + (s.names.length - 1 - s.passed.length) + ' 人还没决定)';
+        g.appendChild(hint);
+      }
+    } else {
+      if (s.grabbedBy !== -1) {
+        // 已被人抢
+        const hint = document.createElement('div');
+        hint.className = 'grabHint';
+        hint.textContent = s.grabbedBy === s.you ? '🎉 你抢到了！' : '😢 被抢走了';
+        g.appendChild(hint);
+      } else if (s.passed.includes(s.you)) {
+        const hint = document.createElement('div');
+        hint.className = 'grabHint';
+        hint.textContent = '你选择不抢，等待其他人...';
+        g.appendChild(hint);
+      } else {
+        const btns = document.createElement('div');
+        btns.className = 'grabButtons';
+        const passBtn = document.createElement('button');
+        passBtn.className = 'btn pass';
+        passBtn.textContent = '过';
+        passBtn.onclick = () => pass();
+        const grabBtn = document.createElement('button');
+        grabBtn.className = 'btn grab';
+        grabBtn.textContent = '抢';
+        grabBtn.onclick = () => grab();
+        btns.appendChild(passBtn);
+        btns.appendChild(grabBtn);
+        g.appendChild(btns);
+
+        const hint = document.createElement('div');
+        hint.className = 'grabHint';
+        hint.textContent = '先抢到的先得，抢到的字会加入手牌';
+        g.appendChild(hint);
+      }
+    }
+
+    playArea.appendChild(g);
   } else if (s.phase === 'playing') {
     const tip = document.createElement('div');
     if (s.turn === s.you) {
       tip.className = 'tip you';
-      tip.textContent = '🎯 轮到你了 · 点牌选择，再点「出牌」';
+      tip.textContent = '🎯 轮到你了 · 点牌选「出牌」或选 1 张点「抛弃」';
     } else {
       tip.className = 'tip';
       tip.textContent = '⏳ 等待 ' + s.names[s.turn] + ' 出牌...';
@@ -872,8 +1193,12 @@ function render() {
     });
   }
 
-  $('btnPlay').disabled = !myTurn || selected.length === 0;
+  // 底部按钮状态
+  const canPlay = myTurn && selected.length >= 1;
+  const canDiscard = myTurn && selected.length === 1;
+  $('btnPlay').disabled = !canPlay;
   $('btnDraw').disabled = !myTurn || s.drewThisTurn;
+  $('btnDiscard').disabled = !canDiscard;
   $('turnHint').textContent = myTurn ? (s.drewThisTurn ? '本轮已摸过牌' : '已选 ' + selected.length + ' 张') : '';
 }
 </script>
