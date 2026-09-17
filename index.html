@@ -1,1843 +1,821 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Life · 官方档案</title>
-    <style>
-        /* ========== 全局重置 ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
-            background: #f0f2f5;
-            color: #2d3748;
-            line-height: 1.7;
-            transition: background 0.3s, color 0.3s;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>文字麻将 · 联机</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(circle at 50% 20%, #1a2338 0%, #070b14 70%);
+    color: #e6ecff; overflow: hidden; user-select: none;
+  }
+  #join {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.85); z-index: 100;
+    overflow-y: auto; padding: 20px;
+  }
+  #join .box {
+    background: #131c2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px;
+    text-align: center; width: 320px; max-width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+  #join h1 { font-size: 22px; margin-bottom: 6px; }
+  #join p { font-size: 13px; color: #8fa2c4; margin-bottom: 18px; }
+  #join input {
+    width: 100%; padding: 12px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: #fff; font-size: 16px;
+    text-align: center; outline: none; margin-bottom: 10px;
+  }
+  #join input:focus { border-color: #38bdf8; }
+  #join button {
+    width: 100%; padding: 12px; margin-bottom: 8px;
+    border: none; border-radius: 10px;
+    background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+    color: #041022; font-weight: 700; font-size: 15px;
+    cursor: pointer;
+  }
+  #join button.ghost {
+    background: rgba(255,255,255,0.08);
+    color: #e6ecff;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
 
-        /* ===== 暗色主题 ===== */
-        body.dark-theme {
-            background: #0d0d0f;
-            color: #c8c0b8;
-        }
-        body.dark-theme .navbar {
-            background: #1a1a1f;
-            border-bottom-color: #2a2a30;
-        }
-        body.dark-theme .navbar .logo span {
-            color: #b8b0a8;
-        }
-        body.dark-theme .navbar .logo {
-            color: #d94a3a;
-        }
-        body.dark-theme .nav-menu li {
-            color: #a09890;
-        }
-        body.dark-theme .nav-menu li:hover {
-            color: #d94a3a;
-            border-bottom-color: #d94a3a;
-        }
-        body.dark-theme .section-card {
-            background: #16161c;
-            border-color: #2a2a32;
-            box-shadow: none;
-        }
-        body.dark-theme .section-card h2 {
-            color: #d0c8c0;
-        }
-        body.dark-theme .forum-post {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .forum-post .user {
-            color: #c8c0b8;
-        }
-        body.dark-theme .forum-post .msg {
-            color: #a8a09a;
-        }
-        body.dark-theme .forum-post .msg.reply {
-            color: #88807a;
-        }
-        body.dark-theme .news-item {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .news-item .news-title {
-            color: #d0c8c0;
-        }
-        body.dark-theme .news-item .news-body {
-            color: #a8a09a;
-        }
-        body.dark-theme .news-item .news-footnote {
-            color: #706a64;
-        }
-        body.dark-theme .interview {
-            background: #121216;
-            border-left-color: #d94a3a;
-        }
-        body.dark-theme .interview .q {
-            color: #b8b0a8;
-        }
-        body.dark-theme .interview .a {
-            color: #a09890;
-        }
-        body.dark-theme .interview .a strong {
-            color: #d94a3a;
-        }
-        body.dark-theme .sidebar-card {
-            background: #16161c;
-            border-color: #2a2a32;
-        }
-        body.dark-theme .sidebar-card h3 {
-            color: #d0c8c0;
-            border-bottom-color: #2a2a32;
-        }
-        body.dark-theme .sidebar-member {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .sidebar-member:hover {
-            background: #1e1e26;
-        }
-        body.dark-theme .sidebar-member .info .sname {
-            color: #c8c0b8;
-        }
-        body.dark-theme .sidebar-member .info .sdesc {
-            color: #88807a;
-        }
-        body.dark-theme .footer {
-            background: #0d0d0f;
-            border-top-color: #1a1a20;
-            color: #706a64;
-        }
-        body.dark-theme .footer strong {
-            color: #d94a3a;
-        }
-        body.dark-theme .footer .footer-tagline {
-            color: #4a4a4a;
-        }
-        body.dark-theme .modal-box {
-            background: #1a1a22;
-            border: 1px solid #2a2a32;
-        }
-        body.dark-theme .modal-box .close-btn {
-            background: #22222a;
-            color: #b0a8a0;
-        }
-        body.dark-theme .modal-box .close-btn:hover {
-            background: #d94a3a;
-            color: white;
-        }
-        body.dark-theme .modal-box h2 {
-            color: #d0c8c0;
-        }
-        body.dark-theme .modal-box .subinfo {
-            color: #88807a;
-            border-bottom-color: #2a2a32;
-        }
-        body.dark-theme .modal-box .story-text {
-            color: #c0b8b0;
-        }
-        body.dark-theme .modal-box .story-text .hint {
-            color: #706a64;
-        }
-        body.dark-theme .comment-section {
-            border-top-color: #2a2a32;
-        }
-        body.dark-theme .comment-item {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .comment-item .c-user {
-            color: #c0b8b0;
-        }
-        body.dark-theme .comment-item .c-time {
-            color: #706a64;
-        }
-        body.dark-theme .comment-item .c-text {
-            color: #a09890;
-        }
-        body.dark-theme .login-box {
-            background: #1a1a22;
-            border: 1px solid #2a2a32;
-        }
-        body.dark-theme .login-box h3 {
-            color: #d0c8c0;
-        }
-        body.dark-theme .login-box .sub {
-            color: #88807a;
-        }
-        body.dark-theme .login-box label {
-            color: #b0a8a0;
-        }
-        body.dark-theme .login-box input {
-            background: #0d0d0f;
-            border-color: #2a2a32;
-            color: #d0c8c0;
-        }
-        body.dark-theme .login-box input:focus {
-            border-color: #d94a3a;
-        }
-        body.dark-theme .chat-box {
-            background: #1a1a22;
-            border: 1px solid #2a2a32;
-        }
-        body.dark-theme .chat-header {
-            background: #121216;
-            border-bottom-color: #2a2a32;
-        }
-        body.dark-theme .chat-header h3 {
-            color: #d0c8c0;
-        }
-        body.dark-theme .chat-header .close-chat {
-            color: #88807a;
-        }
-        body.dark-theme .chat-header .close-chat:hover {
-            color: #d94a3a;
-        }
-        body.dark-theme .chat-contact {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .chat-contact:hover {
-            background: #1e1e26;
-        }
-        body.dark-theme .chat-contact .c-name {
-            color: #c8c0b8;
-        }
-        body.dark-theme .chat-contact .c-hint {
-            color: #706a64;
-        }
-        body.dark-theme .chat-contact.note {
-            border-bottom-color: #3a3a3a;
-        }
-        body.dark-theme .chat-detail .detail-header {
-            background: #121216;
-            border-bottom-color: #2a2a32;
-        }
-        body.dark-theme .chat-detail .detail-header .d-name {
-            color: #d0c8c0;
-        }
-        body.dark-theme .chat-detail .detail-body {
-            background: #0d0d0f;
-        }
-        body.dark-theme .chat-msg .msg-user {
-            color: #c8c0b8;
-        }
-        body.dark-theme .chat-msg .msg-text {
-            color: #a8a09a;
-        }
-        body.dark-theme .chat-msg .msg-text.me {
-            color: #d94a3a;
-        }
-        body.dark-theme .chat-msg .msg-time {
-            color: #706a64;
-        }
-        body.dark-theme .note-content {
-            background: #121216;
-            border-left-color: #d94a3a;
-        }
-        body.dark-theme .note-content .note-date {
-            color: #88807a;
-        }
-        body.dark-theme .note-content .note-text {
-            color: #c0b8b0;
-        }
-        body.dark-theme .help-section {
-            background: #16161c;
-            border-color: #2a2a32;
-        }
+  #app {
+    display: none; flex-direction: column;
+    height: 100%; max-width: 900px; margin: 0 auto; padding: 8px; gap: 8px;
+  }
+  #app.show { display: flex; }
 
-        /* ========== 顶部导航 ========== */
-        .navbar {
-            background: #ffffff;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
-            padding: 0 40px;
-            height: 68px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #eaeef2;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .navbar .logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: #c0392b;
-            letter-spacing: 1px;
-        }
-        .navbar .logo span {
-            color: #2d3748;
-            transition: color 0.3s;
-        }
-        .nav-menu {
-            display: flex;
-            gap: 28px;
-            list-style: none;
-            font-size: 15px;
-            font-weight: 500;
-            color: #4a5568;
-        }
-        .nav-menu li {
-            cursor: pointer;
-            padding: 6px 0;
-            border-bottom: 3px solid transparent;
-            transition: 0.2s;
-        }
-        .nav-menu li:hover {
-            color: #c0392b;
-            border-bottom-color: #c0392b;
-        }
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .login-btn {
-            background: #c0392b;
-            color: white;
-            border: none;
-            padding: 8px 22px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .login-btn:hover {
-            background: #a93226;
-        }
-        .user-badge {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #2d3748;
-        }
-        .user-badge .avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: #c0392b;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-        .user-badge .logout-link {
-            color: #718096;
-            font-weight: 400;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .user-badge .logout-link:hover {
-            color: #c0392b;
-        }
+  #topbar { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .seat {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px; padding: 5px 10px; font-size: 12px;
+    display: flex; gap: 6px; align-items: center;
+    transition: all 0.25s;
+  }
+  .seat.active {
+    border-color: #38bdf8;
+    box-shadow: 0 0 14px rgba(56,189,248,0.55);
+    background: rgba(56,189,248,0.12);
+  }
+  .seat .cnt { color: #7dd3fc; font-weight: 700; }
 
-        /* ========== 主容器 ========== */
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 30px 40px 60px;
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 40px;
-        }
+  #table {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px; min-height: 0; padding: 8px;
+  }
+  .tip { font-size: 14px; color: #8fa2c4; text-align: center; }
+  .tip.you { color: #7dd3fc; font-size: 16px; font-weight: 600; }
 
-        /* ===== 左侧主内容 ===== */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
+  .play-tiles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; animation: pop 0.3s ease; }
+  @keyframes pop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* 板块卡片 */
-        .section-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 32px 36px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid #edf2f7;
-            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-        }
-        .section-card h2 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #1a202c;
-            border-left: 5px solid #c0392b;
-            padding-left: 16px;
-            margin-bottom: 22px;
-            transition: color 0.3s;
-        }
+  .tile.big { width: 56px; height: 70px; font-size: 30px; cursor: default; }
+  .tile.big:hover { transform: none; }
+  .votebar { display: flex; gap: 12px; justify-content: center; margin-top: 4px; flex-wrap: wrap; }
 
-        /* ===== 社区讨论 ===== */
-        .forum-post {
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f2f5;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-        .forum-post:last-child {
-            border-bottom: none;
-        }
-        .forum-post .time {
-            color: #a0aec0;
-            font-size: 13px;
-            margin-right: 12px;
-        }
-        .forum-post .user {
-            font-weight: 600;
-            color: #2d3748;
-            margin-right: 8px;
-            transition: color 0.3s;
-        }
-        .forum-post .msg {
-            color: #4a5568;
-            transition: color 0.3s;
-        }
-        .forum-post .msg.reply {
-            padding-left: 32px;
-            color: #5a6a7a;
-            transition: color 0.3s;
-        }
+  #handArea { flex-shrink: 0; }
+  #hand {
+    display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;
+    padding: 8px; background: rgba(255,255,255,0.03);
+    border-radius: 12px; min-height: 76px;
+  }
 
-        /* ===== 新闻 ===== */
-        .news-item {
-            padding: 16px 0;
-            border-bottom: 1px solid #f0f2f5;
-            transition: border-color 0.3s;
-        }
-        .news-item:last-child {
-            border-bottom: none;
-        }
-        .news-item .news-title {
-            font-weight: 600;
-            font-size: 17px;
-            color: #1a202c;
-            transition: color 0.3s;
-        }
-        .news-item .news-body {
-            color: #4a5568;
-            font-size: 15px;
-            margin-top: 4px;
-            line-height: 1.8;
-            transition: color 0.3s;
-        }
-        .news-item .news-footnote {
-            font-size: 13px;
-            color: #a0aec0;
-            margin-top: 4px;
-            font-style: italic;
-            transition: color 0.3s;
-        }
+  .tile {
+    width: 44px; height: 56px;
+    background: linear-gradient(180deg, #f8fafc, #c7d2e0);
+    color: #0b1220; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700;
+    cursor: pointer; position: relative;
+    transition: all 0.15s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.45);
+    border: 2px solid transparent; flex-shrink: 0;
+  }
+  .tile:hover { transform: translateY(-3px); }
+  .tile.selected {
+    border-color: #38bdf8;
+    box-shadow:
+      0 0 20px rgba(56,189,248,0.95),
+      0 0 6px rgba(56,189,248,0.9) inset,
+      0 4px 10px rgba(0,0,0,0.5);
+    transform: translateY(-5px);
+    background: linear-gradient(180deg, #e0f2fe, #7dd3fc);
+  }
+  .tile .order {
+    position: absolute; top: -6px; right: -6px;
+    background: #38bdf8; color: #041022;
+    font-size: 11px; font-weight: 800;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 8px rgba(56,189,248,0.9);
+  }
 
-        /* ===== 采访 ===== */
-        .interview {
-            background: #f7f9fc;
-            border-radius: 16px;
-            padding: 24px 28px;
-            font-size: 15px;
-            line-height: 2;
-            border-left: 4px solid #c0392b;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .interview .q {
-            color: #2d3748;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .interview .a {
-            color: #4a5568;
-            padding-left: 20px;
-            transition: color 0.3s;
-        }
-        .interview .a strong {
-            color: #c0392b;
-            transition: color 0.3s;
-        }
+  #bottombar {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; padding: 4px 0 8px;
+  }
+  .btn {
+    padding: 12px 22px; border-radius: 10px; border: none;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn.primary {
+    background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+    color: #041022; box-shadow: 0 4px 14px rgba(56,189,248,0.35);
+  }
+  .btn.secondary {
+    background: rgba(255,255,255,0.08); color: #e6ecff;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .btn.vote-yes {
+    background: linear-gradient(180deg, #4ade80, #22c55e);
+    color: #052e16; box-shadow: 0 4px 14px rgba(74,222,128,0.4);
+  }
+  .btn.vote-no {
+    background: linear-gradient(180deg, #f87171, #ef4444);
+    color: #450a0a; box-shadow: 0 4px 14px rgba(248,113,113,0.4);
+  }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
-        /* ===== 更多帮助 ===== */
-        .help-section {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 24px 30px;
-            border: 1px solid #edf2f7;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .help-section .help-btn {
-            padding: 12px 32px;
-            background: #c0392b;
-            color: white;
-            border: none;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .help-section .help-btn:hover {
-            background: #a93226;
-        }
-        .help-section .help-panel {
-            display: none;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #edf2f7;
-        }
-        .help-section .help-panel.open {
-            display: block;
-        }
-        .help-section .help-panel .sub-btn {
-            padding: 10px 24px;
-            background: #2d3748;
-            color: white;
-            border: none;
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-right: 12px;
-            transition: 0.2s;
-        }
-        .help-section .help-panel .sub-btn:hover {
-            background: #1a202c;
-        }
-        .help-section .help-panel .sub-btn.primary {
-            background: #c0392b;
-        }
-        .help-section .help-panel .sub-btn.primary:hover {
-            background: #a93226;
-        }
-        .help-section .help-panel .quiz-area {
-            display: none;
-            margin-top: 20px;
-        }
-        .help-section .help-panel .quiz-area.open {
-            display: block;
-        }
-        .quiz-item {
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 1px dashed #e2e8f0;
-        }
-        .quiz-item:last-child {
-            border-bottom: none;
-        }
-        .quiz-item .q-text {
-            font-weight: 500;
-            color: #2d3748;
-            margin-bottom: 6px;
-        }
-        .quiz-item .q-input {
-            padding: 8px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 30px;
-            font-size: 14px;
-            width: 220px;
-            margin-right: 10px;
-            outline: none;
-        }
-        .quiz-item .q-input:focus {
-            border-color: #c0392b;
-        }
-        .quiz-item .q-submit {
-            padding: 6px 18px;
-            background: #c0392b;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .quiz-item .q-submit:hover {
-            background: #a93226;
-        }
-        .quiz-item .q-result {
-            margin-left: 12px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .quiz-item .q-result.correct {
-            color: #22a65a;
-        }
-        .quiz-item .q-result.wrong {
-            color: #c0392b;
-        }
-        body.dark-theme .help-section {
-            background: #16161c;
-            border-color: #2a2a32;
-        }
-        body.dark-theme .help-section .help-panel {
-            border-top-color: #2a2a32;
-        }
-        body.dark-theme .help-section .help-panel .sub-btn {
-            background: #2a2a32;
-            color: #b0a8a0;
-        }
-        body.dark-theme .help-section .help-panel .sub-btn:hover {
-            background: #3a3a44;
-        }
-        body.dark-theme .help-section .help-panel .sub-btn.primary {
-            background: #c0392b;
-            color: white;
-        }
-        body.dark-theme .help-section .help-panel .sub-btn.primary:hover {
-            background: #a93226;
-        }
-        body.dark-theme .quiz-item {
-            border-bottom-color: #22222a;
-        }
-        body.dark-theme .quiz-item .q-text {
-            color: #c8c0b8;
-        }
-        body.dark-theme .quiz-item .q-input {
-            background: #0d0d0f;
-            border-color: #2a2a32;
-            color: #d0c8c0;
-        }
-        body.dark-theme .quiz-item .q-input:focus {
-            border-color: #d94a3a;
-        }
-        body.dark-theme .quiz-item .q-result.correct {
-            color: #4ad66d;
-        }
-        body.dark-theme .quiz-item .q-result.wrong {
-            color: #ff4a4a;
-        }
+  /* 房主浮动按钮 */
+  #hostPanel {
+    display: none;
+    position: fixed; top: 12px; right: 12px;
+    z-index: 50;
+    display: none; flex-direction: column; gap: 8px;
+    align-items: flex-end;
+  }
+  #hostPanel.show { display: flex; }
+  #hostPanel .roomTag {
+    background: rgba(56,189,248,0.15);
+    border: 1px solid rgba(56,189,248,0.5);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #7dd3fc;
+    text-align: right;
+  }
+  #hostPanel .roomTag .code {
+    font-size: 20px; font-weight: 800; letter-spacing: 2px;
+    display: block; margin-top: 2px;
+  }
+  #hostPanel .botBtn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(180deg, #a78bfa, #8b5cf6);
+    color: #1e1b4b;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(139,92,246,0.4);
+  }
+  #hostPanel .botBtn:active { transform: scale(0.96); }
 
-        /* ===== 右侧边栏 ===== */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-        .sidebar-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 28px 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid #edf2f7;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .sidebar-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1a202c;
-            border-bottom: 2px solid #edf2f7;
-            padding-bottom: 14px;
-            margin-bottom: 18px;
-            transition: color 0.3s, border-color 0.3s;
-        }
-        .sidebar-member {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f2f5;
-            cursor: pointer;
-            transition: 0.2s, border-color 0.3s;
-        }
-        .sidebar-member:last-child {
-            border-bottom: none;
-        }
-        .sidebar-member:hover {
-            background: #f7f9fc;
-            margin: 0 -12px;
-            padding: 12px;
-            border-radius: 12px;
-        }
-        .sidebar-member .avatar-placeholder {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: #4a5568;
-            flex-shrink: 0;
-        }
-        .sidebar-member .info .sname {
-            font-weight: 600;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-        .sidebar-member .info .sdesc {
-            font-size: 13px;
-            color: #718096;
-            transition: color 0.3s;
-        }
+  #log {
+    position: fixed; bottom: 8px; left: 8px;
+    max-width: 260px; max-height: 110px; overflow-y: auto;
+    font-size: 11px; color: #7a8aa8; line-height: 1.5;
+    pointer-events: none; z-index: 5;
+  }
+  #log div { margin-bottom: 2px; }
 
-        /* ===== 模态框 ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-box {
-            background: #ffffff;
-            max-width: 780px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 28px;
-            padding: 36px 42px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
-            animation: modalPop 0.3s ease;
-            position: relative;
-            transition: background 0.3s, border 0.3s;
-        }
-        @keyframes modalPop {
-            0% {
-                transform: scale(0.92);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        .modal-box .close-btn {
-            position: sticky;
-            top: 0;
-            float: right;
-            background: #f0f2f5;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2d3748;
-            margin-top: -8px;
-            margin-right: -8px;
-        }
-        .modal-box .close-btn:hover {
-            background: #c0392b;
-            color: white;
-        }
-        .modal-box .modal-img {
-            width: 100%;
-            max-height: 360px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin: 8px 0 20px;
-            background: #e2e8f0;
-        }
-        .modal-box h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a202c;
-            transition: color 0.3s;
-        }
-        .modal-box .subinfo {
-            color: #718096;
-            font-size: 15px;
-            margin-bottom: 16px;
-            border-bottom: 1px solid #edf2f7;
-            padding-bottom: 14px;
-            transition: color 0.3s, border-color 0.3s;
-        }
-        .modal-box .story-text {
-            font-size: 16px;
-            line-height: 2;
-            color: #2d3748;
-            transition: color 0.3s;
-        }
-        .modal-box .story-text p {
-            margin-bottom: 14px;
-        }
-        .modal-box .story-text .hint {
-            color: #8a7a6a;
-            font-size: 14px;
-            font-style: italic;
-            transition: color 0.3s;
-        }
-        .comment-section {
-            margin-top: 28px;
-            border-top: 2px solid #edf2f7;
-            padding-top: 20px;
-            transition: border-color 0.3s;
-        }
-        .comment-section .c-title {
-            font-weight: 600;
-            font-size: 16px;
-            color: #4a5568;
-            margin-bottom: 12px;
-            transition: color 0.3s;
-        }
-        .comment-item {
-            font-size: 14px;
-            padding: 6px 0;
-            border-bottom: 1px dashed #f0f2f5;
-            transition: border-color 0.3s;
-        }
-        .comment-item .c-user {
-            font-weight: 600;
-            color: #2d3748;
-            transition: color 0.3s;
-        }
-        .comment-item .c-time {
-            color: #a0aec0;
-            font-size: 12px;
-            margin-left: 10px;
-            transition: color 0.3s;
-        }
-        .comment-item .c-text {
-            color: #4a5568;
-            margin-left: 4px;
-            transition: color 0.3s;
-        }
-
-        /* ===== 加密笔记密码弹窗 ===== */
-        .pin-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            z-index: 5000;
-            justify-content: center;
-            align-items: center;
-        }
-        .pin-overlay.active {
-            display: flex;
-        }
-        .pin-box {
-            background: #1a1a22;
-            border: 2px solid #4a3a3a;
-            border-radius: 30px;
-            padding: 40px 36px;
-            max-width: 380px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.3s ease;
-        }
-        .pin-box h3 {
-            color: #d0c0b0;
-            font-size: 22px;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-        }
-        .pin-box .sub {
-            color: #807060;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-        .pin-box input {
-            width: 100%;
-            padding: 14px 16px;
-            background: #0d0d0f;
-            border: 2px solid #3a2a2a;
-            border-radius: 40px;
-            color: #e0d0c0;
-            font-size: 20px;
-            text-align: center;
-            letter-spacing: 8px;
-            outline: none;
-            margin-bottom: 20px;
-        }
-        .pin-box input:focus {
-            border-color: #8a3a3a;
-        }
-        .pin-box .pin-submit {
-            width: 100%;
-            padding: 14px;
-            background: #3a2a2a;
-            border: none;
-            border-radius: 40px;
-            color: #e0d0c0;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .pin-box .pin-submit:hover {
-            background: #4a3a3a;
-        }
-        .pin-box .pin-error {
-            color: #cc5555;
-            font-size: 14px;
-            margin-top: 12px;
-            display: none;
-        }
-        .pin-box .pin-close {
-            margin-top: 16px;
-            color: #605050;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .pin-box .pin-close:hover {
-            color: #a09080;
-        }
-
-        /* ===== 加密笔记展示 ===== */
-        .encrypted-note-content {
-            background: #0a0a0a;
-            color: #cc2222;
-            padding: 30px 28px;
-            border-radius: 20px;
-            border: 1px solid #3a1a1a;
-            box-shadow: 0 0 40px rgba(200, 30, 30, 0.08);
-            font-size: 18px;
-            line-height: 2;
-            text-align: center;
-            font-family: 'Georgia', serif;
-            letter-spacing: 1px;
-        }
-        .encrypted-note-content .sign {
-            margin-top: 20px;
-            text-align: right;
-            color: #aa3333;
-            font-style: italic;
-            font-size: 16px;
-        }
-
-        /* ===== 聊天界面 ===== */
-        .chat-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 4000;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-        }
-        .chat-overlay.active {
-            display: flex;
-        }
-        .chat-box {
-            background: #ffffff;
-            border-radius: 28px;
-            width: 100%;
-            max-width: 560px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
-            animation: modalPop 0.3s ease;
-            overflow: hidden;
-            transition: background 0.3s, border 0.3s;
-        }
-        .chat-header {
-            padding: 20px 28px;
-            border-bottom: 1px solid #edf2f7;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f7f9fc;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .chat-header h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1a202c;
-            transition: color 0.3s;
-        }
-        .chat-header .close-chat {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: #a0aec0;
-            transition: 0.2s;
-        }
-        .chat-header .close-chat:hover {
-            color: #c0392b;
-        }
-        .chat-body {
-            padding: 20px 28px;
-            overflow-y: auto;
-            flex: 1;
-        }
-        .chat-contact {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 16px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .chat-contact:hover {
-            background: #f7f9fc;
-        }
-        .chat-contact .c-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
-            color: #4a5568;
-            flex-shrink: 0;
-        }
-        .chat-contact .c-name {
-            font-weight: 600;
-            font-size: 17px;
-            color: #2d3748;
-            transition: color 0.3s;
-        }
-        .chat-contact .c-hint {
-            font-size: 13px;
-            color: #a0aec0;
-            margin-left: auto;
-            transition: color 0.3s;
-        }
-        .chat-contact.note {
-            border-bottom: 2px dashed #d4c5a0;
-        }
-        .chat-contact.note .c-avatar {
-            background: #f0e6d3;
-            color: #8a7a5a;
-        }
-        .chat-contact.recording {
-            border-bottom: 1px solid #3a3a3a;
-            cursor: default;
-            background: #121216;
-            border-radius: 12px;
-            margin-bottom: 4px;
-            padding: 12px 16px;
-        }
-        .chat-contact.recording .c-avatar {
-            background: #1a1a1a;
-            color: #d94a3a;
-            font-size: 16px;
-        }
-        .chat-contact.recording .c-name {
-            font-size: 14px;
-            color: #b0a8a0;
-            font-weight: 400;
-            line-height: 1.6;
-            white-space: normal;
-        }
-        .chat-contact.recording .c-name .speaker {
-            color: #d94a3a;
-            font-weight: 600;
-        }
-        .chat-contact.recording .c-name .time-tag {
-            color: #706a64;
-            font-size: 12px;
-        }
-        .chat-contact.recording .c-name .dialogue {
-            display: block;
-            color: #c8c0b8;
-            padding-left: 8px;
-            border-left: 2px solid #3a3a3a;
-            margin-top: 4px;
-        }
-        .chat-contact.encrypted {
-            border-bottom: 1px solid #2a2a2a;
-            background: #0d0d0f;
-            border-radius: 12px;
-            margin-bottom: 4px;
-            padding: 12px 16px;
-        }
-        .chat-contact.encrypted .c-avatar {
-            background: #1a1a1a;
-            color: #d94a3a;
-        }
-        .chat-contact.encrypted .c-name {
-            color: #d94a3a;
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
-        .chat-contact.encrypted .c-name .lock-icon {
-            margin-right: 6px;
-        }
-
-        .chat-detail {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-        }
-        .chat-detail.active {
-            display: flex;
-        }
-        .chat-detail .detail-header {
-            padding: 14px 20px;
-            border-bottom: 1px solid #edf2f7;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: #f7f9fc;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .chat-detail .detail-header .back-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #4a5568;
-        }
-        .chat-detail .detail-header .back-btn:hover {
-            color: #c0392b;
-        }
-        .chat-detail .detail-header .d-name {
-            font-weight: 600;
-            font-size: 18px;
-            transition: color 0.3s;
-        }
-        .chat-detail .detail-body {
-            padding: 20px 24px;
-            flex: 1;
-            overflow-y: auto;
-            background: #fafbfc;
-            transition: background 0.3s;
-        }
-        .chat-msg {
-            margin-bottom: 12px;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-        .chat-msg .msg-time {
-            color: #a0aec0;
-            font-size: 12px;
-            display: block;
-            margin-bottom: 2px;
-            transition: color 0.3s;
-        }
-        .chat-msg .msg-user {
-            font-weight: 600;
-            color: #2d3748;
-            transition: color 0.3s;
-        }
-        .chat-msg .msg-text {
-            color: #4a5568;
-            transition: color 0.3s;
-        }
-        .chat-msg .msg-text.me {
-            color: #c0392b;
-            transition: color 0.3s;
-        }
-
-        .note-content {
-            background: #fcf8f0;
-            border-radius: 16px;
-            padding: 24px 28px;
-            border-left: 4px solid #c0392b;
-            font-size: 16px;
-            line-height: 2;
-            color: #2d3748;
-            white-space: pre-wrap;
-            transition: background 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .note-content .note-date {
-            color: #8a7a5a;
-            font-size: 14px;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 12px;
-            border-bottom: 1px dashed #e0d6c8;
-            padding-bottom: 10px;
-            transition: color 0.3s, border-color 0.3s;
-        }
-        .note-content .note-text {
-            font-style: italic;
-            color: #3d3a36;
-            transition: color 0.3s;
-        }
-
-        /* ===== 页脚 ===== */
-        .footer {
-            background: #1a202c;
-            color: #a0aec0;
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 14px;
-            border-top: 1px solid #2d3748;
-            transition: background 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .footer strong {
-            color: #c0392b;
-            transition: color 0.3s;
-        }
-        .footer .footer-tagline {
-            margin-top: 6px;
-            font-size: 13px;
-            opacity: 0.6;
-            letter-spacing: 2px;
-            color: #7a8a7a;
-            transition: color 0.3s;
-        }
-
-        /* ===== 响应式 ===== */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                padding: 20px;
-            }
-            .sidebar {
-                order: -1;
-            }
-        }
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 0 16px;
-                height: auto;
-                flex-wrap: wrap;
-                gap: 10px;
-                padding-top: 12px;
-                padding-bottom: 12px;
-            }
-            .nav-menu {
-                gap: 14px;
-                font-size: 13px;
-                flex-wrap: wrap;
-            }
-            .section-card {
-                padding: 20px;
-            }
-            .modal-box {
-                padding: 24px 20px;
-            }
-            .login-box {
-                padding: 28px 24px;
-            }
-            .chat-box {
-                max-width: 100%;
-                border-radius: 20px;
-            }
-            .chat-body {
-                padding: 16px;
-            }
-            .quiz-item .q-input {
-                width: 140px;
-            }
-        }
-    </style>
+  .history {
+    font-size: 12px; color: #8fa2c4;
+    display: flex; flex-direction: column; gap: 4px;
+    align-items: center; margin-top: 8px;
+    max-height: 90px; overflow-y: auto;
+  }
+  .history .ok { color: #4ade80; }
+  .history .no { color: #f87171; }
+  .votehint { font-size: 13px; color: #7dd3fc; }
+</style>
 </head>
 <body>
 
-    <!-- ===== 顶部导航 ===== -->
-    <header class="navbar">
-        <div class="logo">📁 <span>Happy</span>Life</div>
-        <ul class="nav-menu">
-            <li onclick="scrollToSection('community')">社区讨论</li>
-            <li onclick="scrollToSection('news')">新闻</li>
-            <li onclick="scrollToSection('interview')">采访</li>
-            <li onclick="scrollToSection('help')">更多帮助</li>
-        </ul>
-        <div class="nav-right">
-            <div class="user-badge" id="userBadge">
-                <span class="avatar">林</span>
-                <span id="userNameDisplay">林凡996</span>
-                <span class="logout-link" onclick="logout()">退出</span>
-            </div>
-            <button class="login-btn" id="loginBtn" onclick="openLogin()">登录</button>
-        </div>
-    </header>
-
-    <!-- ===== 主容器 ===== -->
-    <div class="container">
-        <div class="main-content">
-
-            <!-- ===== 社区讨论 ===== -->
-            <div class="section-card" id="community">
-                <h2>💬 社区讨论</h2>
-                <div class="forum-post"><span class="time">2020.06.21 13:11</span><span class="user">开朗怪</span><span class="msg">有人吗？</span></div>
-                <div class="forum-post"><span class="time">2020.07.04 16:40</span><span class="user">小羊羔</span><span class="msg">同问。</span></div>
-                <div class="forum-post">
-                    <span class="time">2020.08.01 12:30</span><span class="user">清风</span><span class="msg">有</span>
-                    <div class="msg reply"><span class="user">小羊羔</span>：真人吗？好神奇！居然真的有人！</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：玩到这个游戏了吗？</div>
-                    <div class="msg reply"><span class="user">清风</span>：玩到了</div>
-                    <div class="msg reply"><span class="user">清风</span>：很普通的老虎机游戏啊</div>
-                    <div class="msg reply"><span class="user">清风</span>：好想接手升华一下</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：对这种类型的游戏不太感兴趣。</div>
-                    <div class="msg reply"><span class="user">清风</span>：那是没有遇到合适你的</div>
-                    <div class="msg reply"><span class="user">清风</span>：要不要来试试我改造的Happy Life？你肯定喜欢</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：真的吗？我加你联系方式吧！</div>
-                    <div class="msg reply"><span class="user">清风</span>：私</div>
-                    <div class="msg reply"><span class="user">咯叽</span>：求网址！</div>
-                </div>
-                <div class="forum-post">
-                    <span class="time">2020.08.02 01:32</span><span class="user">小羊羔</span><span class="msg">有人吗？</span>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                </div>
-                <div class="forum-post">
-                    <span class="time">2020.08.03 17:03</span><span class="user">小羊羔</span><span class="msg">有人吗？</span>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                </div>
-                <div class="forum-post">
-                    <span class="time">2020.10.25 20:17</span><span class="user">小羊羔</span><span class="msg">有人吗？</span>
-                    <div class="msg reply"><span class="user">小羊羔</span>：有人吗？</div>
-                </div>
-                <div class="forum-post">
-                    <span class="time">2022.09.15 16:30</span><span class="user">河南无言组</span><span class="msg">我靠真有人啊</span>
-                    <div class="msg reply"><span class="user">小羊羔</span>：嗨。</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：你同学长得像张硕？把你同学介绍给我吧哈哈哈哈哈。</div>
-                    <div class="msg reply"><span class="user">河南无言组</span>：隔壁班隔壁班，话说我也有一阵子没见到他了</div>
-                    <div class="msg reply"><span class="user">小羊羔</span>：要不要来试试清风的休闲小游戏？</div>
-                    <div class="msg reply"><span class="user">河南无言组</span>：啊，好啊</div>
-                </div>
-            </div>
-
-            <!-- ===== 新闻 ===== -->
-            <div class="section-card" id="news">
-                <h2>📰 新闻</h2>
-                <div class="news-item">
-                    <div class="news-title">1. 科学研究新突破！</div>
-                    <div class="news-body">科学研究显示，人的身体里最多承载两个灵魂，如果两个灵魂间从未有过交集和误会，两个灵魂就会在一起完美融合，直到合为一个整体，若是两个灵魂有很严重的排斥或其中一方灵魂有很强烈的情绪，两个灵魂就会互不交融，很有可能为了同一具身体大打出手。</div>
-                    <div class="news-footnote">（该研究结果尚未通过同行评审，且实验样本仅限《Happy Life》游戏玩家。）</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">2. 新生代音乐人Rico Zayd荣获年度新人突破奖！</div>
-                    <div class="news-body">记者采访中，Rico Zayd表示这只是一个简单的开始，不久的以后将会让全世界的人知道他的音乐，对此，Rico Zayd的粉丝们也表示愿意一直陪伴他闯出一个独属于他的时代。</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">3. 网络画手Lin最新绘本预售开始！</div>
-                    <div class="news-body">网络著名画手Lin依旧以其独特的见解绘制出无数引人入胜的故事，在上一本绘本突破十万售量大关后，Lin沉寂一年投入于新的绘本创作中，大家都希望这次的销售量可以达到新巅峰。</div>
-                </div>
-                <div class="news-item">
-                    <div class="news-title">4. 美妆新人"咯叽"带火网络用语！</div>
-                    <div class="news-body">在美妆市场高度饱和的情况下，美妆博主"咯叽"用其专业的化妆技术以及无比洗脑的网名闯出了一片新天地，现如今大家开始用"咯叽风"来形容当下最盛行的妆面！</div>
-                </div>
-            </div>
-
-            <!-- ===== 采访 ===== -->
-            <div class="section-card" id="interview">
-                <h2>🎤 采访</h2>
-                <div class="interview">
-                    <p><span class="q">📌 时间：2017年10月</span></p>
-                    <p><span class="q">记者：</span>《Happy Life》的大火为三位年轻人铺下了明亮的前路，今天我们有请到了创作人之一的林凡来为我们解答一些疑惑，那么请问林凡先生，是什么契机推动你想要创造一款游戏呢？</p>
-                    <p><span class="a"><strong>林凡：</strong>是夏爽。</span></p>
-                    <p><span class="q">记者：</span>哈哈哈看来林凡先生很看中这段感情呢！</p>
-                    <p><span class="a"><strong>林凡：</strong>是的，夏爽是我生命中最重要的人，大学的时候我暗恋夏爽，很幸运，我们是同一年出生，所以我把我的账户名称改成林凡996，她也不会发现我输入的是她的生日。</span></p>
-                    <p><span class="q">记者：</span>听说在咱们游戏创作初期还有一位成员是吗？</p>
-                    <p><span class="a"><strong>林凡：</strong>是的，但是后来退出了，我也不清楚他退出的理由。</span></p>
-                    <p><span class="q">记者：</span>但是他删除电子画稿的行为总归是不好的。</p>
-                    <p><span class="a"><strong>林凡：</strong>没错，还好张硕接手了这一切。</span></p>
-                </div>
-            </div>
-
-            <!-- ===== 更多帮助 ===== -->
-            <div class="help-section" id="help">
-                <button class="help-btn" id="helpToggleBtn">更多帮助</button>
-                <div class="help-panel" id="helpPanel">
-                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                        <button class="sub-btn primary" id="quizBtn">问题核实</button>
-                        <button class="sub-btn" onclick="alert('Happy Life 相关资讯将在后续更新。')">Happy Life</button>
-                    </div>
-                    <div class="quiz-area" id="quizArea">
-                        <div style="margin-top:6px; font-size:14px; color:#718096;">回答以下问题，验证你对故事的理解：</div>
-
-                        <div class="quiz-item">
-                            <div class="q-text">1. Happy Life中第一个出现的灵魂是谁的？</div>
-                            <input class="q-input" id="q1" placeholder="输入答案">
-                            <button class="q-submit" onclick="checkQuiz(1, '夏爽')">提交</button>
-                            <span class="q-result" id="r1"></span>
-                        </div>
-                        <div class="quiz-item">
-                            <div class="q-text">2. 用户"小羊羔"的灵魂中含有谁的灵魂？</div>
-                            <input class="q-input" id="q2" placeholder="输入答案">
-                            <button class="q-submit" onclick="checkQuiz(2, '夏爽')">提交</button>
-                            <span class="q-result" id="r2"></span>
-                        </div>
-                        <div class="quiz-item">
-                            <div class="q-text">3. 2018年8月15日，谁的灵魂进入了Happy Life？</div>
-                            <input class="q-input" id="q3" placeholder="输入答案">
-                            <button class="q-submit" onclick="checkQuiz(3, '张硕')">提交</button>
-                            <span class="q-result" id="r3"></span>
-                        </div>
-                        <div class="quiz-item">
-                            <div class="q-text">4. 用户"河南无言组"灵魂是否进入过Happy Life？（填是/否）</div>
-                            <input class="q-input" id="q4" placeholder="是或否">
-                            <button class="q-submit" onclick="checkQuiz(4, '否')">提交</button>
-                            <span class="q-result" id="r4"></span>
-                        </div>
-                        <div class="quiz-item">
-                            <div class="q-text">5. 对林凡恨意最强的人是？</div>
-                            <input class="q-input" id="q5" placeholder="输入答案">
-                            <button class="q-submit" onclick="checkQuiz(5, '张硕')">提交</button>
-                            <span class="q-result" id="r5"></span>
-                        </div>
-                        <div class="quiz-item">
-                            <div class="q-text">6. 你是？</div>
-                            <input class="q-input" id="q6" placeholder="输入答案">
-                            <button class="q-submit" onclick="checkQuiz(6, '张希之')">提交</button>
-                            <span class="q-result" id="r6"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== 右侧边栏：成员介绍 ===== -->
-        <div class="sidebar">
-            <div class="sidebar-card">
-                <h3>👥 成员介绍</h3>
-                <div class="sidebar-member" onclick="openMemberModal('linfan')">
-                    <div class="avatar-placeholder" style="background:#e8d5b7;">林</div>
-                    <div class="info">
-                        <div class="sname">林凡</div>
-                        <div class="sdesc">1996.4.8 · 清彩大学设计学院</div>
-                    </div>
-                </div>
-                <div class="sidebar-member" onclick="openMemberModal('xiashuang')">
-                    <div class="avatar-placeholder" style="background:#d4e0d8;">夏</div>
-                    <div class="info">
-                        <div class="sname">夏爽</div>
-                        <div class="sdesc">1996.5.14 · 清彩大学工程技术学院</div>
-                    </div>
-                </div>
-                <div class="sidebar-member" onclick="openMemberModal('zhangshuo')">
-                    <div class="avatar-placeholder" style="background:#d4d0e8;">张</div>
-                    <div class="info">
-                        <div class="sname">张硕</div>
-                        <div class="sdesc">1997.12.3 · 河南美工学院</div>
-                    </div>
-                </div>
-                <!-- 张希之已移除 -->
-            </div>
-        </div>
+<div id="join">
+  <div class="box">
+    <h1>🀄 文字麻将</h1>
+    <p>4 人联机 · 出牌投票 · 打完获胜</p>
+    <input id="inputName" placeholder="输入昵称" maxlength="8" autocomplete="off">
+    <button onclick="createRoom()">创建房间（当房主）</button>
+    <button class="ghost" onclick="showJoinInput()">加入房间</button>
+    <div id="joinRoomBox" style="display:none; margin-top:8px;">
+      <input id="inputRoom" placeholder="输入 6 位房间号" maxlength="6" autocomplete="off" style="text-transform:uppercase;">
+      <button onclick="joinRoom()">进入</button>
     </div>
+  </div>
+</div>
 
-    <!-- ===== 页脚 ===== -->
-    <div class="footer">
-        <p>© 2026 <strong>Happy Life</strong> · 官方档案 · 仅供内部查阅</p>
-        <div class="footer-tagline">欢迎光临 · 一切非必要，而已必然</div>
-    </div>
+<div id="hostPanel">
+  <div class="roomTag">
+    房间号
+    <span class="code" id="roomCodeTag">------</span>
+  </div>
+  <button class="botBtn" id="botBtn" onclick="addBots()">🤖 加 3 个机器人</button>
+</div>
 
-    <!-- ===== 模态框：人物详情 ===== -->
-    <div class="modal-overlay" id="memberModal" onclick="closeModalOutside(event, 'memberModal')">
-        <div class="modal-box">
-            <button class="close-btn" onclick="closeModal('memberModal')">✕</button>
-            <img class="modal-img" id="memberImg" src="" alt="人物照片">
-            <h2 id="memberName">名字</h2>
-            <div class="subinfo" id="memberSub">简介</div>
-            <div class="story-text" id="memberStory"></div>
-            <div class="comment-section"><div class="c-title">💬 评论区</div><div id="commentList"></div></div>
-        </div>
-    </div>
+<div id="app">
+  <div id="topbar"></div>
+  <div id="table">
+    <div id="playArea" style="display:flex;flex-direction:column;align-items:center;gap:12px;"></div>
+    <div id="voteArea" class="votebar"></div>
+    <div id="historyArea" class="history"></div>
+  </div>
+  <div id="handArea"><div id="hand"></div></div>
+  <div id="bottombar">
+    <button id="btnDraw" class="btn secondary">摸一张</button>
+    <div id="turnHint" class="tip"></div>
+    <button id="btnPlay" class="btn primary">出牌</button>
+  </div>
+</div>
 
-    <!-- ===== 登录弹窗 ===== -->
-    <div class="login-overlay" id="loginOverlay" onclick="if(event.target===this) closeLogin()">
-        <div class="login-box">
-            <h3>🔐 登录</h3>
-            <div class="sub">请输入账号密码以访问内部聊天记录</div>
-            <label>用户</label>
-            <input type="text" id="loginUser" placeholder="请输入用户名">
-            <label>密码</label>
-            <input type="password" id="loginPass" placeholder="请输入密码">
-            <button class="login-submit" onclick="handleLogin()">登录</button>
-            <div class="login-error" id="loginError">账号或密码错误，请重试</div>
-            <div class="login-close" onclick="closeLogin()">取消</div>
-        </div>
-    </div>
+<div id="log"></div>
 
-    <!-- ===== 聊天界面（登录后） ===== -->
-    <div class="chat-overlay" id="chatOverlay" onclick="if(event.target===this) closeChat()">
-        <div class="chat-box">
-            <div class="chat-header"><h3>💬 消息</h3><button class="close-chat" onclick="closeChat()">✕</button></div>
-            <div class="chat-body" id="chatBody">
-                <div id="contactList">
-                    <div class="chat-contact encrypted" onclick="openEncryptedNote()">
-                        <div class="c-avatar">🔒</div>
-                        <span class="c-name"><span class="lock-icon">📜</span>加密笔记</span>
-                        <span class="c-hint">需密码</span>
-                    </div>
-                    <div class="chat-contact recording">
-                        <div class="c-avatar">🎙️</div>
-                        <span class="c-name">
-                            <span class="time-tag">2018年8月10日</span>
-                            <span class="speaker">张希之：</span>只有下一个玩家点击15次获得金币的时候，才可以选择进行灵魂替换，夏爽的灵魂才会重新出现，但消失过的身体无法承受灵魂，所以需要新的身体作为容器，而新的容器是谁，只是概率问题，同时这个被收纳的灵魂也会忘记关于《Happy Life》的一切。
-                            <span class="time-tag" style="display:block; margin-top:8px;">2022年10月26日</span>
-                            <span class="speaker">林凡：</span>为什么不在游戏创造完成前告诉我们必须停滞的理由？
-                            <span class="speaker" style="display:block;">张希之：</span>当时只是因为觉得分红不合理，想捣毁工作室罢了，谁知道会成这样？
-                        </span>
-                    </div>
-                    <div class="chat-contact note" onclick="openNoteDetail()">
-                        <div class="c-avatar">📝</div>
-                        <span class="c-name">笔记</span>
-                        <span class="c-hint">2022.10.26</span>
-                    </div>
-                    <div class="chat-contact" onclick="openChatDetail('zhangxizhi')">
-                        <div class="c-avatar">希</div>
-                        <span class="c-name">张希之</span>
-                        <span class="c-hint">3条消息</span>
-                    </div>
-                    <div class="chat-contact" onclick="openChatDetail('zhangshuo')">
-                        <div class="c-avatar">硕</div>
-                        <span class="c-name">张硕</span>
-                        <span class="c-hint">2条消息</span>
-                    </div>
-                    <div class="chat-contact" onclick="openChatDetail('xiashuang')">
-                        <div class="c-avatar">爽</div>
-                        <span class="c-name">夏爽</span>
-                        <span class="c-hint">2条消息</span>
-                    </div>
-                </div>
-                <div class="chat-detail" id="chatDetail">
-                    <div class="detail-header">
-                        <button class="back-btn" onclick="backToContactList()">←</button>
-                        <span class="d-name" id="detailName">联系人</span>
-                    </div>
-                    <div class="detail-body" id="detailBody"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+/* ==================== 字库 ==================== */
+const CHAR_POOL = [
+  '天','地','日','月','星','云','风','雨','雪','雷','电','山','河','湖','海','江','水','火','土','木','金','石','光','影','夜','昼','春','夏','秋','冬',
+  '花','草','树','叶','林','森','鸟','鱼','虫','马','牛','羊','虎','龙','凤','猫','狗','狼','鹿','象','鹤','鹰','蛇','龟',
+  '心','灵','魂','梦','想','思','念','情','爱','恨','愁','喜','怒','哀','乐','悲','欢','离','合','生','死','命','运','缘','分','时','空','虚','实','真','假','美','丑','善','恶','是','非','对','错','得','失','成','败','因','果',
+  '你','我','他','谁','何','无','有','一','二','三','四','五','六','七','八','九','十','百','千','万','亿',
+  '大','小','多','少','高','低','长','短','远','近','前','后','左','右','上','下','里','外','东','西','南','北','中','间',
+  '来','去','走','跑','飞','落','起','坐','站','看','听','说','笑','哭','唱','跳','吃','喝','睡','醒','忘','记','知','觉','感','悟','寻','找','等','待','问','答','给','取','开','关','推','拉',
+  '门','窗','墙','路','桥','灯','烟','酒','茶','书','笔','墨','纸','剑','刀','衣','帽','鞋','车','船','城','村','家','国',
+  '世','界','宇','宙','沙','漠','梦','幻','声','色','味','香','苦','甜','酸','辣','咸','淡','静','动'
+];
+const HAND_SIZE = 20;
 
-    <!-- ===== 加密笔记密码弹窗 ===== -->
-    <div class="pin-overlay" id="pinOverlay">
-        <div class="pin-box">
-            <h3>🔐 加密笔记</h3>
-            <div class="sub">请输入四位密码</div>
-            <input type="password" id="pinInput" placeholder="····" maxlength="4" inputmode="numeric">
-            <button class="pin-submit" onclick="verifyPin()">解锁</button>
-            <div class="pin-error" id="pinError">密码错误，请重试</div>
-            <div class="pin-close" onclick="closePin()">取消</div>
-        </div>
-    </div>
+/* ==================== 工具 ==================== */
+function shuffle(a) {
+  const arr = a.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function genRoomId() {
+  const cs = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 6; i++) s += cs[Math.floor(Math.random() * cs.length)];
+  return s;
+}
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+const $ = id => document.getElementById(id);
 
-    <!-- ===== 加密笔记内容展示 ===== -->
-    <div class="modal-overlay" id="encryptedNoteModal" onclick="if(event.target===this) closeEncryptedNoteModal()">
-        <div class="modal-box" style="max-width:540px; background:#0a0a0a; border:2px solid #3a1a1a; padding:40px 36px;">
-            <button class="close-btn" onclick="closeEncryptedNoteModal()" style="background:#1a0a0a; color:#aa4444;">✕</button>
-            <div class="encrypted-note-content">
-                你欠我的太多了，一口气还回来吧！
-                <div class="sign">—— 张硕</div>
-            </div>
-        </div>
-    </div>
+/* ==================== 全局 ==================== */
+let peer = null;
+let isHost = false;
+let myName = '';
+let myIndex = -1;
+let roomCode = '';
+let myConn = null;
+let conns = {};
+let room = null;
+let S = null;
+let selected = [];
+let botTimer = null;
 
-    <script>
-        // ================================================================
-        // ========== 人物数据（已移除张希之，移除所有hint） ==========
-        const memberData = {
-            linfan: {
-                name: '林凡',
-                sub: '1996.4.8 · 清彩大学设计学院',
-                img: 'https://picsum.photos/seed/p1/800/400',
-                story: `<p>林凡，1996年4月8日出生，就读于清彩大学设计学院。在2016年"青华奖"设计大赛中荣获第三名。</p>
-                        <p>2017年八月，游戏《Happy Life》正式上线。2018年五月五日，林凡加入HT有限公司，并在三个月后宣布破产。</p>`,
-                comments: [{ user: '兔崽子炖鸡蛋', time: '2019年3月22日 9:45', text: '好可惜，第一次听到就已经寄了的游戏。' }]
-            },
-            xiashuang: {
-                name: '夏爽',
-                sub: '1996.5.14 · 清彩大学工程技术学院',
-                img: 'https://picsum.photos/seed/p2/800/400',
-                story: `<p>夏爽，1996年5月14日出生，就读于清彩大学工程技术学院。在校期间经常参加舍友刘帆的采访作业，并因为采访在学校有一定的人气积累。</p>
-                        <p>夏爽曾经说过："我的梦想是创建一个独属于自己的游戏公司。"虽然多数同学对此嗤之以鼻。</p>
-                        <p>2017年八月，夏爽携手林凡等人创作出游戏《Happy Life》并大获成功，此游戏几乎成为了家喻户晓的恐怖游戏，"戒赌"主题更是让游戏升华，拯救了无数家庭。2018年五月五日，夏爽创立HT有限公司，并在三个月后宣布破产，此后杳无音信。</p>`,
-                comments: [
-                    { user: '小羔羊', time: '2020年7月4日 16:33', text: '怎么对这个游戏一点印象都没有？' },
-                    { user: '清风', time: '2020年8月1日 12:20', text: '没听说过啊，我去玩玩看' },
-                    { user: '咯叽', time: '2020年8月1日 13:10', text: '求网址' }
-                ]
-            },
-            zhangshuo: {
-                name: '张硕',
-                sub: '1997.12.3 · 河南美工学院',
-                img: 'https://picsum.photos/seed/p3/800/400',
-                story: `<p>张硕，1997年12月3日出生，就读于河南美工学院。因其外表阳光开朗，被称为"当之无愧的河南美工校草"。</p>
-                        <p>2017年四月正式加入《Happy Life》制作团队。2018年8月15日，张硕在一次校外酒局后失踪，至今下落不明。</p>`,
-                comments: [
-                    { user: '小羊羔', time: '2020年7月4日 16:36', text: '卧艹，模糊的画质，清晰的帅！' },
-                    { user: '河南无言组', time: '2022年7月4日 16:50', text: '真可惜，长得还挺像我隔壁班一个男的。' }
-                ]
-            }
-            // 张希之已移除
-        };
+/* ==================== 首页 ==================== */
+$('inputName').value = localStorage.getItem('mj_name') || '';
 
-        // ========== 聊天数据（保留，因为登录后仍需要） ==========
-        const chatData = {
-            zhangxizhi: {
-                name: '张希之',
-                messages: [
-                    { time: '2017年3月3日', user: '张希之', text: '不要再继续做下去了，会出问题的！' },
-                    { time: '2017年3月3日', user: '我', text: '不可能在这阶段不做啊。', me: true },
-                    { time: '2017年3月3日', user: '张希之', text: '好，那你们做吧，我不奉陪了！' },
-                    { time: '2017年3月3日', user: '我', text: '好走不送。', me: true },
-                    { time: '2018年8月10日', user: '我', text: '你是不是知道一些事情？', me: true },
-                    { time: '2018年8月10日', user: '张希之', text: '怎么宣布公司破产了？' },
-                    { time: '2018年8月10日', user: '我', text: '我以为，公司破产了，夏爽就能回来了……', me: true },
-                    { time: '2018年8月10日', user: '张希之', text: '……' },
-                    { time: '2018年8月10日', user: '我', text: '所以你知道什么？可以告诉我吗？', me: true },
-                    { time: '2018年8月10日', user: '张希之', text: '我打电话跟你说。' },
-                    { time: '2022年10月26日', user: '我', text: '张希之，我们见一面吧。', me: true },
-                    { time: '2022年10月26日', user: '张希之', text: '好啊' },
-                    { time: '2022年10月26日', user: '张希之', text: '我很想和你见面' },
-                    { time: '2022年10月26日', user: '张希之', text: '约个时间吧' },
-                    { time: '2022年10月26日', user: '我', text: '现在。', me: true }
-                ]
-            },
-            zhangshuo: {
-                name: '张硕',
-                messages: [
-                    { time: '2017年4月3日', user: '我', text: '谢谢你能来接手美工项目。', me: true },
-                    { time: '2017年4月3日', user: '张硕', text: '谢什么啊哥' },
-                    { time: '2017年4月3日', user: '张硕', text: '应该我谢你们啊' },
-                    { time: '2018年8月15日', user: '我', text: '张硕！出来喝点吗？', me: true },
-                    { time: '2018年8月15日', user: '张硕', text: '啊！可以啊' },
-                    { time: '2018年8月15日', user: '张硕', text: '你们当时的庆功宴我就没去成' },
-                    { time: '2018年8月15日', user: '张硕', text: '还说有点可惜呢' },
-                    { time: '2018年8月15日', user: '我', text: '快来，地点离你们学校很近！', me: true }
-                ]
-            },
-            xiashuang: {
-                name: '夏爽',
-                messages: [
-                    { time: '2017年4月3日', user: '夏爽', text: '张硕长得挺好看啊，不愧是校草。' },
-                    { time: '2017年4月3日', user: '我', text: '别那么关注他吧！', me: true },
-                    { time: '2017年4月3日', user: '夏爽', text: '哈哈哈哈，开个玩笑嘛，你才是长到了我心上的人~' },
-                    { time: '2017年4月3日', user: '我', text: '好土啊~', me: true },
-                    { time: '2017年4月3日', user: '夏爽', text: '别逼我打你。' },
-                    { time: '2018年5月5日', user: '我', text: '你的梦想终于达成了！', me: true },
-                    { time: '2018年5月5日', user: '我', text: '要不要出来庆祝一下呀？', me: true }
-                ]
-            }
-        };
+function showJoinInput() {
+  $('joinRoomBox').style.display = 'block';
+  $('inputRoom').focus();
+}
+function getNick() {
+  const n = $('inputName').value.trim();
+  if (!n) { alert('先输入昵称'); return null; }
+  localStorage.setItem('mj_name', n);
+  return n.slice(0, 8);
+}
 
-        // ================================================================
-        // ========== 登录状态管理 ==========
-        let isLoggedIn = false;
+/* ==================== 创建房间 ==================== */
+function createRoom() {
+  const n = getNick(); if (!n) return;
+  myName = n; isHost = true; myIndex = 0;
+  roomCode = genRoomId();
 
-        function setLoggedIn(state) {
-            isLoggedIn = state;
-            if (state) {
-                document.body.classList.add('dark-theme');
-            } else {
-                document.body.classList.remove('dark-theme');
-            }
-        }
+  room = {
+    players: [{ id: 'host', name: myName, hand: [] }],
+    phase: 'waiting', turn: 0, deck: [],
+    currentPlay: null, votes: {},
+    drewFlags: [false, false, false, false],
+    winner: null, history: []
+  };
 
-        // ================================================================
-        // ========== 函数 ==========
-        function openMemberModal(id) {
-            const data = memberData[id];
-            if (!data) return;
-            document.getElementById('memberImg').src = data.img;
-            document.getElementById('memberName').textContent = data.name;
-            document.getElementById('memberSub').textContent = data.sub;
-            document.getElementById('memberStory').innerHTML = data.story;
-            const list = document.getElementById('commentList');
-            list.innerHTML = '';
-            data.comments.forEach(c => {
-                list.innerHTML += `<div class="comment-item"><span class="c-user">${c.user}</span><span class="c-time">${c.time}</span><span class="c-text">${c.text}</span></div>`;
-            });
-            document.getElementById('memberModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+  // 先进入界面（不等 PeerJS）
+  $('app').classList.add('show');
+  $('join').style.display = 'none';
+  $('hostPanel').classList.add('show');
+  $('roomCodeTag').textContent = roomCode;
+  hostBroadcast();
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = '';
-        }
+  // 后台尝试连接 PeerJS
+  try {
+    peer = new Peer('mahjong-' + roomCode, { debug: 1 });
+    peer.on('connection', (conn) => {
+      conn.on('data', (data) => hostHandle(conn, data));
+      conn.on('close', () => hostDisconnect(conn));
+    });
+    peer.on('error', (e) => {
+      console.warn('PeerJS error:', e);
+      addLog('⚠️ 联机服务暂时不可用（不影响和机器人玩）');
+    });
+  } catch (e) {
+    console.warn(e);
+  }
+}
 
-        function closeModalOutside(event, id) {
-            if (event.target === document.getElementById(id)) closeModal(id);
-        }
+/* ==================== 加入房间 ==================== */
+function joinRoom() {
+  const n = getNick(); if (!n) return;
+  const code = ($('inputRoom').value || '').trim().toUpperCase();
+  if (code.length !== 6) { alert('房间号是 6 位'); return; }
+  myName = n; isHost = false; roomCode = code;
 
-        // ---------- 登录 ----------
-        function openLogin() {
-            document.getElementById('loginOverlay').classList.add('active');
-            document.getElementById('loginError').style.display = 'none';
-            document.getElementById('loginUser').value = '';
-            document.getElementById('loginPass').value = '';
-        }
+  peer = new Peer({ debug: 1 });
+  peer.on('open', () => {
+    const conn = peer.connect('mahjong-' + roomCode, { reliable: true });
+    myConn = conn;
+    conn.on('open', () => conn.send({ type: 'join', name: myName }));
+    conn.on('data', (data) => clientHandle(data));
+    conn.on('close', () => { alert('与房主断开了连接'); location.reload(); });
+    conn.on('error', () => alert('连接失败，检查房间号或网络'));
+  });
+  peer.on('error', (e) => alert('连接失败：' + e.type));
 
-        function closeLogin() {
-            document.getElementById('loginOverlay').classList.remove('active');
-        }
+  setTimeout(() => {
+    $('app').classList.add('show');
+    $('join').style.display = 'none';
+  }, 300);
+}
 
-        function handleLogin() {
-            const user = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value.trim();
-            if (user === '林凡996' && pass === '1996514') {
-                closeLogin();
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('userBadge').style.display = 'flex';
-                document.getElementById('userNameDisplay').textContent = user;
-                setLoggedIn(true);
-                document.getElementById('chatOverlay').classList.add('active');
-                document.getElementById('contactList').style.display = 'block';
-                document.getElementById('chatDetail').classList.remove('active');
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
+/* ==================== 加机器人 ==================== */
+function addBots() {
+  if (!isHost || !room) return;
+  if (room.phase !== 'waiting') { addLog('⚠️ 游戏已开始，无法再加机器人'); return; }
 
-        function logout() {
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('userBadge').style.display = 'none';
-            document.getElementById('chatOverlay').classList.remove('active');
-            setLoggedIn(false);
-        }
+  const botNames = ['🤖阿强', '🤖小美', '🤖老王'];
+  let bi = 0;
+  while (room.players.length < 4 && bi < botNames.length) {
+    const bid = 'bot_' + (bi + 1);
+    if (!room.players.find(p => p.id === bid)) {
+      room.players.push({ id: bid, name: botNames[bi], hand: [], isBot: true });
+    }
+    bi++;
+  }
+  hostLog('🤖 机器人已加入，凑齐 ' + room.players.length + ' 人');
+  hostBroadcast();
 
-        // ---------- 聊天 ----------
-        function closeChat() {
-            document.getElementById('chatOverlay').classList.remove('active');
-        }
+  if (room.players.length === 4) {
+    setTimeout(() => {
+      if (room.players.length === 4 && room.phase === 'waiting') hostStart();
+    }, 500);
+  }
+}
 
-        function openChatDetail(id) {
-            const data = chatData[id];
-            if (!data) return;
-            document.getElementById('contactList').style.display = 'none';
-            document.getElementById('chatDetail').classList.add('active');
-            document.getElementById('detailName').textContent = data.name;
-            const body = document.getElementById('detailBody');
-            body.innerHTML = '';
-            data.messages.forEach(m => {
-                body.innerHTML += `<div class="chat-msg"><span class="msg-time">${m.time}</span><span class="msg-user">${m.user}：</span><span class="msg-text ${m.me ? 'me' : ''}">${m.text}</span></div>`;
-            });
-            body.scrollTop = body.scrollHeight;
-        }
+/* ==================== 房主核心 ==================== */
+function hostBroadcast() {
+  if (!room) return;
+  room.players.forEach((p, i) => {
+    const st = buildState(room, i);
+    if (p.id === 'host') { S = st; render(); }
+    else if (!p.isBot) {
+      const c = conns[p.id];
+      if (c) c.send({ type: 'state', s: st });
+    }
+  });
+  checkBots();
+}
 
-        function openNoteDetail() {
-            document.getElementById('contactList').style.display = 'none';
-            document.getElementById('chatDetail').classList.add('active');
-            document.getElementById('detailName').textContent = '📝 笔记';
-            document.getElementById('detailBody').innerHTML = `
-                <div class="note-content">
-                    <span class="note-date">📅 2022年10月26日</span>
-                    <div class="note-text">我不知道自己还要怎么做，问题到底出在哪里？现在还剩着谁？张希之到底藏了多少秘密？不行，我要找他问清楚……<br><br>联系张希之的时候感觉他的说话方式好奇怪，发生什么了吗？</div>
-                </div>
-            `;
-        }
+function hostLog(msg) {
+  if (!room) return;
+  room.players.forEach(p => {
+    if (p.id === 'host') addLog(msg);
+    else if (!p.isBot) {
+      const c = conns[p.id];
+      if (c) c.send({ type: 'log', msg: msg });
+    }
+  });
+}
 
-        function backToContactList() {
-            document.getElementById('contactList').style.display = 'block';
-            document.getElementById('chatDetail').classList.remove('active');
-        }
+function buildState(room, myIdx) {
+  const cp = room.currentPlay;
+  return {
+    you: myIdx,
+    phase: room.phase,
+    turn: room.turn,
+    names: room.players.map(p => p.name),
+    handCounts: room.players.map(p => p.hand.length),
+    isBot: room.players.map(p => !!p.isBot),
+    myHand: room.players[myIdx] ? room.players[myIdx].hand : [],
+    deckLeft: room.deck.length,
+    winner: room.winner,
+    drewThisTurn: room.drewFlags[myIdx],
+    currentPlay: cp ? {
+      playerIndex: cp.playerIndex,
+      playerName: room.players[cp.playerIndex].name,
+      tiles: cp.tiles
+    } : null,
+    voteCount: Object.keys(room.votes).length,
+    voteTotal: Math.max(0, room.players.length - 1),
+    myVote: (cp && cp.playerIndex !== myIdx && room.votes[myIdx] !== undefined) ? room.votes[myIdx] : null,
+    history: room.history.slice(-6)
+  };
+}
 
-        // ---------- 加密笔记 ----------
-        function openEncryptedNote() {
-            document.getElementById('pinOverlay').classList.add('active');
-            document.getElementById('pinInput').value = '';
-            document.getElementById('pinError').style.display = 'none';
-            document.getElementById('pinInput').focus();
-        }
+function hostHandle(conn, data) {
+  const peerId = conn.peer;
+  if (data.type === 'join') {
+    if (room.players.find(p => p.id === peerId)) return;
+    if (room.players.length >= 4) { conn.send({ type: 'error', msg: '房间已满' }); return; }
+    if (room.phase !== 'waiting') { conn.send({ type: 'error', msg: '游戏已开始' }); return; }
+    conns[peerId] = conn;
+    room.players.push({ id: peerId, name: String(data.name || '玩家').slice(0, 8), hand: [] });
+    hostLog('👋 ' + data.name + ' 加入了 (' + room.players.length + '/4)');
+    hostBroadcast();
+    if (room.players.length === 4) {
+      setTimeout(() => { if (room.players.length === 4 && room.phase === 'waiting') hostStart(); }, 800);
+    }
+    return;
+  }
+  const pi = room.players.findIndex(p => p.id === peerId);
+  if (pi === -1) return;
+  hostAction(pi, data);
+}
 
-        function closePin() {
-            document.getElementById('pinOverlay').classList.remove('active');
-        }
+function hostAction(pi, data) {
+  if (room.phase === 'waiting' || room.phase === 'over') return;
+  if (data.type === 'play') hostPlay(pi, data.tiles);
+  else if (data.type === 'vote') hostVote(pi, data.v);
+  else if (data.type === 'draw') hostDraw(pi);
+}
 
-        function verifyPin() {
-            const pin = document.getElementById('pinInput').value.trim();
-            if (pin === '1026') {
-                closePin();
-                document.getElementById('encryptedNoteModal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('pinError').style.display = 'block';
-                document.getElementById('pinInput').value = '';
-                document.getElementById('pinInput').focus();
-            }
-        }
+function hostStart() {
+  const pool = shuffle(CHAR_POOL);
+  let idx = 0;
+  room.players.forEach(p => {
+    p.hand = pool.slice(idx, idx + HAND_SIZE).sort();
+    idx += HAND_SIZE;
+  });
+  room.deck = pool.slice(idx);
+  room.phase = 'playing';
+  room.turn = 0;
+  room.drewFlags = [false, false, false, false];
+  room.currentPlay = null;
+  room.votes = {};
+  room.winner = null;
+  room.history = [];
+  hostLog('🎲 游戏开始！每人 20 张');
+  // 开局隐藏机器人按钮
+  $('botBtn').style.display = 'none';
+  hostBroadcast();
+}
 
-        function closeEncryptedNoteModal() {
-            document.getElementById('encryptedNoteModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
+function hostPlay(pi, tiles) {
+  if (room.phase !== 'playing') return;
+  if (pi !== room.turn) return;
+  if (!Array.isArray(tiles) || tiles.length === 0) return;
+  const copy = room.players[pi].hand.slice();
+  for (const t of tiles) {
+    const k = copy.indexOf(t);
+    if (k === -1) return;
+    copy.splice(k, 1);
+  }
+  room.currentPlay = { playerIndex: pi, tiles: tiles };
+  room.votes = {};
+  room.phase = 'voting';
+  hostLog('🎴 ' + room.players[pi].name + ' 出牌：' + tiles.join('') + '，等待投票...');
+  hostBroadcast();
+}
 
-        // ---------- 更多帮助 ----------
-        document.getElementById('helpToggleBtn').addEventListener('click', function() {
-            const panel = document.getElementById('helpPanel');
-            panel.classList.toggle('open');
-            if (panel.classList.contains('open')) {
-                document.getElementById('help').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+function hostVote(pi, approve) {
+  if (room.phase !== 'voting' || !room.currentPlay) return;
+  if (pi === room.currentPlay.playerIndex) return;
+  if (room.votes[pi] !== undefined) return;
+  room.votes[pi] = !!approve;
 
-        document.getElementById('quizBtn').addEventListener('click', function() {
-            const area = document.getElementById('quizArea');
-            area.classList.toggle('open');
-            document.querySelectorAll('.q-result').forEach(el => {
-                el.textContent = '';
-                el.className = 'q-result';
-            });
-            document.querySelectorAll('.q-input').forEach(el => el.value = '');
-        });
+  const voters = room.players.map((_, i) => i).filter(i => i !== room.currentPlay.playerIndex);
+  if (voters.every(i => room.votes[i] !== undefined)) {
+    hostResolveVote();
+  } else {
+    hostBroadcast();
+  }
+}
 
-        function checkQuiz(num, correctAnswer) {
-            const input = document.getElementById('q' + num);
-            const result = document.getElementById('r' + num);
-            const val = input.value.trim();
-            if (val === '') {
-                result.textContent = '请输入答案';
-                result.className = 'q-result wrong';
-                return;
-            }
-            if (val === correctAnswer) {
-                result.textContent = '✓ 正确';
-                result.className = 'q-result correct';
-            } else {
-                result.textContent = '✗ 错误';
-                result.className = 'q-result wrong';
-            }
-        }
+function hostResolveVote() {
+  const cp = room.currentPlay;
+  const approve = Object.values(room.votes).filter(Boolean).length;
+  const reject = Object.values(room.votes).filter(v => !v).length;
+  const pi = cp.playerIndex;
+  const tiles = cp.tiles;
+  const pass = approve >= 2;
 
-        // ---------- 导航 ----------
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+  room.history.push({ name: room.players[pi].name, tiles: tiles, pass: pass });
 
-        // ---------- 键盘事件 ----------
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && document.getElementById('loginOverlay').classList.contains('active')) {
-                handleLogin();
-            }
-            if (e.key === 'Enter' && document.getElementById('pinOverlay').classList.contains('active')) {
-                verifyPin();
-            }
-            if (e.key === 'Escape') {
-                if (document.getElementById('loginOverlay').classList.contains('active')) closeLogin();
-                if (document.getElementById('chatOverlay').classList.contains('active')) closeChat();
-                if (document.getElementById('memberModal').classList.contains('active')) closeModal('memberModal');
-                if (document.getElementById('pinOverlay').classList.contains('active')) closePin();
-                if (document.getElementById('encryptedNoteModal').classList.contains('active')) closeEncryptedNoteModal();
-            }
-        });
+  if (pass) {
+    const hand = room.players[pi].hand;
+    for (const t of tiles) {
+      const k = hand.indexOf(t);
+      if (k !== -1) hand.splice(k, 1);
+    }
+    hostLog('✅ 成立 (' + approve + '赞/' + reject + '踩) — ' + room.players[pi].name + ' 出了「' + tiles.join('') + '」');
+    room.currentPlay = null;
+    room.votes = {};
+    room.drewFlags = [false, false, false, false];
 
-        console.log('📁 Happy Life 官方档案已加载');
-    </script>
+    if (room.players[pi].hand.length === 0) {
+      room.phase = 'over';
+      room.winner = pi;
+      hostLog('🏆 ' + room.players[pi].name + ' 打完了所有牌，获胜！');
+      hostBroadcast();
+      return;
+    }
+    room.turn = (pi + 1) % 4;
+    room.phase = 'playing';
+    hostBroadcast();
+  } else {
+    hostLog('❌ 不成立 (' + approve + '赞/' + reject + '踩) — ' + room.players[pi].name + ' 请重新出牌');
+    room.currentPlay = null;
+    room.votes = {};
+    room.phase = 'playing';
+    hostBroadcast();
+  }
+}
+
+function hostDraw(pi) {
+  if (room.phase !== 'playing') return;
+  if (pi !== room.turn) return;
+  if (room.drewFlags[pi]) return;
+  if (room.deck.length === 0) return;
+  const t = room.deck.pop();
+  room.players[pi].hand.push(t);
+  room.players[pi].hand.sort();
+  room.drewFlags[pi] = true;
+  hostLog('🀫 ' + room.players[pi].name + ' 摸了一张牌');
+
+  if (room.drewFlags.every(Boolean)) {
+    room.drewFlags = [false, false, false, false];
+    hostLog('🔄 一圈摸完，摸牌权限已刷新');
+  }
+  room.turn = (pi + 1) % 4;
+  hostBroadcast();
+}
+
+function hostDisconnect(conn) {
+  const pi = room.players.findIndex(p => p.id === conn.peer);
+  if (pi === -1) return;
+  const name = room.players[pi].name;
+  delete conns[conn.peer];
+  room.players.splice(pi, 1);
+  hostLog('💨 ' + name + ' 离开了游戏');
+  room.phase = 'waiting';
+  room.players.forEach(p => { if (!p.isBot) p.hand = []; });
+  room.currentPlay = null;
+  room.votes = {};
+  room.winner = null;
+  room.drewFlags = [false, false, false, false];
+  room.turn = 0;
+  if (room.players.length < 4) $('botBtn').style.display = 'block';
+  hostBroadcast();
+}
+
+/* ==================== 机器人 ==================== */
+function checkBots() {
+  if (!isHost || !room) return;
+  if (botTimer) { clearTimeout(botTimer); botTimer = null; }
+
+  if (room.phase === 'playing') {
+    const pi = room.turn;
+    const p = room.players[pi];
+    if (p && p.isBot) {
+      botTimer = setTimeout(() => botPlay(pi), 1500);
+      return;
+    }
+  }
+
+  if (room.phase === 'voting' && room.currentPlay) {
+    const cp = room.currentPlay;
+    for (let i = 0; i < room.players.length; i++) {
+      const p = room.players[i];
+      if (i === cp.playerIndex) continue;
+      if (!p.isBot) continue;
+      if (room.votes[i] !== undefined) continue;
+      botTimer = setTimeout(() => botVote(i), 1000);
+      return;
+    }
+  }
+}
+
+function botPlay(pi) {
+  if (!room || room.phase !== 'playing' || room.turn !== pi) return;
+  const p = room.players[pi];
+  if (!p || !p.isBot || p.hand.length === 0) return;
+
+  if (Math.random() < 0.3 && !room.drewFlags[pi] && room.deck.length > 0) {
+    hostDraw(pi);
+    return;
+  }
+
+  const hand = p.hand.slice();
+  const n = Math.min(hand.length, 1 + Math.floor(Math.random() * 3));
+  const picked = [];
+  for (let i = 0; i < n; i++) {
+    const k = Math.floor(Math.random() * hand.length);
+    picked.push(hand.splice(k, 1)[0]);
+  }
+  hostPlay(pi, picked);
+}
+
+function botVote(pi) {
+  if (!room || room.phase !== 'voting' || !room.currentPlay) return;
+  if (pi === room.currentPlay.playerIndex) return;
+  if (room.votes[pi] !== undefined) return;
+  hostVote(pi, Math.random() < 0.75);
+}
+
+/* ==================== 客户端接收 ==================== */
+function clientHandle(data) {
+  if (data.type === 'state') { S = data.s; render(); }
+  else if (data.type === 'log') addLog(data.msg);
+  else if (data.type === 'error') { alert(data.msg); location.reload(); }
+}
+
+/* ==================== 操作入口 ==================== */
+function sendAction(msg) {
+  if (isHost) hostAction(myIndex, msg);
+  else if (myConn) myConn.send(msg);
+}
+
+/* ==================== 日志 ==================== */
+function addLog(msg) {
+  const el = document.createElement('div');
+  el.textContent = msg;
+  $('log').appendChild(el);
+  $('log').scrollTop = $('log').scrollHeight;
+  while ($('log').children.length > 30) $('log').removeChild($('log').firstChild);
+}
+
+/* ==================== 按钮 ==================== */
+$('btnPlay').onclick = () => {
+  if (!S || selected.length === 0) return;
+  if (S.turn !== S.you || S.phase !== 'playing') return;
+  sendAction({ type: 'play', tiles: selected.slice() });
+  selected = [];
+  render();
+};
+$('btnDraw').onclick = () => {
+  if (!S) return;
+  sendAction({ type: 'draw' });
+};
+function vote(v) { sendAction({ type: 'vote', v: v }); }
+
+function toggleSelect(t) {
+  if (!S || S.phase !== 'playing') return;
+  if (S.turn !== S.you) return;
+  const i = selected.indexOf(t);
+  if (i === -1) selected.push(t);
+  else selected.splice(i, 1);
+  render();
+}
+
+/* ==================== 渲染 ==================== */
+function render() {
+  if (!S) return;
+  const s = S;
+  selected = selected.filter(t => s.myHand.indexOf(t) !== -1);
+
+  const top = $('topbar');
+  top.innerHTML = '';
+  s.names.forEach((name, i) => {
+    if (i === s.you) return;
+    const d = document.createElement('div');
+    d.className = 'seat' + (i === s.turn && s.phase !== 'over' ? ' active' : '');
+    d.innerHTML = escapeHtml(name) + ' <span class="cnt">' + s.handCounts[i] + '张</span>';
+    top.appendChild(d);
+  });
+
+  const hand = $('hand');
+  hand.innerHTML = '';
+  const myTurn = s.turn === s.you && s.phase === 'playing';
+  s.myHand.forEach(t => {
+    const el = document.createElement('div');
+    const si = selected.indexOf(t);
+    el.className = 'tile' + (si !== -1 ? ' selected' : '');
+    el.textContent = t;
+    if (si !== -1) {
+      const b = document.createElement('span');
+      b.className = 'order';
+      b.textContent = si + 1;
+      el.appendChild(b);
+    }
+    el.onclick = () => toggleSelect(t);
+    hand.appendChild(el);
+  });
+
+  const playArea = $('playArea');
+  const voteArea = $('voteArea');
+  const histArea = $('historyArea');
+  playArea.innerHTML = '';
+  voteArea.innerHTML = '';
+  histArea.innerHTML = '';
+
+  if (s.phase === 'voting' && s.currentPlay) {
+    const cp = s.currentPlay;
+    const title = document.createElement('div');
+    title.className = 'tip';
+    title.textContent = cp.playerName + ' 出了：';
+    playArea.appendChild(title);
+
+    const row = document.createElement('div');
+    row.className = 'play-tiles';
+    cp.tiles.forEach(t => {
+      const el = document.createElement('div');
+      el.className = 'tile big';
+      el.textContent = t;
+      row.appendChild(el);
+    });
+    playArea.appendChild(row);
+
+    if (cp.playerIndex !== s.you) {
+      if (s.myVote === null) {
+        const yes = document.createElement('button');
+        yes.className = 'btn vote-yes';
+        yes.textContent = '✅ 成立';
+        yes.onclick = () => vote(true);
+        const no = document.createElement('button');
+        no.className = 'btn vote-no';
+        no.textContent = '❌ 不成立';
+        no.onclick = () => vote(false);
+        voteArea.appendChild(yes);
+        voteArea.appendChild(no);
+      } else {
+        const hint = document.createElement('div');
+        hint.className = 'votehint';
+        hint.textContent = (s.myVote ? '你投了 ✅ 成立' : '你投了 ❌ 不成立') + ' · 等待其他人 (' + s.voteCount + '/' + s.voteTotal + ')';
+        voteArea.appendChild(hint);
+      }
+    } else {
+      const hint = document.createElement('div');
+      hint.className = 'votehint';
+      hint.textContent = '你的出牌正在被投票... (' + s.voteCount + '/' + s.voteTotal + ')';
+      voteArea.appendChild(hint);
+    }
+  } else if (s.phase === 'playing') {
+    const tip = document.createElement('div');
+    if (s.turn === s.you) {
+      tip.className = 'tip you';
+      tip.textContent = '🎯 轮到你了 · 点牌选择，再点「出牌」';
+    } else {
+      tip.className = 'tip';
+      tip.textContent = '⏳ 等待 ' + s.names[s.turn] + ' 出牌...';
+    }
+    playArea.appendChild(tip);
+  } else if (s.phase === 'over') {
+    const tip = document.createElement('div');
+    tip.className = 'tip you';
+    tip.textContent = '🏆 ' + s.names[s.winner] + ' 获胜！刷新页面可重开';
+    playArea.appendChild(tip);
+  } else if (s.phase === 'waiting') {
+    const tip = document.createElement('div');
+    tip.className = 'tip';
+    tip.textContent = '等待玩家加入... (' + s.names.length + '/4)';
+    const sub = document.createElement('div');
+    sub.className = 'tip';
+    sub.style.marginTop = '8px';
+    sub.innerHTML = '房主可点右上角 <b style="color:#a78bfa">🤖 加 3 个机器人</b> 开始测试';
+    playArea.appendChild(tip);
+    playArea.appendChild(sub);
+  }
+
+  if (s.history && s.history.length) {
+    s.history.forEach(h => {
+      const d = document.createElement('div');
+      d.innerHTML = '<span class="' + (h.pass ? 'ok' : 'no') + '">' + (h.pass ? '✅' : '❌') + '</span> ' + escapeHtml(h.name) + '：' + h.tiles.join('');
+      histArea.appendChild(d);
+    });
+  }
+
+  $('btnPlay').disabled = !myTurn || selected.length === 0;
+  $('btnDraw').disabled = !myTurn || s.drewThisTurn;
+  $('turnHint').textContent = myTurn ? (s.drewThisTurn ? '本轮已摸过牌' : '已选 ' + selected.length + ' 张') : '';
+}
+</script>
 </body>
 </html>
